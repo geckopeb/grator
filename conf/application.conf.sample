@@ -5,7 +5,7 @@
 # ~~~~~
 # The secret key is used to secure cryptographics functions.
 # If you deploy your application to several instances be sure to use the same key!
-application.secret="31tB80Xe2Zry[0wbFgshQ?8QldRD0Wo04`eiqePCTUH=m@vZN]np@p>TLY2TeyXR"
+application.secret="ASAMPLEASDFSAFDSAasdfsadfdsaASDFSECRET"
 
 # The application languages
 # ~~~~~
@@ -33,10 +33,10 @@ application.langs="en"
 # You can declare as many datasources as you want.
 # By convention, the default datasource is named `default`
 #
-# db.default.driver=org.h2.Driver
-# db.default.url="jdbc:h2:mem:play"
-# db.default.user=sa
-# db.default.password=""
+db.default.driver=com.mysql.jdbc.Driver
+db.default.url="jdbc:mysql://localhost:3306/dbname"
+db.default.user=user
+db.default.password="password"
 
 # Evolutions
 # ~~~~~
