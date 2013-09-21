@@ -1,0 +1,69 @@
+@(name:String)
+package models.DB
+
+import play.api.Play.current
+
+import play.api.db.slick.DB
+import play.api.db.slick.Config.driver.simple._
+import scala.slick.driver.MySQLDriver.DeleteInvoker
+import slick.lifted.{Join, MappedTypeMapper}
+
+case class @{name.capitalize}Row(
+  id: Option[Long] = None,
+  name: String
+){
+  
+}
+
+object @{name.capitalize}Row{
+  def save(@{name}: @{name.capitalize}Row):Long = {
+    DB.withTransaction { implicit session =>
+      @{name.capitalize}Table.returning(@{name.capitalize}Table.id).insert(@{name})
+    }
+  }
+  
+  def update(@{name}: @{name.capitalize}Row):Int = {
+    DB.withTransaction { implicit session =>
+      val q = for {
+        s <- @{name.capitalize}Table
+        if s.id === @{name}.id
+      } yield(s)
+      q.update(@{name})
+    }
+  }
+  
+  def delete(@{name}: @{name.capitalize}Row):Int = {
+    DB.withTransaction { implicit session =>
+       val q = for {
+        s <- @{name.capitalize}Table
+        if s.id === @{name}.id.get
+      } yield(s)
+      (new DeleteInvoker(q)).delete
+    }
+  }
+
+  
+  def findAll: List[@{name.capitalize}Row] = {
+    DB.withSession { implicit session =>
+      Query(@{name.capitalize}Table).list
+    }
+  }
+  
+  def findById(id: Long):Option[@{name.capitalize}Row] = {
+    DB.withSession { implicit session =>
+      val q = for{
+        s <- @{name.capitalize}Table if s.id === id
+      } yield (s)
+      q.firstOption
+    }
+  }
+
+  def getOptions(): Seq[(String,String)] = {
+    DB.withSession { implicit session =>
+      val @{name}s = for {
+        p <- @{name.capitalize}Table
+      } yield(p)
+      for(@{name} <- @{name}s.list) yield(@{name}.id.get.toString,@{name}.name) 
+    }
+  }
+}

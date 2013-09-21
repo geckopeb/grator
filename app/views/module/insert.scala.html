@@ -1,0 +1,15 @@
+@(moduleForm: Form[models.DB.ModuleRow], applications: Seq[(String,String)])(implicit lang: Lang)
+
+@main(Messages("module.insert")){
+  <div class="page-header">
+      <h1>@Messages("module.insert")</h1>
+  </div>
+  
+  @views.html.module.form(moduleForm,applications,routes.ModuleController.save())
+
+  <p>
+    <a href="@controllers.routes.ModuleController.index()"
+    class="btn">
+    <i class="icon-plus"></i> @Messages("module.return")</a>
+  </p>
+}

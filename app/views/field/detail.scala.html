@@ -1,0 +1,16 @@
+
+@(field: models.DB.FieldRow)(implicit lang: Lang)
+
+@main(Messages("field.name")){
+	<div class="page-header">
+    	<h1>@Messages("field.item_detail",field.name)</h1>
+  </div>
+	
+  @views.html.field.list(List(field))
+
+ 	<p>
+		<a href="@controllers.routes.FieldController.index()"
+		class="btn">
+		<i class="icon-plus"></i> @Messages("field.index")</a>
+	</p>
+}

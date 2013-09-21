@@ -1,0 +1,48 @@
+application.name = MyCRUDGenerator
+
+#applications
+application.module_name = Aplications
+
+application.number = #
+application.item_name = Name
+
+application.new = New Application
+application.insert = A New Application
+application.return = Return
+application.save = Save
+application.index = Applications List
+application.item_detail = {0} Application details
+application.path = Path
+application.generate_all = Generate All
+
+#modules
+module.module_name = Modules
+
+module.number = #
+module.item_name = Name
+
+module.new = New Module
+module.insert = A New Module
+module.return = Return
+module.save = Save
+module.index = Modules List
+module.item_detail = {0} Module details
+
+module.generate_all = Generate All
+module.generate_controller = Generate Controller
+module.generate_table = Generate Table
+module.generate_row = Generate Row
+module.generate_views = Generate Views
+
+#field
+field.module_name = Field
+
+field.number = #
+field.item_name = Name
+
+field.new = New Field
+field.insert = A New Field
+field.return = Return
+field.save = Save
+field.index = Field List
+field.item_detail = {0} Field details

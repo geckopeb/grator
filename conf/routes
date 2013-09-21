@@ -1,9 +1,36 @@
-# Routes
-# This file defines all application routes (Higher priority routes first)
-# ~~~~
-
 # Home page
-GET     /                           controllers.Application.index
+GET   /                             controllers.ApplicationController.index
+GET   /application/:id/detail       controllers.ApplicationController.detail(id: Long)
+GET   /application/insert           controllers.ApplicationController.insert
+GET   /application/:id/edit         controllers.ApplicationController.edit(id: Long)
+POST  /application/save             controllers.ApplicationController.save
+POST  /application/:id/delete       controllers.ApplicationController.delete(id: Long)
+POST  /application/:id/update       controllers.ApplicationController.update(id: Long)
+GET   /application/:id/generateall  controllers.ApplicationController.generateAll(id: Long)
+
+GET   /module                controllers.ModuleController.index
+GET   /module/:id/detail     controllers.ModuleController.detail(id: Long)
+GET   /module/insert         controllers.ModuleController.insert
+GET   /module/:id/edit       controllers.ModuleController.edit(id: Long)
+POST  /module/save           controllers.ModuleController.save
+GET   /module/pepeee         controllers.ModuleController.pepee
+POST  /module/:id/delete     controllers.ModuleController.delete(id: Long)
+POST  /module/:id/update     controllers.ModuleController.update(id: Long)
+GET   /module/:id/generateall controllers.ModuleController.generateAll(id: Long)
+GET   /module/:id/controller  controllers.ModuleController.generateController(id: Long)
+GET   /module/:id/table       controllers.ModuleController.generateTable(id: Long)
+GET   /module/:id/row         controllers.ModuleController.generateRow(id: Long)
+GET   /module/:id/views       controllers.ModuleController.generateViews(id: Long)
+
+#field:
+GET   /field                controllers.FieldController.index
+GET   /field/:id/detail     controllers.FieldController.detail(id: Long)
+GET   /field/insert         controllers.FieldController.insert
+GET   /field/:id/edit       controllers.FieldController.edit(id: Long)
+POST  /field/save           controllers.FieldController.save
+POST  /field/:id/delete     controllers.FieldController.delete(id: Long)
+POST  /field/:id/update     controllers.FieldController.update(id: Long)
+
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

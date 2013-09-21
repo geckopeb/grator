@@ -1,0 +1,18 @@
+@(appName: String, modules: List[models.DB.ModuleRow])
+application.name = @appName
+
+@for(module <- modules){
+
+#@{module.name}
+@{module.name}.module_name = @{module.name.capitalize}
+
+@{module.name}.number = #
+@{module.name}.item_name = Nombre
+
+@{module.name}.new = Nuevo @{module.name.capitalize}
+@{module.name}.insert = Insertando un nuevo @{module.name.capitalize}
+@{module.name}.return = Volver
+@{module.name}.save = Guardar
+@{module.name}.index = Listado de @{module.name.capitalize}
+@{module.name}.item_detail = Detalles de {0} @{module.name.capitalize}
+}

@@ -1,0 +1,80 @@
+@(name:String)
+package controllers
+
+import play.api._
+import play.api.mvc._
+
+import models.DB._
+
+import play.api.data._
+import play.api.data.Forms._
+
+import play.api.db.slick.DB
+import play.api.db.slick.Config.driver.simple._
+import slick.lifted.{Join, MappedTypeMapper}
+
+object @{name.capitalize}Controller extends Controller {
+  def index = Action {
+    val @{name}s = @{name.capitalize}Row.findAll
+
+    Ok(views.html.@{name}.index(@{name}s))
+  }
+
+  val @{name}Form = Form(
+      mapping(
+        "id" -> optional(longNumber),
+        "name" -> nonEmptyText
+      )(@{name.capitalize}Row.apply)(@{name.capitalize}Row.unapply)
+  )
+
+  def insert = Action {
+    Ok(views.html.@{name}.insert(@{name}Form))
+  }
+  
+
+  def detail(id: Long) = Action {
+    @{name.capitalize}Row.findById(id).map{
+      @{name} => Ok(views.html.@{name}.detail(@{name}))
+    }.getOrElse(NotFound)
+  }
+  
+  def save = Action { implicit request =>
+    @{name}Form.bindFromRequest.fold(
+      formWithErrors => BadRequest(views.html.@{name}.insert(formWithErrors)),
+      @{name} => {
+        val id = @{name.capitalize}Row.save(@{name})
+        Redirect(routes.@{name.capitalize}Controller.detail(id))
+      }
+    )
+  }
+  
+  def edit(id: Long) = Action{
+    @{name.capitalize}Row.findById(id).map{
+      @{name}:@{name.capitalize}Row => Ok(views.html.@{name}.edit(@{name}Form.fill(@{name}),@{name}))
+    }.getOrElse(NotFound)
+  }
+  
+  def delete(id: Long) = Action{
+    implicit request =>
+    @{name.capitalize}Row.findById(id).map{
+      @{name}Row => {
+          @{name.capitalize}Row.delete(@{name}Row)
+          Redirect(routes.@{name.capitalize}Controller.index())
+    }
+    }.getOrElse(NotFound)
+  }
+  
+  def update(id: Long) = Action{ implicit request =>
+    @{name.capitalize}Row.findById(id).map{
+      @{name} => {
+      @{name}Form.bindFromRequest.fold(
+        formWithErrors => BadRequest(views.html.@{name}.edit(formWithErrors,@{name})),
+        @{name} => {
+          @{name.capitalize}Row.update(@{name})
+          Redirect(routes.@{name.capitalize}Controller.detail(@{name}.id.get))
+        }
+      )
+    }
+    }.getOrElse(NotFound)
+  }
+}

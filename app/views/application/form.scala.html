@@ -1,0 +1,23 @@
+@(applicationForm: Form[models.DB.ApplicationRow], formAction: play.api.mvc.Call, application: Option[models.DB.ApplicationRow] = None)(implicit lang: Lang)
+
+@import helper._
+@import helper.twitterBootstrap._
+
+@helper.form(action = formAction) {
+  <fieldset>
+    <legend>
+      @Messages("application.module_name")
+    </legend>
+    @application match {
+    	case Some(app) => {
+    		<input type="hidden" name="id" value='@app.id.get' >
+    	}
+    	case None => {}
+	}
+    
+    @helper.inputText(applicationForm("name"))
+    @helper.inputText(applicationForm("path"))
+  </fieldset>
+  <p><input type="submit" class="btn primary"
+  value='@Messages("application.save")'></p>
+}

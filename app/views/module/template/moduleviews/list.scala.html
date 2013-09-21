@@ -1,0 +1,21 @@
+@(name: String)
+@@(rows: List[models.DB.@{name.capitalize}Row])(implicit lang: Lang)
+
+<table class="table table-bordered table-striped table-hover">
+    <thead>
+      <tr>
+        <th>@@Messages("@{name}.number")</th>
+        <th>@@Messages("@{name}.item_name")</th>
+      </tr>
+    </thead>
+    <tbody>
+    @@for(row <- rows){
+          <tr>
+            <td>
+              <a href="@@controllers.routes.@{name.capitalize}Controller.detail(row.id.get)">@@row.id</a>
+            </td>
+            <td>@@row.name</td>
+        </tr>
+    }
+     </tbody>
+  </table>

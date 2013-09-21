@@ -1,0 +1,15 @@
+@(modules: List[models.DB.ModuleRow])(implicit lang: Lang)
+
+@main(Messages("module.name")){
+	<div class="page-header">
+    	<h1>@Messages("module.module_name")</h1>
+  </div>
+	
+  @views.html.module.list(modules)
+
+ 	<p>
+		<a href="@controllers.routes.ModuleController.insert()"
+		class="btn">
+		<i class="icon-plus"></i> @Messages("module.new")</a>
+	</p>
+}

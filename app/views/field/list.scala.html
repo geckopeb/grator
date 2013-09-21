@@ -1,0 +1,21 @@
+
+@(rows: List[models.DB.FieldRow])(implicit lang: Lang)
+
+<table class="table table-bordered table-striped table-hover">
+    <thead>
+      <tr>
+        <th>@Messages("field.number")</th>
+        <th>@Messages("field.item_name")</th>
+      </tr>
+    </thead>
+    <tbody>
+    @for(row <- rows){
+          <tr>
+            <td>
+              <a href="@controllers.routes.FieldController.detail(row.id.get)">@row.id</a>
+            </td>
+            <td>@row.name</td>
+        </tr>
+    }
+     </tbody>
+  </table>

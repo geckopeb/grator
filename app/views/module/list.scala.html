@@ -1,0 +1,20 @@
+@(modules: List[models.DB.ModuleRow])(implicit lang: Lang)
+
+<table class="table table-bordered table-striped table-hover">
+    <thead>
+      <tr>
+        <th>@Messages("module.number")</th>
+        <th>@Messages("module.item_name")</th>
+      </tr>
+    </thead>
+    <tbody>
+    @for(module <- modules){
+          <tr>
+            <td>
+              <a href="@controllers.routes.ModuleController.detail(module.id.get)">@module.id</a>
+            </td>
+            <td>@module.name</td>
+        </tr>
+    }
+     </tbody>
+  </table>

@@ -1,0 +1,24 @@
+@(name:String)
+@@(rowForm: Form[models.DB.@{name.capitalize}Row], route: play.api.mvc.Call, row: Option[models.DB.@{name.capitalize}Row] = None)(implicit lang: Lang)
+
+@@import helper._
+@@import helper.twitterBootstrap._
+
+@@helper.form(action = route) {
+  <fieldset>
+    <legend>
+      @@Messages("@{name}.name")
+    </legend>
+
+    @@row match {
+    	@{"case"} Some(row) => { @* hay que escapar los cases porque se pueden usar dentro de un template *@
+    		<input type="hidden" name="id" value='@@row.id.get' >
+    	}
+    	@{"case"} None => {}
+	  }
+    
+    @@helper.inputText(rowForm("name"))  
+  </fieldset>
+  <p><input type="submit" class="btn primary"
+  value='@@Messages("@{name}.save")'></p>
+}

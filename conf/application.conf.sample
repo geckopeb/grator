@@ -9,7 +9,7 @@ application.secret="ASAMPLEASDFSAFDSAasdfsadfdsaASDFSECRET"
 
 # The application languages
 # ~~~~~
-application.langs="en"
+application.langs="en,es"
 
 # Global object class
 # ~~~~~
@@ -37,6 +37,8 @@ db.default.driver=com.mysql.jdbc.Driver
 db.default.url="jdbc:mysql://localhost:3306/dbname"
 db.default.user=user
 db.default.password="password"
+
+slick.default="models.DB.*"
 
 # Evolutions
 # ~~~~~

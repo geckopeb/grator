@@ -1,0 +1,16 @@
+
+@(fieldForm: Form[models.DB.FieldRow], moduleOptions: Seq[(String,String)], typeOptions: Seq[(String,String)], field: models.DB.FieldRow)(implicit lang: Lang)
+
+@main(Messages("field.insert")){
+  <div class="page-header">
+      <h1>@Messages("field.insert")</h1>
+  </div>
+  
+  @views.html.field.form(fieldForm, moduleOptions, typeOptions, route = routes.FieldController.update(field.id.get), row = Some(field))
+
+  <p>
+    <a href="@controllers.routes.FieldController.index()"
+    class="btn">
+    <i class="icon-plus"></i> @Messages("field.return")</a>
+  </p>
+}

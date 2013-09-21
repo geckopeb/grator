@@ -1,0 +1,16 @@
+@(name: String)
+@@(rows: List[models.DB.@{name.capitalize}Row])(implicit lang: Lang)
+
+@@main(Messages("@{name}.name")){
+	<div class="page-header">
+    	<h1>@@Messages("@{name}.module_name")</h1>
+  </div>
+	
+  @@views.html.@{name}.list(rows)
+
+ 	<p>
+		<a href="@@controllers.routes.@{name.capitalize}Controller.insert()"
+		class="btn">
+		<i class="icon-plus"></i> @@Messages("@{name}.new")</a>
+	</p>
+}

@@ -1,0 +1,15 @@
+@(applications: List[models.DB.ApplicationRow])(implicit lang: Lang)
+
+@main(Messages("application.name")){
+	<div class="page-header">
+    	<h1>@Messages("application.module_name")</h1>
+  </div>
+	
+  @views.html.application.list(applications)
+
+ 	<p>
+		<a href="@controllers.routes.ApplicationController.insert()"
+		class="btn">
+		<i class="icon-plus"></i> @Messages("application.new")</a>
+	</p>
+}
