@@ -1,4 +1,4 @@
-application.name = MyCRUDGenerator
+application.name = Grator
 
 application.module_name = Aplicaciones
 

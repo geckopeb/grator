@@ -1,7 +1,7 @@
-application.name = MyCRUDGenerator
+application.name = Grator
 
 #applications
-application.module_name = Aplications
+application.module_name = Applications
 
 application.number = #
 application.item_name = Name
