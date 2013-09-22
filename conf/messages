@@ -14,6 +14,9 @@ application.index = Applications List
 application.item_detail = {0} Application details
 application.path = Path
 application.generate_all = Generate All
+application.detail = Detail
+application.module_list = {0} Modules
+
 
 #modules
 module.module_name = Modules

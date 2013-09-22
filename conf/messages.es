@@ -13,6 +13,9 @@ application.index = Listado de aplicaciones
 application.item_detail = Detalle de la aplicación {0}
 application.path = Ruta
 application.generate_all = Generar Todo
+application.detail = Detalle
+application.module_list = Modulos de {0}
+
 
 #modules
 module.module_name = Modulos
