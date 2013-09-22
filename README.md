@@ -1,7 +1,7 @@
 Grator
 ======
 
-CRUD Generator for PlayFramework2-Scala
+CRUD Generator for PlayFramework2-Slick-Scala
 
 Inspired by CATO(PHP/Smarty).
 
