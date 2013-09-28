@@ -7,7 +7,7 @@
 	<h2>@Messages("application.detail")</h2>
   @views.html.application.list(List(application))
 
-  <h3>@Messages("application.module_list",@application.name)</h3>
+  <h3>@Messages("application.module_list",application.name)</h3>
   @views.html.module.list(modules)
 
  	<p>
