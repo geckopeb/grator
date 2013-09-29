@@ -1,4 +1,4 @@
-@(name:String,fields: List[models.DB.FieldRow])
+@(name:String,fields: List[models.fields.Field])
 package controllers
 
 import play.api._
@@ -22,8 +22,7 @@ object @{name.capitalize}Controller extends Controller {
 
   val @{name}Form = Form(
       mapping(
-        "id" -> optional(longNumber),
-        "name" -> nonEmptyText
+        @views.html.field.template.fields.render_controller_form(fields)
       )(@{name.capitalize}Row.apply)(@{name.capitalize}Row.unapply)
   )
 

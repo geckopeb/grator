@@ -80,6 +80,12 @@ object FieldRow{
   }
 
   def getTypeOptions(): Seq[(String,String)] = {
-    Seq(("Id","Id"),("Text","String"),("Number","Int"),("Boolean","Boolean"))
+    Seq(
+      //("Id","Id"),
+      //("Name","Name"),
+      ("Text","Text"),
+      ("Integer","Integer"),
+      ("Boolean","Boolean")
+    )
   }
 }

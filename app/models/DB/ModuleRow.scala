@@ -9,18 +9,24 @@ import slick.lifted.{Join, MappedTypeMapper}
 
 import utils.FileUtils
 
+import models.fields._
+
+import play.api.Logger
+
 case class ModuleRow(
 	id: Option[Long] = None,
 	name: String,
 	applicationId: Long
 ){
   lazy val fields = FieldRow.findByModule(this.id.get)
+  lazy val application = ApplicationRow.findById(this.applicationId)
 
   def getPath(folder: String, fileTermination: String): String = {
-    val app = ApplicationRow.findById(this.applicationId)
-    val basePath = app.get.path
+    val basePath = this.application.get.path
 
-    basePath+folder+this.name.capitalize+fileTermination
+    val path = basePath+folder+this.name.capitalize+fileTermination
+    Logger.debug(path)
+    path
   }
 
   def getViewPath(viewName: String): String = {
@@ -39,7 +45,7 @@ case class ModuleRow(
 
   def generateController(): Unit = {
     val path = this.getPath("app/controllers/","Controller.scala")
-    FileUtils.writeToFile(path,views.html.module.template.controller(this.name,this.fields).toString)
+    FileUtils.writeToFile(path,views.html.module.template.controller(this.name,for (fieldRow <- this.fields) yield (FieldFactory.get(fieldRow))).toString)
   }
 
   def generateTable(): Unit = {
@@ -100,7 +106,7 @@ object ModuleRow{
       val moduleId = new FieldRow(None, "id", id, "Id", true)
       FieldTable.insert(moduleId)
 
-      val moduleName = new FieldRow(None, "name", id, "name", true)
+      val moduleName = new FieldRow(None, "name", id, "Name", true)
       FieldTable.insert(moduleName)
       
       id
