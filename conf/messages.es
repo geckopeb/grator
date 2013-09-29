@@ -38,7 +38,7 @@ module.generate_row = Generar Registro
 module.generate_views = Generar Vistas
 
 #field
-field.module_name = Campo
+field.module_name = Campos
 
 field.number = #
 field.item_name = Nombre

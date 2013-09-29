@@ -39,7 +39,7 @@ module.generate_row = Generate Row
 module.generate_views = Generate Views
 
 #field
-field.module_name = Field
+field.module_name = Fields
 
 field.number = #
 field.item_name = Name
