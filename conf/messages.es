@@ -34,7 +34,7 @@ module.field_list = Listado de Campos
 module.generate_all = Generar Todo
 module.generate_controller = Generar Controlador
 module.generate_table = Generar Tabla
-module.generate_table = Generar Registro
+module.generate_row = Generar Registro
 module.generate_views = Generar Vistas
 
 #field
