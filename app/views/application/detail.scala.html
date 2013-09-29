@@ -9,6 +9,7 @@
 
   <h3>@Messages("application.module_list",application.name)</h3>
   @views.html.module.list(modules)
+  @views.html.module.buttons.new_item()
 
  	<p>
 		<a href="@controllers.routes.ApplicationController.generateAll(application.id.get)"

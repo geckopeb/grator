@@ -14,6 +14,8 @@ case class ModuleRow(
 	name: String,
 	applicationId: Long
 ){
+  lazy val fields = FieldRow.findByModule(this.id.get)
+
   def getPath(folder: String, fileTermination: String): String = {
     val app = ApplicationRow.findById(this.applicationId)
     val basePath = app.get.path
@@ -37,7 +39,7 @@ case class ModuleRow(
 
   def generateController(): Unit = {
     val path = this.getPath("app/controllers/","Controller.scala")
-    FileUtils.writeToFile(path,views.html.module.template.controller(this.name).toString)
+    FileUtils.writeToFile(path,views.html.module.template.controller(this.name,this.fields).toString)
   }
 
   def generateTable(): Unit = {
@@ -93,7 +95,15 @@ case class ModuleRow(
 object ModuleRow{
   def save(module: ModuleRow):Long = {
     DB.withTransaction { implicit session =>
-      ModuleTable.returning(ModuleTable.id).insert(module)
+      val id = ModuleTable.returning(ModuleTable.id).insert(module)
+
+      val moduleId = new FieldRow(None, "id", id, "Id", true)
+      FieldTable.insert(moduleId)
+
+      val moduleName = new FieldRow(None, "name", id, "name", true)
+      FieldTable.insert(moduleName)
+      
+      id
     }
   }
   

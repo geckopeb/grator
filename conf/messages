@@ -30,6 +30,7 @@ module.return = Return
 module.save = Save
 module.index = Modules List
 module.item_detail = {0} Module details
+module.field_list = Fields List
 
 module.generate_all = Generate All
 module.generate_controller = Generate Controller

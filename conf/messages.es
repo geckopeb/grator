@@ -29,6 +29,7 @@ module.return = Volver
 module.save = Guardar
 module.index = Listado de modulos
 module.item_detail = Detalle del módulo {0}
+module.field_list = Listado de Campos
 
 module.generate_all = Generar Todo
 module.generate_controller = Generar Controlador
@@ -37,14 +38,14 @@ module.generate_table = Generar Registro
 module.generate_views = Generar Vistas
 
 #field
-field.module_name = Field
+field.module_name = Campo
 
 field.number = #
 field.item_name = Nombre
 
-field.new = Nuevo Field
-field.insert = Insertando un nuevo Field
+field.new = Nuevo Campo
+field.insert = Insertando un nuevo Campo
 field.return = Volver
-field.save = Guardar
-field.index = Listado de Field
-field.item_detail = Detalles de {0} Field
+field.save = Guardar Campo
+field.index = Listado de Campos
+field.item_detail = Detalles del Campo {0}

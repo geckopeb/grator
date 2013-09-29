@@ -1,13 +1,17 @@
 @(module: models.DB.ModuleRow)(implicit lang: Lang)
 
 @main(Messages("module.name")){
-	<div class="page-header">
-    	<h1>@Messages("module.item_detail",module.name)</h1>
-  </div>
-	
-  @views.html.module.list(List(module))
+<div class="page-header">
+   <h1>@Messages("module.item_detail",module.name)</h1>
+</div>
 
- 	<p>
+@views.html.module.list(List(module))
+
+<h3>@Messages("module.field_list",module.name)</h3>
+@views.html.field.list(module.fields)
+@views.html.field.buttons.new_item()
+
+<p>
     <a href="@controllers.routes.ModuleController.generateAll(module.id.get)"
     class="btn">
     <i class="icon-plus"></i> @Messages("module.generate_all")</a>
@@ -30,8 +34,8 @@
     <br />
 
     <br />
-	<a href="@controllers.routes.ModuleController.index()"
+    <a href="@controllers.routes.ModuleController.index()"
     class="btn">
     <i class="icon-plus"></i> @Messages("module.index")</a>
-	</p>
+</p>
 }
