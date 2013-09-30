@@ -1,0 +1,5 @@
+@(fields: List[models.fields.Field])
+
+@for(field <- fields){
+	@{Html(field.htmlForm)}
+}

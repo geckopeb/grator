@@ -7,4 +7,8 @@ class BooleanField(val field: FieldRow) extends Field{
 		val formType = if(field.required) "boolean" else "optional(boolean)"
 		"\""+field.name+"\" -> "+formType
 	}
+
+	def htmlForm(): String = {
+		""
+	}
 }

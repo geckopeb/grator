@@ -19,6 +19,7 @@ case class ModuleRow(
 	applicationId: Long
 ){
   lazy val fields = FieldRow.findByModule(this.id.get)
+  lazy val renderFields = for (fieldRow <- this.fields) yield (FieldFactory.get(fieldRow))
   lazy val application = ApplicationRow.findById(this.applicationId)
 
   def getPath(folder: String, fileTermination: String): String = {
@@ -45,7 +46,7 @@ case class ModuleRow(
 
   def generateController(): Unit = {
     val path = this.getPath("app/controllers/","Controller.scala")
-    FileUtils.writeToFile(path,views.html.module.template.controller(this.name,for (fieldRow <- this.fields) yield (FieldFactory.get(fieldRow))).toString)
+    FileUtils.writeToFile(path,views.html.module.template.controller(this.name,this.renderFields).toString)
   }
 
   def generateTable(): Unit = {
@@ -70,7 +71,7 @@ case class ModuleRow(
 
   def generateFormView(): Unit = {
     val path = this.getViewPath("form")
-    FileUtils.writeToFile(path,views.html.module.template.moduleviews.form(this.name).toString)
+    FileUtils.writeToFile(path,views.html.module.template.moduleviews.form(this.name,this.renderFields).toString)
   }
 
   def generateIndexView(): Unit = {

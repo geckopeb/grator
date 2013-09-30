@@ -7,4 +7,8 @@ class TextField(val field: FieldRow) extends Field{
 		val formType = if(field.required) "nonEmptyText" else "text"
 		"\""+field.name+"\" -> "+formType
 	}
+
+	def htmlForm: String = {
+		""
+	}
 }

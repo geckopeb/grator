@@ -15,6 +15,7 @@ case class FieldRow(
   fieldType: String,
   required: Boolean
 ){
+  lazy val module = ModuleRow.findById(this.moduleId).get
   
 }
 
