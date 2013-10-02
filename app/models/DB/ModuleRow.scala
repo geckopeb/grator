@@ -51,7 +51,7 @@ case class ModuleRow(
 
   def generateTable(): Unit = {
     val path = this.getPath("app/models/DB/","Table.scala")
-    FileUtils.writeToFile(path,views.html.module.template.table(this.name).toString)
+    FileUtils.writeToFile(path,views.html.module.template.table(this.name,this.renderFields).toString)
   }
 
   def generateRow(): Unit = {

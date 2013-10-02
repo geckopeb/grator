@@ -11,4 +11,12 @@ class TextField(val field: FieldRow) extends Field{
 	def htmlForm: String = {
 		""
 	}
+
+	def fieldTable: String = {
+		""
+	}
+	
+	def nameInTable: String = {
+		""
+	}
 }

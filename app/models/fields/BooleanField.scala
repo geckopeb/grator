@@ -8,7 +8,15 @@ class BooleanField(val field: FieldRow) extends Field{
 		"\""+field.name+"\" -> "+formType
 	}
 
-	def htmlForm(): String = {
+	def htmlForm: String = {
+		""
+	}
+
+	def fieldTable: String = {
+		""
+	}
+	
+	def nameInTable: String = {
 		""
 	}
 }

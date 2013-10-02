@@ -9,9 +9,17 @@ class NameField(val field: FieldRow) extends Field{
 
 	def htmlForm: String = {
 		val moduleName = field.module.name
-s"""<legend>
-		@Messages("$moduleName.item_name")
-   </legend>
-    @helper.inputText(rowForm("name"))"""
+		s"""<legend>
+				@Messages("$moduleName.item_name")
+		   </legend>
+		    @helper.inputText(rowForm("name"))"""
+	}
+
+	def fieldTable: String = {
+		"def name = column[String](\"name\",O.NotNull)"
+	}
+
+	def nameInTable: String = {
+		"name"
 	}
 }

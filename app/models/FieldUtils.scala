@@ -1,5 +1,7 @@
 package models
 
+import models.fields.Field
+
 object FieldUtils{
   /**
    * Takes a camel cased identifier name and returns an underscore separated name
@@ -19,4 +21,8 @@ object FieldUtils{
   def underscoreToCamel(name: String) = "_([a-z\\d])".r.replaceAllIn(name, {m =>
     m.group(1).toUpperCase()
   })
+
+  def toOneLine(fields: List[String], separator: String): String = {
+    fields.mkString(separator)
+  }
 }

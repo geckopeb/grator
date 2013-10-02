@@ -15,4 +15,12 @@ class IdField(val field: FieldRow) extends Field{
     	case None => {}
 	  }"""
 	}
+
+	def fieldTable: String = {
+		"def id = column[Long](\"id\", O.PrimaryKey, O.AutoInc)"
+	}
+
+	def nameInTable: String = {
+		"id.?"	
+	}
 }

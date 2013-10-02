@@ -1,4 +1,4 @@
-@(name: String)
+@(name: String, fields: List[models.fields.Field])
 package models.DB
 
 import play.api.Play.current
@@ -8,8 +8,7 @@ import play.api.db.slick.Config.driver.simple._
 import slick.lifted.{Join, MappedTypeMapper}
 
 object @{name.capitalize}Table extends Table[@{name.capitalize}Row]("@{name}"){
-  def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
-  def name = column[String]("name",O.NotNull)
+  @views.html.field.template.fields.render_field_table(fields)
 
-  def * = id.? ~ name <> (@{name.capitalize}Row.apply _, @{name.capitalize}Row.unapply _)
+  def * = @Html(models.FieldUtils.toOneLine(for(field <- fields) yield field.nameInTable," ~ ")) <> (@{name.capitalize}Row.apply _, @{name.capitalize}Row.unapply _)
 }
