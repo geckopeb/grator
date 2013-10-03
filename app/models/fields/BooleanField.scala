@@ -19,4 +19,8 @@ class BooleanField(val field: FieldRow) extends Field{
 	def nameInTable: String = {
 		""
 	}
+
+	def list: String = {
+		""
+	}
 }

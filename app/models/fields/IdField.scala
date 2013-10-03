@@ -23,4 +23,10 @@ class IdField(val field: FieldRow) extends Field{
 	def nameInTable: String = {
 		"id.?"	
 	}
+
+	def list: String = {
+		val moduleName = field.module.name
+		val controllerName = moduleName.capitalize+"Controller"
+		s"""<a href="@controllers.routes.$controllerName.detail(row.id.get)">@row.id</a>"""
+	}
 }

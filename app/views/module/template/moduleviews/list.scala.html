@@ -1,20 +1,18 @@
-@(name: String)
+@(name: String, fields: List[models.fields.Field])
 @@(rows: List[models.DB.@{name.capitalize}Row])(implicit lang: Lang)
 
 <table class="table table-bordered table-striped table-hover">
     <thead>
-      <tr>
-        <th>@@Messages("@{name}.number")</th>
-        <th>@@Messages("@{name}.item_name")</th>
+      <tr>@for(field <- fields){
+        <th>@@Messages("@{name}.@{field.field.name}")</th>}
       </tr>
     </thead>
     <tbody>
     @@for(row <- rows){
-          <tr>
+          <tr>@for(field <- fields){
             <td>
-              <a href="@@controllers.routes.@{name.capitalize}Controller.detail(row.id.get)">@@row.id</a>
-            </td>
-            <td>@@row.name</td>
+              @Html(field.list)
+            </td>}
         </tr>
     }
      </tbody>

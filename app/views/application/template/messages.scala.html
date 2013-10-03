@@ -15,4 +15,8 @@ application.name = @appName
 @{module.name}.save = Save
 @{module.name}.index = @{module.name.capitalize} List
 @{module.name}.item_detail = {0} @{module.name.capitalize} details
+
+@for(field <- module.fields){
+	@{module.name}.@{field.name} = @{field.name.capitalize}
+}
 }

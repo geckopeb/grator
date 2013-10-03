@@ -22,4 +22,8 @@ class NameField(val field: FieldRow) extends Field{
 	def nameInTable: String = {
 		"name"
 	}
+
+	def list: String = {
+		"@row.name"
+	}
 }

@@ -86,7 +86,7 @@ case class ModuleRow(
 
   def generateListView(): Unit = {
     val path = this.getViewPath("list")
-    FileUtils.writeToFile(path,views.html.module.template.moduleviews.list(this.name).toString)
+    FileUtils.writeToFile(path,views.html.module.template.moduleviews.list(this.name,this.renderFields).toString)
   }
 
   def generateViews(): Unit = {
