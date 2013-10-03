@@ -7,7 +7,7 @@ class IdField(val field: FieldRow) extends Field{
 		"\"id\" -> optional(longNumber)"
 	}
 
-	def htmlForm: String = {
+	override def htmlForm: String = {
  """@row match {
     	case Some(row) => {
     		<input type="hidden" name="id" value="@row.id.get">
@@ -20,13 +20,19 @@ class IdField(val field: FieldRow) extends Field{
 		"def id = column[Long](\"id\", O.PrimaryKey, O.AutoInc)"
 	}
 
-	def nameInTable: String = {
+	override def nameInTable: String = {
 		"id.?"	
 	}
 
-	def list: String = {
+	override def list: String = {
 		val moduleName = field.module.name
 		val controllerName = moduleName.capitalize+"Controller"
 		s"""<a href="@controllers.routes.$controllerName.detail(row.id.get)">@row.id</a>"""
+	}
+
+	def fieldType: String = "Long"
+
+	override def classDefinition: String = {
+		"id: Option[Long] = None"
 	}
 }

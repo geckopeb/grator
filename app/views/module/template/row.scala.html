@@ -1,4 +1,4 @@
-@(name:String)
+@(name:String, fields: List[models.fields.Field])
 package models.DB
 
 import play.api.Play.current
@@ -9,8 +9,9 @@ import scala.slick.driver.MySQLDriver.DeleteInvoker
 import slick.lifted.{Join, MappedTypeMapper}
 
 case class @{name.capitalize}Row(
-  id: Option[Long] = None,
-  name: String
+  @for((field,index) <- fields.zipWithIndex){
+    @Html(field.classDefinition)@{if(index != fields.length - 1){','}}
+  }
 ){
   
 }

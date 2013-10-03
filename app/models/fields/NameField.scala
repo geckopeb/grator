@@ -7,7 +7,7 @@ class NameField(val field: FieldRow) extends Field{
 		"\"name\" -> nonEmptyText"
 	}
 
-	def htmlForm: String = {
+	override def htmlForm: String = {
 		val moduleName = field.module.name
 		s"""<legend>
 				@Messages("$moduleName.item_name")
@@ -19,11 +19,5 @@ class NameField(val field: FieldRow) extends Field{
 		"def name = column[String](\"name\",O.NotNull)"
 	}
 
-	def nameInTable: String = {
-		"name"
-	}
-
-	def list: String = {
-		"@row.name"
-	}
+	def fieldType: String = "String"
 }

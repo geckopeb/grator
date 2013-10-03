@@ -8,19 +8,11 @@ class IntegerField(val field: FieldRow) extends Field{
 		"\""+field.name+"\" -> "+formType
 	}
 
-	def htmlForm: String = {
-		""
-	}
-
 	def fieldTable: String = {
-		""
-	}
-	
-	def nameInTable: String = {
-		""
+		val name = field.name
+		val required = if(field.required){", O.NotNull"} else {""}
+		s"""def $name = column[Int]("$name"$required)"""
 	}
 
-	def list: String = {
-		""
-	}
+	def fieldType: String = "Int"
 }
