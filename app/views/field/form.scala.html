@@ -38,6 +38,12 @@
     @helper.checkbox(
       rowForm("required")
     )
+
+    @helper.select(
+        rowForm("relatedModuleId"),
+        moduleOptions               
+    )
+
   </fieldset>
   <p><input type="submit" class="btn primary"
   value='@Messages("field.save")'></p>

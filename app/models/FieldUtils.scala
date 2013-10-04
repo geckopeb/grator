@@ -1,7 +1,5 @@
 package models
 
-import models.fields.Field
-
 object FieldUtils{
   /**
    * Takes a camel cased identifier name and returns an underscore separated name

@@ -12,6 +12,7 @@ object FieldFactory{
 			case "Text" 	=> new TextField(field)
 			case "Integer" 	=> new IntegerField(field)
 			case "Boolean" 	=> new BooleanField(field)
+			case "Related"  => new RelatedField(field)
 			case x:String	=> throw new customException("Field type "+x+" not found")
 		}
 	}

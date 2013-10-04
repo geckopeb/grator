@@ -1,9 +1,12 @@
 package models.fields
+import models.FieldUtils
 import models.DB.FieldRow
 
 trait Field{
 	def field: FieldRow
 	def controllerForm: String
+
+	lazy val name: String = FieldUtils.underscoreToCamel(this.field.name)
 
 	def htmlForm: String = {
 		val moduleName = field.module.name
@@ -26,14 +29,14 @@ trait Field{
 	}
 
 	def list: String = {
-		val name = field.name
+		val name = this.name
 		s"@row.$name"
 	}
 
 	def fieldType: String
 
 	def classDefinition: String = {
-		val name = this.field.name
+		val name = this.name
 		val fieldType = this.fieldType
 		if(this.field.required){
 			s"""$name: $fieldType"""

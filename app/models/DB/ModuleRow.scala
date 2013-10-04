@@ -22,6 +22,11 @@ case class ModuleRow(
   lazy val renderFields = for (fieldRow <- this.fields) yield (FieldFactory.get(fieldRow))
   lazy val application = ApplicationRow.findById(this.applicationId)
 
+  lazy val relatedFields: List[RelatedField] = for{
+    fieldRow <- this.fields
+    if(fieldRow.fieldType == "Related")
+  }  yield(new RelatedField(fieldRow))
+
   def getPath(folder: String, fileTermination: String): String = {
     val basePath = this.application.get.path
 
@@ -51,7 +56,7 @@ case class ModuleRow(
 
   def generateTable(): Unit = {
     val path = this.getPath("app/models/DB/","Table.scala")
-    FileUtils.writeToFile(path,views.html.module.template.table(this.name,this.renderFields).toString)
+    FileUtils.writeToFile(path,views.html.module.template.table(this.name,this.renderFields, this.relatedFields).toString)
   }
 
   def generateRow(): Unit = {

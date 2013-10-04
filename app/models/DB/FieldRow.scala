@@ -13,9 +13,16 @@ case class FieldRow(
   name: String,
   moduleId: Long,
   fieldType: String,
-  required: Boolean
+  required: Boolean,
+  relatedModuleId: Option[Long] = None
 ){
   lazy val module = ModuleRow.findById(this.moduleId).get
+  lazy val relatedModule: Option[ModuleRow] = {
+    this.relatedModuleId match{
+      case Some(id) => Some(ModuleRow.findById(id).get)
+      case None => None
+    }
+  }
   
 }
 
@@ -86,7 +93,8 @@ object FieldRow{
       //("Name","Name"),
       ("Text","Text"),
       ("Integer","Integer"),
-      ("Boolean","Boolean")
+      ("Boolean","Boolean"),
+      ("Related","Related")
     )
   }
 }

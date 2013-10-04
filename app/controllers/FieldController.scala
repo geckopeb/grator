@@ -26,7 +26,8 @@ object FieldController extends Controller {
         "name" -> nonEmptyText,
         "module" -> longNumber,
         "fieldType" -> nonEmptyText,
-        "required" -> boolean
+        "required" -> boolean,
+        "relatedModuleId" -> optional(longNumber)
       )(FieldRow.apply)(FieldRow.unapply)
   )
 
