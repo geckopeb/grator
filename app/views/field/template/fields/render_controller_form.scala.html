@@ -1,5 +1,3 @@
 @(fields: List[models.fields.Field])
-
-@for((field,index) <- fields.zipWithIndex){
-	@{Html(field.controllerForm)}@{if(index != fields.length - 1){','}}
+@for((field,index) <- fields.zipWithIndex){					@{Html(field.controllerForm)}@{if(index != fields.length - 1){','}}
 }

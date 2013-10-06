@@ -21,8 +21,7 @@ object @{module.controllerName} extends Controller {
   }
 
   val @{module.formName} = Form(
-      mapping(
-        @views.html.field.template.fields.render_controller_form(fields)
+      mapping(@views.html.field.template.fields.render_controller_form(fields)
       )(@{module.rowName}.apply)(@{module.rowName}.unapply)
   )
 

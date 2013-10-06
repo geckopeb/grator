@@ -12,6 +12,31 @@ class RelatedField(val field: FieldRow) extends Field{
 		}
 		s""""$name" -> $fieldType"""
 	}
+	/*
+	@select(
+                signupForm("profile.country"), 
+                options = options(Countries.list),
+                '_default -> "--- Choose a country ---",
+                '_label -> "Country",
+                '_error -> signupForm("profile.country").error.map(_.withMessage("Please select your country"))
+            )
+	*/
+
+	override def htmlForm: String = {
+		val moduleName = field.module.name
+		val relatedModuleRow = field.relatedModule.get
+		val relatedModule = relatedModuleRow.module
+		val relatedRowName = relatedModule.rowName
+		val name = field.name
+		s"""<legend>
+				@Messages("$moduleName.$name")
+		   </legend>
+		   @select(
+		   		rowForm("$name"),
+		   		models.DB.$relatedRowName.getOptions,
+		   		'default -> "-- select --"
+		   )"""
+	}
 
 	def fieldTable: String = {
 		val name = field.name
@@ -19,7 +44,7 @@ class RelatedField(val field: FieldRow) extends Field{
 		val required = if(field.required){", O.NotNull"} else {""}
 		s"""def $name = column[$fieldType]("$name"$required)"""
 	}
-
+	
 	def fieldType: String = "Long"
 
 	def tableIndex: String = {
