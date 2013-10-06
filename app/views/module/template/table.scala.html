@@ -1,4 +1,4 @@
-@(name: String, fields: List[models.fields.Field], relatedFields: List[models.fields.RelatedField])
+@(module: models.Module, fields: List[models.fields.Field], relatedFields: List[models.fields.RelatedField])
 package models.DB
 
 import play.api.Play.current
@@ -7,10 +7,10 @@ import play.api.db.slick.DB
 import play.api.db.slick.Config.driver.simple._
 import slick.lifted.{Join, MappedTypeMapper}
 
-object @{name.capitalize}Table extends Table[@{name.capitalize}Row]("@{name}"){
+object @{module.tableName} extends Table[@{module.rowName}]("@{module.name}"){
   @views.html.field.template.fields.render_field_table(fields)
 
-  def * = @Html(models.FieldUtils.toOneLine(for(field <- fields) yield field.nameInTable," ~ ")) <> (@{name.capitalize}Row.apply _, @{name.capitalize}Row.unapply _)
+  def * = @Html(models.FieldUtils.toOneLine(for(field <- fields) yield field.nameInTable," ~ ")) <> (@{module.rowName}.apply _, @{module.rowName}.unapply _)
 
   @views.html.field.template.fields.index_related_fields(relatedFields)
 }

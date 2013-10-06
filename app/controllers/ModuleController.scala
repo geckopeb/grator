@@ -123,6 +123,4 @@ object ModuleController extends Controller {
       }
     }.getOrElse(NotFound)
   }
-
-  def pepee = TODO
 }

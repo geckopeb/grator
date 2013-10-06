@@ -1,4 +1,4 @@
-@(name:String, fields: List[models.fields.Field])
+@(module: models.Module, fields: List[models.fields.Field])
 package models.DB
 
 import play.api.Play.current
@@ -8,7 +8,7 @@ import play.api.db.slick.Config.driver.simple._
 import scala.slick.driver.MySQLDriver.DeleteInvoker
 import slick.lifted.{Join, MappedTypeMapper}
 
-case class @{name.capitalize}Row(
+case class @{module.rowName}(
   @for((field,index) <- fields.zipWithIndex){
     @Html(field.classDefinition)@{if(index != fields.length - 1){','}}
   }
@@ -16,44 +16,44 @@ case class @{name.capitalize}Row(
   
 }
 
-object @{name.capitalize}Row{
-  def save(@{name}: @{name.capitalize}Row):Long = {
+object @{module.rowName}{
+  def save(@{module.varName}: @{module.rowName}):Long = {
     DB.withTransaction { implicit session =>
-      @{name.capitalize}Table.returning(@{name.capitalize}Table.id).insert(@{name})
+      @{module.tableName}.returning(@{module.tableName}.id).insert(@{module.varName})
     }
   }
   
-  def update(@{name}: @{name.capitalize}Row):Int = {
+  def update(@{module.varName}: @{module.rowName}):Int = {
     DB.withTransaction { implicit session =>
       val q = for {
-        s <- @{name.capitalize}Table
-        if s.id === @{name}.id
+        s <- @{module.tableName}
+        if s.id === @{module.varName}.id
       } yield(s)
-      q.update(@{name})
+      q.update(@{module.varName})
     }
   }
   
-  def delete(@{name}: @{name.capitalize}Row):Int = {
+  def delete(@{module.varName}: @{module.rowName}):Int = {
     DB.withTransaction { implicit session =>
        val q = for {
-        s <- @{name.capitalize}Table
-        if s.id === @{name}.id.get
+        s <- @{module.tableName}
+        if s.id === @{module.varName}.id.get
       } yield(s)
       (new DeleteInvoker(q)).delete
     }
   }
 
   
-  def findAll: List[@{name.capitalize}Row] = {
+  def findAll: List[@{module.rowName}] = {
     DB.withSession { implicit session =>
-      Query(@{name.capitalize}Table).list
+      Query(@{module.tableName}).list
     }
   }
   
-  def findById(id: Long):Option[@{name.capitalize}Row] = {
+  def findById(id: Long):Option[@{module.rowName}] = {
     DB.withSession { implicit session =>
       val q = for{
-        s <- @{name.capitalize}Table if s.id === id
+        s <- @{module.tableName} if s.id === id
       } yield (s)
       q.firstOption
     }
@@ -61,10 +61,10 @@ object @{name.capitalize}Row{
 
   def getOptions(): Seq[(String,String)] = {
     DB.withSession { implicit session =>
-      val @{name}s = for {
-        p <- @{name.capitalize}Table
+      val @{module.pluralName} = for {
+        p <- @{module.tableName}
       } yield(p)
-      for(@{name} <- @{name}s.list) yield(@{name}.id.get.toString,@{name}.name) 
+      for(@{module.varName} <- @{module.pluralName}.list) yield(@{module.varName}.id.get.toString,@{module.varName}.name) 
     }
   }
 }

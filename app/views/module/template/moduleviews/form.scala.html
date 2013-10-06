@@ -1,5 +1,5 @@
-@(name:String, fields: List[models.fields.Field])
-@@(rowForm: Form[models.DB.@{name.capitalize}Row], route: play.api.mvc.Call, row: Option[models.DB.@{name.capitalize}Row] = None)(implicit lang: Lang)
+@(module: models.Module, fields: List[models.fields.Field])
+@@(rowForm: Form[models.DB.@{module.rowName}], route: play.api.mvc.Call, row: Option[models.DB.@{module.rowName}] = None)(implicit lang: Lang)
 
 @@import helper._
 @@import helper.twitterBootstrap._
@@ -9,5 +9,5 @@
     @views.html.field.template.fields.render_html_form(fields)
   </fieldset>
   <p><input type="submit" class="btn primary"
-  value='@@Messages("@{name}.save")'></p>
+  value='@@Messages("@{module.name}.save")'></p>
 }

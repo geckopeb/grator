@@ -10,6 +10,7 @@ import slick.lifted.{Join, MappedTypeMapper}
 import utils.FileUtils
 
 import models.fields._
+import models.Module
 
 import play.api.Logger
 
@@ -26,6 +27,8 @@ case class ModuleRow(
     fieldRow <- this.fields
     if(fieldRow.fieldType == "Related")
   }  yield(new RelatedField(fieldRow))
+
+  lazy val module = new Module(this)
 
   def getPath(folder: String, fileTermination: String): String = {
     val basePath = this.application.get.path
@@ -51,47 +54,47 @@ case class ModuleRow(
 
   def generateController(): Unit = {
     val path = this.getPath("app/controllers/","Controller.scala")
-    FileUtils.writeToFile(path,views.html.module.template.controller(this.name,this.renderFields).toString)
+    FileUtils.writeToFile(path,views.html.module.template.controller(this.module,this.renderFields,this.relatedFields).toString)
   }
 
   def generateTable(): Unit = {
     val path = this.getPath("app/models/DB/","Table.scala")
-    FileUtils.writeToFile(path,views.html.module.template.table(this.name,this.renderFields, this.relatedFields).toString)
+    FileUtils.writeToFile(path,views.html.module.template.table(this.module,this.renderFields, this.relatedFields).toString)
   }
 
   def generateRow(): Unit = {
     val path = this.getPath("app/models/DB/","Row.scala")
-    FileUtils.writeToFile(path,views.html.module.template.row(this.name,this.renderFields).toString)
+    FileUtils.writeToFile(path,views.html.module.template.row(this.module,this.renderFields).toString)
   }
 
   def generateDetailView(): Unit = {
     val path = this.getViewPath("detail")
-    FileUtils.writeToFile(path,views.html.module.template.moduleviews.detail(this.name).toString)
+    FileUtils.writeToFile(path,views.html.module.template.moduleviews.detail(this.module).toString)
   }
 
   def generateEditView(): Unit = {
     val path = this.getViewPath("edit")
-    FileUtils.writeToFile(path,views.html.module.template.moduleviews.edit(this.name).toString)
+    FileUtils.writeToFile(path,views.html.module.template.moduleviews.edit(this.module).toString)
   }
 
   def generateFormView(): Unit = {
     val path = this.getViewPath("form")
-    FileUtils.writeToFile(path,views.html.module.template.moduleviews.form(this.name,this.renderFields).toString)
+    FileUtils.writeToFile(path,views.html.module.template.moduleviews.form(this.module,this.renderFields).toString)
   }
 
   def generateIndexView(): Unit = {
     val path = this.getViewPath("index")
-    FileUtils.writeToFile(path,views.html.module.template.moduleviews.index(this.name).toString)
+    FileUtils.writeToFile(path,views.html.module.template.moduleviews.index(this.module).toString)
   }
 
   def generateInsertView(): Unit = {
     val path = this.getViewPath("insert")
-    FileUtils.writeToFile(path,views.html.module.template.moduleviews.insert(this.name).toString)
+    FileUtils.writeToFile(path,views.html.module.template.moduleviews.insert(this.module).toString)
   }
 
   def generateListView(): Unit = {
     val path = this.getViewPath("list")
-    FileUtils.writeToFile(path,views.html.module.template.moduleviews.list(this.name,this.renderFields).toString)
+    FileUtils.writeToFile(path,views.html.module.template.moduleviews.list(this.module,this.renderFields).toString)
   }
 
   def generateViews(): Unit = {

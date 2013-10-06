@@ -1,4 +1,4 @@
-@(name:String,fields: List[models.fields.Field])
+@(module: models.Module, fields: List[models.fields.Field], relatedFields: List[models.fields.RelatedField])
 package controllers
 
 import play.api._
@@ -13,64 +13,64 @@ import play.api.db.slick.DB
 import play.api.db.slick.Config.driver.simple._
 import slick.lifted.{Join, MappedTypeMapper}
 
-object @{name.capitalize}Controller extends Controller {
+object @{module.controllerName} extends Controller {
   def index = Action {
-    val @{name}s = @{name.capitalize}Row.findAll
+    val @{module.pluralName} = @{module.rowName}.findAll
 
-    Ok(views.html.@{name}.index(@{name}s))
+    Ok(views.html.@{module.name}.index(@{module.pluralName}))
   }
 
-  val @{name}Form = Form(
+  val @{module.formName} = Form(
       mapping(
         @views.html.field.template.fields.render_controller_form(fields)
-      )(@{name.capitalize}Row.apply)(@{name.capitalize}Row.unapply)
+      )(@{module.rowName}.apply)(@{module.rowName}.unapply)
   )
 
   def insert = Action {
-    Ok(views.html.@{name}.insert(@{name}Form))
+    Ok(views.html.@{module.name}.insert(@{module.formName}))
   }
   
 
   def detail(id: Long) = Action {
-    @{name.capitalize}Row.findById(id).map{
-      @{name} => Ok(views.html.@{name}.detail(@{name}))
+    @{module.rowName}.findById(id).map{
+      @{module.varName} => Ok(views.html.@{module.name}.detail(@{module.varName}))
     }.getOrElse(NotFound)
   }
   
   def save = Action { implicit request =>
-    @{name}Form.bindFromRequest.fold(
-      formWithErrors => BadRequest(views.html.@{name}.insert(formWithErrors)),
-      @{name} => {
-        val id = @{name.capitalize}Row.save(@{name})
-        Redirect(routes.@{name.capitalize}Controller.detail(id))
+    @{module.formName}.bindFromRequest.fold(
+      formWithErrors => BadRequest(views.html.@{module.name}.insert(formWithErrors)),
+      @{module.varName} => {
+        val id = @{module.rowName}.save(@{module.varName})
+        Redirect(routes.@{module.controllerName}.detail(id))
       }
     )
   }
   
   def edit(id: Long) = Action{
-    @{name.capitalize}Row.findById(id).map{
-      @{name}:@{name.capitalize}Row => Ok(views.html.@{name}.edit(@{name}Form.fill(@{name}),@{name}))
+    @{module.rowName}.findById(id).map{
+      @{module.varName}:@{module.rowName} => Ok(views.html.@{module.name}.edit(@{module.formName}.fill(@{module.varName}),@{module.varName}))
     }.getOrElse(NotFound)
   }
   
   def delete(id: Long) = Action{
     implicit request =>
-    @{name.capitalize}Row.findById(id).map{
-      @{name}Row => {
-          @{name.capitalize}Row.delete(@{name}Row)
-          Redirect(routes.@{name.capitalize}Controller.index())
+    @{module.rowName}.findById(id).map{
+      @{module.varName} => {
+          @{module.rowName}.delete(@{module.varName})
+          Redirect(routes.@{module.controllerName}.index())
     }
     }.getOrElse(NotFound)
   }
   
   def update(id: Long) = Action{ implicit request =>
-    @{name.capitalize}Row.findById(id).map{
-      @{name} => {
-      @{name}Form.bindFromRequest.fold(
-        formWithErrors => BadRequest(views.html.@{name}.edit(formWithErrors,@{name})),
-        @{name} => {
-          @{name.capitalize}Row.update(@{name})
-          Redirect(routes.@{name.capitalize}Controller.detail(@{name}.id.get))
+    @{module.rowName}.findById(id).map{
+      @{module.varName} => {
+      @{module.formName}.bindFromRequest.fold(
+        formWithErrors => BadRequest(views.html.@{module.name}.edit(formWithErrors,@{module.varName})),
+        @{module.varName} => {
+          @{module.rowName}.update(@{module.varName})
+          Redirect(routes.@{module.controllerName}.detail(@{module.varName}.id.get))
         }
       )
     }

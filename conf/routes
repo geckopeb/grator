@@ -13,7 +13,6 @@ GET   /module/:id/detail     controllers.ModuleController.detail(id: Long)
 GET   /module/insert         controllers.ModuleController.insert
 GET   /module/:id/edit       controllers.ModuleController.edit(id: Long)
 POST  /module/save           controllers.ModuleController.save
-GET   /module/pepeee         controllers.ModuleController.pepee
 POST  /module/:id/delete     controllers.ModuleController.delete(id: Long)
 POST  /module/:id/update     controllers.ModuleController.update(id: Long)
 GET   /module/:id/generateall controllers.ModuleController.generateAll(id: Long)
