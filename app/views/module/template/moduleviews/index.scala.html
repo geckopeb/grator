@@ -9,7 +9,7 @@
   @@views.html.@{module.name}.list(rows)
 
  	<p>
-		<a href="@@controllers.routes.@{module.controllerName}.insert()"
+		<a href="@@controllers.@{module.packageName}.routes.@{module.controllerName}.insert()"
 		class="btn">
 		<i class="icon-plus"></i> @@Messages("@{module.name}.new")</a>
 	</p>

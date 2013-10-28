@@ -11,4 +11,7 @@ class Module(val module: ModuleRow){
 	val tableName = upName+"Table"
 	val formName = upName+"Form"
 	val pluralName = varName+"s" //TODO add plural name field to module and update this method
+
+	val packageName = "grator"
+	val packageControllerName = "controllers."+this.packageName
 }

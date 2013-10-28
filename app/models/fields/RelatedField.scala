@@ -12,15 +12,6 @@ class RelatedField(val field: FieldRow) extends Field{
 		}
 		s""""$name" -> $fieldType"""
 	}
-	/*
-	@select(
-                signupForm("profile.country"), 
-                options = options(Countries.list),
-                '_default -> "--- Choose a country ---",
-                '_label -> "Country",
-                '_error -> signupForm("profile.country").error.map(_.withMessage("Please select your country"))
-            )
-	*/
 
 	override def htmlForm: String = {
 		val moduleName = field.module.name

@@ -1,5 +1,5 @@
 @(module: models.Module, fields: List[models.fields.Field], relatedFields: List[models.fields.RelatedField])
-package controllers
+package @{module.packageControllerName}
 
 import play.api._
 import play.api.mvc._

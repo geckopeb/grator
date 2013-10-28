@@ -12,8 +12,6 @@ import utils.FileUtils
 import models.fields._
 import models.Module
 
-import play.api.Logger
-
 case class ModuleRow(
 	id: Option[Long] = None,
 	name: String,
@@ -31,16 +29,14 @@ case class ModuleRow(
   lazy val module = new Module(this)
 
   def getPath(folder: String, fileTermination: String): String = {
-    val basePath = this.application.get.path
+    val basePath = this.application.get.subProjectPath
 
     val path = basePath+folder+this.name.capitalize+fileTermination
-    Logger.debug(path)
     path
   }
 
   def getViewPath(viewName: String): String = {
-    val app = ApplicationRow.findById(this.applicationId)
-    val basePath = app.get.path
+    val basePath = this.application.get.subProjectPath
 
     basePath+"app/views/"+this.name+"/"+viewName+".scala.html"
   }

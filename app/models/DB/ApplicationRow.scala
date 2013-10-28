@@ -16,6 +16,14 @@ case class ApplicationRow(
 ){
   lazy val modules = ModuleRow.findByApplication(this.id.get)
 
+  def subProjectPath: String = {
+    this.path+"grator/"
+  }
+
+  def projectPath: String = {
+    this.path
+  }
+
   def generateAll(): Unit = {
     val modules = ModuleRow.findAll
     for(module <- modules){
@@ -28,19 +36,29 @@ case class ApplicationRow(
   }
 
   def generateMessages(modules: List[ModuleRow]): Unit = {
-    val path = this.path+"conf/messages"
+    val path = this.subProjectPath+"conf/messages"
 
     FileUtils.writeToFile(path,views.html.application.template.messages(this.name, modules).toString)
     FileUtils.writeToFile(path+".es",views.html.application.template.messages_es(this.name, modules).toString)
   }
 
+  def generateGratorRoutes(modules: List[ModuleRow]): Unit = {
+    val path = this.subProjectPath+"grator/conf/grator.routes"
+    FileUtils.writeToFile(path,views.html.application.template.module_routes(modules).toString)
+  }
+
+  def generateRootRoutes: Unit = {
+    val path = this.projectPath+"conf/routes"
+    FileUtils.writeIfNotExists(path,views.html.application.template.routes.toString)
+  }
+
   def generateRoutes(modules: List[ModuleRow]): Unit = {
-    val path = this.path+"conf/routes"
-    FileUtils.writeToFile(path,views.html.application.template.routes(modules).toString)
+    this.generateGratorRoutes(modules)
+    this.generateRootRoutes
   }
 
   def generateMenu(modules: List[ModuleRow]): Unit = {
-    val path = this.path+"app/views/main.scala.html"
+    val path = this.subProjectPath+"app/views/main.scala.html"
     FileUtils.writeToFile(path,views.html.application.template.main(modules).toString)
   }
 }
