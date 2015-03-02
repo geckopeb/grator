@@ -6,11 +6,10 @@ import play.api.Play.current
 import play.api.db.slick.DB
 import play.api.db.slick.Config.driver.simple._
 import scala.slick.driver.MySQLDriver.DeleteInvoker
-import slick.lifted.{Join, MappedTypeMapper}
 
 case class @{module.rowName}(
   @for((field,index) <- fields.zipWithIndex){
-    @Html(field.classDefinition)@{if(index != fields.length - 1){','}}
+    @{Html(field.classDefinition)}@{if(index != fields.length - 1){','}else{""}}
   }
 ){
   
@@ -19,14 +18,14 @@ case class @{module.rowName}(
 object @{module.rowName}{
   def save(@{module.varName}: @{module.rowName}):Long = {
     DB.withTransaction { implicit session =>
-      @{module.tableName}.returning(@{module.tableName}.id).insert(@{module.varName})
+      @{module.tableRef}.returning(@{module.tableRef}.map(_.id)).insert(@{module.varName})
     }
   }
   
   def update(@{module.varName}: @{module.rowName}):Int = {
     DB.withTransaction { implicit session =>
       val q = for {
-        s <- @{module.tableName}
+        s <- @{module.tableRef}
         if s.id === @{module.varName}.id
       } yield(s)
       q.update(@{module.varName})
@@ -36,24 +35,24 @@ object @{module.rowName}{
   def delete(@{module.varName}: @{module.rowName}):Int = {
     DB.withTransaction { implicit session =>
        val q = for {
-        s <- @{module.tableName}
+        s <- @{module.tableRef}
         if s.id === @{module.varName}.id.get
       } yield(s)
-      (new DeleteInvoker(q)).delete
+      q.delete
     }
   }
 
   
   def findAll: List[@{module.rowName}] = {
     DB.withSession { implicit session =>
-      Query(@{module.tableName}).list
+      @{module.tableRef}.run.toList
     }
   }
   
   def findById(id: Long):Option[@{module.rowName}] = {
     DB.withSession { implicit session =>
       val q = for{
-        s <- @{module.tableName} if s.id === id
+        s <- @{module.tableRef} if s.id === id
       } yield (s)
       q.firstOption
     }
@@ -62,7 +61,7 @@ object @{module.rowName}{
   def getOptions(): Seq[(String,String)] = {
     DB.withSession { implicit session =>
       val @{module.pluralName} = for {
-        p <- @{module.tableName}
+        p <- @{module.tableRef}
       } yield(p)
       for(@{module.varName} <- @{module.pluralName}.list) yield(@{module.varName}.id.get.toString,@{module.varName}.name) 
     }

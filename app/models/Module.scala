@@ -8,7 +8,9 @@ class Module(val module: ModuleRow){
 	val upName = varName.capitalize
 	val controllerName = upName+"Controller"
 	val rowName = upName+"Row"
-	val tableName = upName+"Table"
+	val tableClass = upName+"Table"
+	val tableProp = varName+"Table"
+	val tableRef = tableClass+"."+tableProp
 	val formName = upName+"Form"
 	val pluralName = varName+"s" //TODO add plural name field to module and update this method
 }

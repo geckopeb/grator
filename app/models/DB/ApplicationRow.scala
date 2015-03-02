@@ -5,7 +5,6 @@ import play.api.Play.current
 import play.api.db.slick.DB
 import play.api.db.slick.Config.driver.simple._
 import scala.slick.driver.MySQLDriver.DeleteInvoker
-import slick.lifted.{Join, MappedTypeMapper}
 
 import utils.FileUtils
 
@@ -48,15 +47,14 @@ case class ApplicationRow(
 object ApplicationRow{
 	def save(app: ApplicationRow):Long = {
 		DB.withTransaction { implicit session =>
-		  ApplicationTable.returning(ApplicationTable.id).insert(app)
+		  ApplicationTable.applicationTable.returning(ApplicationTable.applicationTable.map(_.id)).insert(app)
 		}
 	}
   
   def update(app: ApplicationRow):Int = {
     DB.withTransaction { implicit session =>
-    	//Shows.where(_.id === show.id.get).update(show)
       val q = for {
-        s <- ApplicationTable
+        s <- ApplicationTable.applicationTable
         if s.id === app.id
       } yield(s)
       q.update(app)
@@ -65,47 +63,32 @@ object ApplicationRow{
   
   def delete(app: ApplicationRow):Int = {
     DB.withTransaction { implicit session =>
-    	//Shows.where(_.id === show.id.get).delete
     	 val q = for {
-        s <- ApplicationTable
+        s <- ApplicationTable.applicationTable
         if s.id === app.id.get
       } yield(s)
-      //q.delete
-      (new DeleteInvoker(q)).delete
+      q.delete
     }
   }
 
-	
 	def findAll: List[ApplicationRow] = {
 	  DB.withSession { implicit session =>
-	  	Query(ApplicationTable).list
+	  	ApplicationTable.applicationTable.run.toList
 	  }
 	}
 	def findById(id: Long):Option[ApplicationRow] = {
 	  DB.withSession { implicit session =>
 	  	val q = for{
-	  	  s <- ApplicationTable if s.id === id
+	  	  s <- ApplicationTable.applicationTable if s.id === id
 	  	} yield (s)
 	  	q.firstOption
 	  }
 	}
 
-  /*
-  def findByIdWithModules(id: Long): Option[(ApplicationRow,List[ModuleRow])] = {
-    DB.withSession{ implicit session =>
-      val q = for{
-        a <- ApplicationTable if a.id === id
-        m <- ModuleTable
-      } yield (a,m)
-      q.list
-    }
-  }
-  */
-
   def getOptions(): Seq[(String,String)] = {
     DB.withSession { implicit session =>
       val applications = for {
-        p <- ApplicationTable
+        p <- ApplicationTable.applicationTable
       } yield(p)
       for(application <- applications.list) yield(application.id.get.toString,application.name) 
     }

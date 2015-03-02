@@ -6,7 +6,6 @@ import play.api.Play.current
 import play.api.db.slick.DB
 import play.api.db.slick.Config.driver.simple._
 import scala.slick.driver.MySQLDriver.DeleteInvoker
-import slick.lifted.{Join, MappedTypeMapper}
 
 case class FieldRow(
   id: Option[Long] = None,
@@ -29,14 +28,14 @@ case class FieldRow(
 object FieldRow{
   def save(field: FieldRow):Long = {
     DB.withTransaction { implicit session =>
-      FieldTable.returning(FieldTable.id).insert(field)
+      FieldTable.fieldTable.returning(FieldTable.fieldTable.map(_.id)).insert(field)
     }
   }
   
   def update(field: FieldRow):Int = {
     DB.withTransaction { implicit session =>
       val q = for {
-        s <- FieldTable
+        s <- FieldTable.fieldTable
         if s.id === field.id
       } yield(s)
       q.update(field)
@@ -46,24 +45,24 @@ object FieldRow{
   def delete(field: FieldRow):Int = {
     DB.withTransaction { implicit session =>
        val q = for {
-        s <- FieldTable
+        s <- FieldTable.fieldTable
         if s.id === field.id.get
       } yield(s)
-      (new DeleteInvoker(q)).delete
+      q.delete
     }
   }
 
   
   def findAll: List[FieldRow] = {
     DB.withSession { implicit session =>
-      Query(FieldTable).list
+      FieldTable.fieldTable.run.toList
     }
   }
   
   def findById(id: Long):Option[FieldRow] = {
     DB.withSession { implicit session =>
       val q = for{
-        s <- FieldTable if s.id === id
+        s <- FieldTable.fieldTable if s.id === id
       } yield (s)
       q.firstOption
     }
@@ -72,7 +71,7 @@ object FieldRow{
   def getOptions(): Seq[(String,String)] = {
     DB.withSession { implicit session =>
       val fields = for {
-        p <- FieldTable
+        p <- FieldTable.fieldTable
       } yield(p)
       for(field <- fields.list) yield(field.id.get.toString,field.name) 
     }
@@ -81,7 +80,7 @@ object FieldRow{
   def findByModule(moduleId: Long): List[FieldRow] = {
     DB.withSession { implicit session =>
       val q = for{
-        s <- FieldTable if s.moduleId === moduleId
+        s <- FieldTable.fieldTable if s.moduleId === moduleId
       } yield (s)
       q.list
     }

@@ -5,12 +5,16 @@ import play.api.Play.current
 
 import play.api.db.slick.DB
 import play.api.db.slick.Config.driver.simple._
-import slick.lifted.{Join, MappedTypeMapper}
+import language.postfixOps
 
-object @{module.tableName} extends Table[@{module.rowName}]("@{module.name}"){
+class @{module.tableClass}(tag: Tag) extends Table[@{module.rowName}](tag, "@{module.name}"){
   @views.html.field.template.fields.render_field_table(fields)
 
-  def * = @Html(models.FieldUtils.toOneLine(for(field <- fields) yield field.nameInTable," ~ ")) <> (@{module.rowName}.apply _, @{module.rowName}.unapply _)
+  def * = (@Html(models.FieldUtils.toOneLine(for(field <- fields) yield field.nameInTable,", ")) ) <> (@{module.rowName}.apply _ tupled, @{module.rowName}.unapply _)
 
   @views.html.field.template.fields.index_related_fields(relatedFields)
+}
+
+object @{module.tableClass}{
+	val @{module.tableProp} = TableQuery[@module.tableClass]
 }

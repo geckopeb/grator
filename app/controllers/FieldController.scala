@@ -11,7 +11,6 @@ import play.api.data.Forms._
 
 import play.api.db.slick.DB
 import play.api.db.slick.Config.driver.simple._
-import slick.lifted.{Join, MappedTypeMapper}
 
 object FieldController extends Controller {
   def index = Action {
