@@ -51,7 +51,7 @@ class RelatedField(val field: FieldRow) extends Field{
 		val name = field.name
 		val relatedName = field.relatedModule.get.name
 		val keyName = field.module.name+"_"+relatedName+"_"+name
-		val relatedTable = relatedName.capitalize+"Table"
+		val relatedTable = relatedName.capitalize+"Table"+"."+relatedName+"Table"
 		val varName = if(this.name == name){name+"Id"}else{this.name}
 		s"""def $varName = foreignKey("$keyName", $name, $relatedTable)(_.id)"""
 	}
