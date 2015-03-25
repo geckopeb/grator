@@ -96,6 +96,11 @@ case class ModuleRow(
     FileUtils.writeToFile(path,views.html.module.template.moduleviews.list(this.module,this.renderFields).toString)
   }
 
+  def generateDeleteView(): Unit = {
+    val path = this.getViewPath("delete")
+    FileUtils.writeToFile(path,views.html.module.template.moduleviews.delete(this.module).toString)
+  }
+
   def generateViews(): Unit = {
     this.generateDetailView()
     this.generateEditView()
@@ -103,6 +108,7 @@ case class ModuleRow(
     this.generateIndexView()
     this.generateInsertView()
     this.generateListView()
+    this.generateDeleteView()
   }
 }
 
