@@ -55,4 +55,11 @@ class RelatedField(val field: FieldRow) extends Field{
 		val varName = if(this.name == name){name+"Id"}else{this.name}
 		s"""def $varName = foreignKey("$keyName", $name, $relatedTable)(_.id)"""
 	}
+
+	override def list: String = {
+		val name = this.name
+		val varName = this.field.relatedModuleModule.get.varName
+
+		s"@$varName.name"
+	}
 }

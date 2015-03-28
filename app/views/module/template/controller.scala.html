@@ -14,7 +14,7 @@ import play.api.db.slick.Config.driver.simple._
 
 object @{module.controllerName} extends Controller {
   def index = Action {
-    val @{module.pluralName} = @{module.rowName}.findAll
+    val @{module.pluralName} = @{module.rowName}.findAllWithRelateds
 
     Ok(views.html.@{module.name}.index(@{module.pluralName}))
   }
@@ -30,7 +30,7 @@ object @{module.controllerName} extends Controller {
   
 
   def detail(id: Long) = Action {
-    @{module.rowName}.findById(id).map{
+    @{module.rowName}.findByIdWithRelateds(id).map{
       @{module.varName} => Ok(views.html.@{module.name}.detail(@{module.varName}))
     }.getOrElse(NotFound)
   }

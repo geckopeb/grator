@@ -26,8 +26,9 @@ class IdField(val field: FieldRow) extends Field{
 
 	override def list: String = {
 		val moduleName = field.module.name
+		val varName = this.moduleVarName
 		val controllerName = moduleName.capitalize+"Controller"
-		s"""<a href="@controllers.routes.$controllerName.detail(row.id.get)">@row.id</a>"""
+		s"""<a href="@controllers.routes.$controllerName.detail($varName.id.get)">@$varName.id</a>"""
 	}
 
 	def fieldType: String = "Long"

@@ -1,9 +1,13 @@
-@(module: models.Module)
-@@(@{module.varName}: models.DB.@{module.rowName})(implicit lang: Lang)
+@(module: models.Module, relatedFields: List[models.fields.RelatedField])
+@@(@{module.varName}: @views.html.module.template.full_tuple_type(module, relatedFields))(implicit lang: Lang)
 
 @@main(Messages("@{module.name}.name")){
 	<div class="page-header">
+		@if(relatedFields.isEmpty){
     	<h1>@@Messages("@{module.name}.item_detail",@{module.varName}.name)</h1>
+    	} else {
+    	<h1>@@Messages("@{module.name}.item_detail",@{module.varName}._1.name)</h1>
+    	}
   </div>
 	
   @@views.html.@{module.name}.list(List(@{module.varName}))
@@ -15,4 +19,8 @@
 	</p>
 }
 
+@if(relatedFields.isEmpty){
 @@views.html.@{module.name}.delete(route = routes.@{module.controllerName}.delete(@{module.varName}.id.get), row = Some(@{module.varName}))
+} else {
+@@views.html.@{module.name}.delete(route = routes.@{module.controllerName}.delete(@{module.varName}._1.id.get), row = Some(@{module.varName}._1))
+}

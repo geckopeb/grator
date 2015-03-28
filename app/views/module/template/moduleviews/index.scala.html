@@ -1,5 +1,5 @@
-@(module: models.Module)
-@@(rows: List[models.DB.@{module.rowName}])(implicit lang: Lang)
+@(module: models.Module, relatedFields: List[models.fields.RelatedField])
+@@(rows: List[@views.html.module.template.full_tuple_type(module, relatedFields)])(implicit lang: Lang)
 
 @@main(Messages("@{module.name}.name")){
 	<div class="page-header">

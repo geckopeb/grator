@@ -1,5 +1,5 @@
-@(module: models.Module, fields: List[models.fields.Field])
-@@(rows: List[models.DB.@{module.rowName}])(implicit lang: Lang)
+@(module: models.Module, fields: List[models.fields.Field], relatedFields: List[models.fields.RelatedField])
+@@(rows: List[@views.html.module.template.full_tuple_type(module, relatedFields)])(implicit lang: Lang)
 
 <table class="table table-bordered table-striped table-hover">
     <thead>
@@ -8,8 +8,8 @@
       </tr>
     </thead>
     <tbody>
-    @@for(row <- rows){
-          <tr>@for(field <- fields){
+    @@for( @views.html.module.template.tuple_extractor(module, relatedFields) <- rows){
+        <tr>@for(field <- fields){
             <td>
               @Html(field.list)
             </td>}

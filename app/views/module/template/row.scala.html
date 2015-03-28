@@ -1,10 +1,14 @@
-@(module: models.Module, fields: List[models.fields.Field])
+@(module: models.Module, fields: List[models.fields.Field], relatedFields: List[models.fields.RelatedField])
 package models.DB
 
 import play.api.Play.current
 
 import play.api.db.slick.DB
 import play.api.db.slick.Config.driver.simple._
+
+@for(relatedField <- relatedFields){
+import @{relatedField.field.relatedModuleModule.get.tableRef}
+}
 
 case class @{module.rowName}(
   @for((field,index) <- fields.zipWithIndex){
@@ -41,6 +45,15 @@ object @{module.rowName}{
     }
   }
 
+  def findAllWithRelateds: List[(@{module.rowName} @views.html.field.template.fields.related_fields_list(relatedFields))] = {
+    DB.withSession { implicit session =>
+      val q = for {
+        @{module.varName} <- @{module.tableRef}
+        @views.html.field.template.fields.related_fields_joins(module,relatedFields)
+      } yield (@views.html.field.template.fields.related_fields_yield(module,relatedFields))
+      q.list
+    }
+  }
   
   def findAll: List[@{module.rowName}] = {
     DB.withSession { implicit session =>
@@ -53,6 +66,16 @@ object @{module.rowName}{
       val q = for{
         s <- @{module.tableRef} if s.id === id
       } yield (s)
+      q.firstOption
+    }
+  }
+
+  def findByIdWithRelateds(id: Long):Option[(@{module.rowName} @views.html.field.template.fields.related_fields_list(relatedFields) )] = {
+    DB.withSession { implicit session =>
+      val q = for {
+        @{module.varName} <- @{module.tableRef} if @{module.varName}.id === id
+        @views.html.field.template.fields.related_fields_joins(module,relatedFields)
+      } yield (@views.html.field.template.fields.related_fields_yield(module,relatedFields))
       q.firstOption
     }
   }

@@ -8,6 +8,8 @@ trait Field{
 
 	lazy val name: String = FieldUtils.underscoreToCamel(this.field.name)
 
+	lazy val moduleVarName: String = field.moduleModule.varName
+
 	def htmlForm: String = {
 		val moduleName = field.module.name
 		val name = field.name
@@ -30,7 +32,9 @@ trait Field{
 
 	def list: String = {
 		val name = this.name
-		s"@row.$name"
+		val varName = this.moduleVarName
+
+		s"@$varName.$name"
 	}
 
 	def fieldType: String

@@ -7,6 +7,9 @@ import play.api.db.slick.DB
 import play.api.db.slick.Config.driver.simple._
 import scala.slick.driver.MySQLDriver.DeleteInvoker
 
+import models.Module
+import models.DB.ModuleRow
+
 case class FieldRow(
   id: Option[Long] = None,
   name: String,
@@ -16,11 +19,18 @@ case class FieldRow(
   relatedModuleId: Option[Long] = None
 ){
   lazy val module = ModuleRow.findById(this.moduleId).get
+  lazy val moduleModule = new Module(this.module)
+
   lazy val relatedModule: Option[ModuleRow] = {
     this.relatedModuleId match{
       case Some(id) => Some(ModuleRow.findById(id).get)
       case None => None
     }
+  }
+
+  lazy val relatedModuleModule: Option[Module] = this.relatedModule match {
+    case Some(moduleRow) => Some(new Module(moduleRow))
+    case None => None
   }
   
 }

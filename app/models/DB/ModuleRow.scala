@@ -9,6 +9,7 @@ import scala.slick.driver.MySQLDriver.DeleteInvoker
 import utils.FileUtils
 
 import models.fields._
+import models.fields.RelatedField
 import models.Module
 
 import play.api.Logger
@@ -63,12 +64,12 @@ case class ModuleRow(
 
   def generateRow(): Unit = {
     val path = this.getPath("app/models/DB/","Row.scala")
-    FileUtils.writeToFile(path,views.html.module.template.row(this.module,this.renderFields).toString)
+    FileUtils.writeToFile(path,views.html.module.template.row(this.module,this.renderFields, this.relatedFields).toString)
   }
 
   def generateDetailView(): Unit = {
     val path = this.getViewPath("detail")
-    FileUtils.writeToFile(path,views.html.module.template.moduleviews.detail(this.module).toString)
+    FileUtils.writeToFile(path,views.html.module.template.moduleviews.detail(this.module, this.relatedFields).toString)
   }
 
   def generateEditView(): Unit = {
@@ -83,7 +84,7 @@ case class ModuleRow(
 
   def generateIndexView(): Unit = {
     val path = this.getViewPath("index")
-    FileUtils.writeToFile(path,views.html.module.template.moduleviews.index(this.module).toString)
+    FileUtils.writeToFile(path,views.html.module.template.moduleviews.index(this.module, this.relatedFields).toString)
   }
 
   def generateInsertView(): Unit = {
@@ -93,7 +94,7 @@ case class ModuleRow(
 
   def generateListView(): Unit = {
     val path = this.getViewPath("list")
-    FileUtils.writeToFile(path,views.html.module.template.moduleviews.list(this.module,this.renderFields).toString)
+    FileUtils.writeToFile(path,views.html.module.template.moduleviews.list(this.module,this.renderFields, this.relatedFields).toString)
   }
 
   def generateDeleteView(): Unit = {

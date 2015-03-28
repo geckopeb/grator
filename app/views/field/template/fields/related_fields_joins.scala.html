@@ -1,0 +1,4 @@
+@(module: models.Module, relatedFields: List[models.fields.RelatedField])
+
+@for(relatedField <- relatedFields){@relatedField.field.relatedModuleModule.get.varName <- @relatedField.field.relatedModuleModule.get.tableProp if @{module.varName}.@{relatedField.field.name} === @{relatedField.field.relatedModuleModule.get.varName}.id
+}

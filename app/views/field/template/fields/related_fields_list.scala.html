@@ -1,0 +1,5 @@
+@(relatedFields: List[models.fields.RelatedField])
+
+@for(relatedField <- relatedFields){
+	, @relatedField.field.relatedModuleModule.get.rowName
+}
