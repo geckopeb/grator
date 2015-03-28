@@ -1,5 +1,3 @@
-@(relatedFields: List[models.fields.RelatedField])
-
-@for(relatedField <- relatedFields){
-	, @relatedField.field.relatedModuleModule.get.rowName
-}
+@(module: models.Module, relatedFields: List[models.fields.RelatedField])@if(relatedFields.isEmpty){
+@{module.rowName}} else {
+( @{module.rowName} @for(relatedField <- relatedFields){, @relatedField.field.relatedModuleModule.get.rowName} )}

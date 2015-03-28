@@ -1,3 +1,1 @@
-@(module: models.Module, relatedFields: List[models.fields.RelatedField])
-
-@module.varName @for(relatedField <- relatedFields){, @relatedField.field.relatedModuleModule.get.varName}
+@(module: models.Module, relatedFields: List[models.fields.RelatedField])@module.varName @for(relatedField <- relatedFields){, @relatedField.field.relatedModuleModule.get.varName}

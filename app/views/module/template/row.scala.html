@@ -12,8 +12,7 @@ import @{relatedField.field.relatedModuleModule.get.tableRef}
 
 case class @{module.rowName}(
   @for((field,index) <- fields.zipWithIndex){
-    @{Html(field.classDefinition)}@{if(index != fields.length - 1){','}else{""}}
-  }
+    @{Html(field.classDefinition)}@{if(index != fields.length - 1){','}else{""}}}
 ){
   
 }
@@ -45,7 +44,7 @@ object @{module.rowName}{
     }
   }
 
-  def findAllWithRelateds: List[(@{module.rowName} @views.html.field.template.fields.related_fields_list(relatedFields))] = {
+  def findAllWithRelateds: List[@views.html.field.template.fields.related_fields_list(module, relatedFields)] = {
     DB.withSession { implicit session =>
       val q = for {
         @{module.varName} <- @{module.tableRef}
@@ -70,7 +69,7 @@ object @{module.rowName}{
     }
   }
 
-  def findByIdWithRelateds(id: Long):Option[(@{module.rowName} @views.html.field.template.fields.related_fields_list(relatedFields) )] = {
+  def findByIdWithRelateds(id: Long):Option[@views.html.field.template.fields.related_fields_list(module, relatedFields)] = {
     DB.withSession { implicit session =>
       val q = for {
         @{module.varName} <- @{module.tableRef} if @{module.varName}.id === id
