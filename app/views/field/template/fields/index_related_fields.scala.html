@@ -1,5 +1,3 @@
 @(relatedFields: List[models.fields.RelatedField])
-
-@for(relatedField <- relatedFields){
-	@Html(relatedField.tableIndex)
+@for(relatedField <- relatedFields){    @Html(relatedField.tableIndex)
 }

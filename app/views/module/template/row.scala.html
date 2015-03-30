@@ -6,10 +6,8 @@ import play.api.Play.current
 import play.api.db.slick.DB
 import play.api.db.slick.Config.driver.simple._
 
-@for(relatedField <- relatedFields){
-import @{relatedField.field.relatedModuleModule.get.tableRef}
+@for(relatedField <- relatedFields){import @{relatedField.field.relatedModuleModule.get.externalTableRef}
 }
-
 case class @{module.rowName}(
   @for((field,index) <- fields.zipWithIndex){
     @{Html(field.classDefinition)}@{if(index != fields.length - 1){','}else{""}}}
@@ -18,6 +16,10 @@ case class @{module.rowName}(
 }
 
 object @{module.rowName}{
+  @views.html.module.template.table(module, fields, relatedFields)
+
+  val @{module.tableProp} = TableQuery[@module.tableClass]
+
   def save(@{module.varName}: @{module.rowName}):Long = {
     DB.withTransaction { implicit session =>
       @{module.tableRef}.returning(@{module.tableRef}.map(_.id)).insert(@{module.varName})

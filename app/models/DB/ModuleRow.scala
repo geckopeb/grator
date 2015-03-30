@@ -47,7 +47,6 @@ case class ModuleRow(
 
   def generateAll(): Unit = {
     this.generateController()
-    this.generateTable()
     this.generateRow()
     this.generateViews()
   }
@@ -57,13 +56,8 @@ case class ModuleRow(
     FileUtils.writeToFile(path,views.html.module.template.controller(this.module,this.renderFields,this.relatedFields).toString)
   }
 
-  def generateTable(): Unit = {
-    val path = this.getPath("app/models/DB/","Table.scala")
-    FileUtils.writeToFile(path,views.html.module.template.table(this.module,this.renderFields, this.relatedFields).toString)
-  }
-
   def generateRow(): Unit = {
-    val path = this.getPath("app/models/DB/","Row.scala")
+    val path = this.getPath("app/models/DB/",".scala")
     FileUtils.writeToFile(path,views.html.module.template.row(this.module,this.renderFields, this.relatedFields).toString)
   }
 

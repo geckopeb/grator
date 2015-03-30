@@ -99,7 +99,7 @@ object ModuleController extends Controller {
   def generateTable(id: Long) = Action {
     ModuleRow.findById(id).map{
       module:ModuleRow => {
-        module.generateTable
+        //module.generateTable
         Redirect(routes.ModuleController.detail(module.id.get)) 
       }
     }.getOrElse(NotFound)
