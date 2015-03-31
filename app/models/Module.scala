@@ -8,6 +8,7 @@ class Module(val module: ModuleRow){
 	val upName = varName.capitalize
 	val controllerName = upName+"Controller"
 	val rowName = upName
+	val tableName = tu.camelToUnderscores(name)
 	val tableClass = upName+"T"
 	val tableProp = varName+"T"
 	val tableRef = "this."+tableProp

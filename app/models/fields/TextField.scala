@@ -9,9 +9,9 @@ class TextField(val field: FieldRow) extends Field{
 	}
 
 	def fieldTable: String = {
-		val name = field.name
+		val tableName = this.tableName
 		val required = if(field.required){", O.NotNull"} else {""}
-		s"""def $name = column[String]("$name"$required)"""
+		s"""def $name = column[String]("$tableName"$required)"""
 	}
 
 	def fieldType: String = "String"

@@ -21,9 +21,9 @@ class BooleanField(val field: FieldRow) extends Field{
 	}
 
 	def fieldTable: String = {
-		val name = field.name
+		val tableName = this.tableName
 		//val required = if(field.required){", O.NotNull"} else {""}
-		s"""def $name = column[Boolean]("$name")"""
+		s"""def $name = column[Boolean]("$tableName")"""
 	}
 
 	override def nameInTable: String = {

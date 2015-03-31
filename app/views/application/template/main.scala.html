@@ -14,10 +14,11 @@
 	     <div class="navbar navbar-fixed-top">
 			<div class="navbar-inner">
 				<div class="container">
+          @*
           <a class="brand" href="@@routes.Application.index()">
             @@Messages("application.name")
           </a>
-
+          *@
           @for(module <- modules){
           <a class="brand" href="@@routes.@{module.name.capitalize}Controller.index()">
             @@Messages("@{module.name}.module_name")

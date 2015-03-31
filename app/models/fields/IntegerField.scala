@@ -9,9 +9,9 @@ class IntegerField(val field: FieldRow) extends Field{
 	}
 
 	def fieldTable: String = {
-		val name = field.name
+		val tableName = this.tableName
 		val required = if(field.required){", O.NotNull"} else {""}
-		s"""def $name = column[Int]("$name"$required)"""
+		s"""def $name = column[Int]("$tableName"$required)"""
 	}
 
 	def fieldType: String = "Int"

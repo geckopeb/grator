@@ -6,7 +6,9 @@ trait Field{
 	def field: FieldRow
 	def controllerForm: String
 
-	lazy val name: String = FieldUtils.underscoreToCamel(this.field.name)
+	//lazy val name: String = FieldUtils.underscoreToCamel(this.field.name)
+	lazy val name: String = this.field.name
+	lazy val tableName: String = FieldUtils.camelToUnderscores(this.name)
 
 	lazy val moduleVarName: String = field.moduleModule.varName
 

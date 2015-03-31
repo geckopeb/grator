@@ -1,5 +1,5 @@
 @(module: models.Module, fields: List[models.fields.Field], relatedFields: List[models.fields.RelatedField])
-  class @{module.tableClass}(tag: Tag) extends Table[@{module.rowName}](tag, "@{module.name}"){
+  class @{module.tableClass}(tag: Tag) extends Table[@{module.rowName}](tag, "@{module.tableName}"){
     @views.html.field.template.fields.render_field_table(fields)
     def * = (@Html(models.FieldUtils.toOneLine(for(field <- fields) yield field.nameInTable,", ")) ) <> ((@{module.  rowName}.apply _).tupled, @{module.rowName}.unapply _)
     @views.html.field.template.fields.index_related_fields(relatedFields)

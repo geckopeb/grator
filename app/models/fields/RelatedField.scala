@@ -1,5 +1,6 @@
 package models.fields
 
+import models.FieldUtils
 import models.DB.FieldRow
 
 class RelatedField(val field: FieldRow) extends Field{
@@ -39,10 +40,10 @@ class RelatedField(val field: FieldRow) extends Field{
 	}
 
 	def fieldTable: String = {
-		val name = field.name
+		val tableName = this.tableName
 		val fieldType = this.fieldType
 		val required = if(field.required){", O.NotNull"} else {""}
-		s"""def $name = column[$fieldType]("$name"$required)"""
+		s"""def $name = column[$fieldType]("$tableName"$required)"""
 	}
 	
 	def fieldType: String = "Long"
@@ -52,16 +53,20 @@ class RelatedField(val field: FieldRow) extends Field{
 
 		val name = field.name
 		val relatedName = field.relatedModule.get.name
-		val keyName = field.module.name+"_"+relatedName+"_"+name
+		val keyName = FieldUtils.camelToUnderscores(field.module.name+"_"+relatedName+"_"+name)
 
 		val relatedTable = relMod.externalTableRef
+
+		//varName and name must be different because field name is in use.
 		val varName = if(this.name == name){name+"Id"}else{this.name}
 		s"""def $varName = foreignKey("$keyName", $name, $relatedTable)(_.id)"""
 	}
 
+	lazy val varName = this.field.relatedModuleModule.get.varName+this.name 
+
 	override def list: String = {
-		val name = this.name
-		val varName = this.field.relatedModuleModule.get.varName
+		//val name = this.name
+		//val varName = this.field.relatedModuleModule.get.varName
 
 		s"@$varName.name"
 	}
