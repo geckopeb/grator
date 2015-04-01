@@ -1,0 +1,31 @@
+@(moduleForm: Form[models.DB.GratorModule], applications: Seq[(String,String)], formAction: play.api.mvc.Call, module: Option[models.DB.GratorModule] = None)(implicit lang: Lang)
+
+@import helper._
+@import helper.twitterBootstrap._
+
+@helper.form(action = formAction) {
+  <fieldset>
+    @module match {
+    	case Some(row) => {
+    		<input type="hidden" name="id" value='@row.id.get' >
+    	}
+    	case None => {}
+	   }
+    <legend>
+      @Messages("gratorModule.name")
+    </legend>
+    @helper.inputText(moduleForm("name"))
+
+    <legend>
+        @Messages("gratorModule.applicationId")
+     </legend>
+     @select(
+        moduleForm("applicationId"),
+        applications,
+        'default -> "-- select --"
+     )  
+
+  </fieldset>
+  <p><input type="submit" class="btn primary"
+  value='@Messages("gratorModule.save")'></p>
+}

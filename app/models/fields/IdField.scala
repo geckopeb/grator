@@ -1,8 +1,8 @@
 package models.fields
 
-import models.DB.FieldRow
+import models.DB.GratorField
 
-class IdField(val field: FieldRow) extends Field{
+class IdField(val field: GratorField) extends Field{
 	def controllerForm: String = {
 		"\"id\" -> optional(longNumber)"
 	}

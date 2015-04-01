@@ -1,0 +1,38 @@
+@(rows: List[( models.DB.GratorField , models.DB.GratorModule, models.DB.GratorModule ) ])(implicit lang: Lang)
+
+<table class="table table-bordered table-striped table-hover">
+    <thead>
+      <tr>
+        <th>@Messages("gratorField.id")</th>
+        <th>@Messages("gratorField.name")</th>
+        <th>@Messages("gratorField.moduleId")</th>
+        <th>@Messages("gratorField.fieldType")</th>
+        <th>@Messages("gratorField.required")</th>
+        <th>@Messages("gratorField.relatedModuleId")</th>
+      </tr>
+    </thead>
+    <tbody>
+    @for(( gratorField , gratorModulemoduleId, gratorModulerelatedModuleId )  <- rows){
+        <tr>
+            <td>
+              <a href="@controllers.routes.GratorFieldController.detail(gratorField.id.get)">@gratorField.id</a>
+            </td>
+            <td>
+              @gratorField.name
+            </td>
+            <td>
+              @gratorModulemoduleId.name
+            </td>
+            <td>
+              @gratorField.fieldType
+            </td>
+            <td>
+              @gratorField.required
+            </td>
+            <td>
+              @gratorModulerelatedModuleId.name
+            </td>
+        </tr>
+    }
+     </tbody>
+  </table>

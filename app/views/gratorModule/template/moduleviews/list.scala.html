@@ -1,0 +1,19 @@
+@(module: models.Module, fields: List[models.fields.Field], relatedFields: List[models.fields.RelatedField])
+@@(rows: List[@views.html.gratorModule.template.full_tuple_type(module, relatedFields)])(implicit lang: Lang)
+
+<table class="table table-bordered table-striped table-hover">
+    <thead>
+      <tr>@for(field <- fields){
+        <th>@@Messages("@{module.name}.@{field.field.name}")</th>}
+      </tr>
+    </thead>
+    <tbody>
+    @@for( @views.html.gratorModule.template.tuple_extractor(module, relatedFields) <- rows){
+        <tr>@for(field <- fields){
+            <td>
+              @Html(field.list)
+            </td>}
+        </tr>
+    }
+     </tbody>
+  </table>

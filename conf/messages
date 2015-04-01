@@ -1,52 +1,88 @@
+
 application.name = Grator
 
-#applications
-application.module_name = Applications
-
-application.number = #
-application.item_name = Name
-
-application.new = New Application
-application.insert = A New Application
-application.return = Return
-application.save = Save
-application.index = Applications List
-application.item_detail = {0} Application details
-application.path = Path
-application.generate_all = Generate All
-application.detail = Detail
-application.module_list = {0} Modules
 
 
-#modules
-module.module_name = Modules
+#gratorApp
+gratorApp.module_name = GratorApp
 
-module.number = #
-module.item_name = Name
+gratorApp.number = #
+gratorApp.item_name = Name
 
-module.new = New Module
-module.insert = A New Module
-module.return = Return
-module.save = Save
-module.index = Modules List
-module.item_detail = {0} Module details
-module.field_list = Fields List
+gratorApp.new = New GratorApp
+gratorApp.insert = A New GratorApp
+gratorApp.return = Return
+gratorApp.save = Save
+gratorApp.index = GratorApp List
+gratorApp.item_detail = {0} GratorApp details
+gratorApp.delete = Delete GratorApp {0}
 
-module.generate_all = Generate All
-module.generate_controller = Generate Controller
-module.generate_table = Generate Table
-module.generate_row = Generate Row
-module.generate_views = Generate Views
 
-#field
-field.module_name = Fields
+	gratorApp.id = Id
 
-field.number = #
-field.item_name = Name
+	gratorApp.name = Name
 
-field.new = New Field
-field.insert = A New Field
-field.return = Return
-field.save = Save
-field.index = Field List
-field.item_detail = {0} Field details
+	gratorApp.path = Path
+
+gratorApp.generate_all = Generate All
+gratorApp.detail = Detail
+gratorApp.module_list = Module List
+
+
+
+#gratorModule
+gratorModule.module_name = GratorModule
+
+gratorModule.number = #
+gratorModule.item_name = Name
+
+gratorModule.new = New GratorModule
+gratorModule.insert = A New GratorModule
+gratorModule.return = Return
+gratorModule.save = Save
+gratorModule.index = GratorModule List
+gratorModule.item_detail = {0} GratorModule details
+gratorModule.delete = Delete GratorModule {0}
+
+
+	gratorModule.id = Id
+
+	gratorModule.name = Name
+
+	gratorModule.applicationId = ApplicationId
+
+gratorModule.field_list = Fields List
+gratorModule.generate_all = Generate All
+gratorModule.generate_controller = Generate Controller
+gratorModule.generate_table = Generate Table
+gratorModule.generate_row = Generate Row
+gratorModule.generate_views = Generate Views
+
+
+
+#gratorField
+gratorField.module_name = GratorField
+
+gratorField.number = #
+gratorField.item_name = Name
+
+gratorField.new = New GratorField
+gratorField.insert = A New GratorField
+gratorField.return = Return
+gratorField.save = Save
+gratorField.index = GratorField List
+gratorField.item_detail = {0} GratorField details
+gratorField.delete = Delete GratorField {0}
+
+
+	gratorField.id = Id
+
+	gratorField.name = Name
+
+	gratorField.moduleId = ModuleId
+
+	gratorField.fieldType = FieldType
+
+	gratorField.required = Required
+
+	gratorField.relatedModuleId = RelatedModuleId

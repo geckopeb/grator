@@ -1,34 +1,46 @@
+
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
 # Home page
-GET   /                             controllers.ApplicationController.index
-GET   /application/:id/detail       controllers.ApplicationController.detail(id: Long)
-GET   /application/insert           controllers.ApplicationController.insert
-GET   /application/:id/edit         controllers.ApplicationController.edit(id: Long)
-POST  /application/save             controllers.ApplicationController.save
-POST  /application/:id/delete       controllers.ApplicationController.delete(id: Long)
-POST  /application/:id/update       controllers.ApplicationController.update(id: Long)
-GET   /application/:id/generateall  controllers.ApplicationController.generateAll(id: Long)
+GET     /                    	  controllers.GratorAppController.index
 
-GET   /module                controllers.ModuleController.index
-GET   /module/:id/detail     controllers.ModuleController.detail(id: Long)
-GET   /module/insert         controllers.ModuleController.insert
-GET   /module/:id/edit       controllers.ModuleController.edit(id: Long)
-POST  /module/save           controllers.ModuleController.save
-POST  /module/:id/delete     controllers.ModuleController.delete(id: Long)
-POST  /module/:id/update     controllers.ModuleController.update(id: Long)
-GET   /module/:id/generateall controllers.ModuleController.generateAll(id: Long)
-GET   /module/:id/controller  controllers.ModuleController.generateController(id: Long)
-GET   /module/:id/table       controllers.ModuleController.generateTable(id: Long)
-GET   /module/:id/row         controllers.ModuleController.generateRow(id: Long)
-GET   /module/:id/views       controllers.ModuleController.generateViews(id: Long)
+#gratorApp:
+GET   /gratorApp                  controllers.GratorAppController.index
+GET   /gratorApp/:id/detail       controllers.GratorAppController.detail(id: Long)
+GET   /gratorApp/insert           controllers.GratorAppController.insert
+GET   /gratorApp/:id/edit         controllers.GratorAppController.edit(id: Long)
+POST  /gratorApp/save             controllers.GratorAppController.save
+POST  /gratorApp/:id/delete       controllers.GratorAppController.delete(id: Long)
+POST  /gratorApp/:id/update       controllers.GratorAppController.update(id: Long)
+GET   /gratorApp/:id/generateall  controllers.GratorAppController.generateAll(id: Long)
 
-#field:
-GET   /field                controllers.FieldController.index
-GET   /field/:id/detail     controllers.FieldController.detail(id: Long)
-GET   /field/insert         controllers.FieldController.insert
-GET   /field/:id/edit       controllers.FieldController.edit(id: Long)
-POST  /field/save           controllers.FieldController.save
-POST  /field/:id/delete     controllers.FieldController.delete(id: Long)
-POST  /field/:id/update     controllers.FieldController.update(id: Long)
+
+#gratorModule:
+GET   /gratorModule                controllers.GratorModuleController.index
+GET   /gratorModule/:id/detail     controllers.GratorModuleController.detail(id: Long)
+GET   /gratorModule/insert         controllers.GratorModuleController.insert
+GET   /gratorModule/:id/edit       controllers.GratorModuleController.edit(id: Long)
+POST  /gratorModule/save           controllers.GratorModuleController.save
+POST  /gratorModule/:id/delete     controllers.GratorModuleController.delete(id: Long)
+POST  /gratorModule/:id/update     controllers.GratorModuleController.update(id: Long)
+GET   /gratorModule/:id/generateall controllers.GratorModuleController.generateAll(id: Long)
+GET   /gratorModule/:id/controller  controllers.GratorModuleController.generateController(id: Long)
+GET   /gratorModule/:id/table       controllers.GratorModuleController.generateTable(id: Long)
+GET   /gratorModule/:id/row         controllers.GratorModuleController.generateRow(id: Long)
+GET   /gratorModule/:id/views       controllers.GratorModuleController.generateViews(id: Long)
+
+
+
+#gratorField:
+GET   /gratorField                controllers.GratorFieldController.index
+GET   /gratorField/:id/detail     controllers.GratorFieldController.detail(id: Long)
+GET   /gratorField/insert         controllers.GratorFieldController.insert
+GET   /gratorField/:id/edit       controllers.GratorFieldController.edit(id: Long)
+POST  /gratorField/save           controllers.GratorFieldController.save
+POST  /gratorField/:id/delete     controllers.GratorFieldController.delete(id: Long)
+POST  /gratorField/:id/update     controllers.GratorFieldController.update(id: Long)
 
 
 # Map static resources from the /public folder to the /assets URL path

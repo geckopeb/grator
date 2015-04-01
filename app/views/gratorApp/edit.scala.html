@@ -1,0 +1,15 @@
+@(GratorAppForm: Form[models.DB.GratorApp], gratorApp: models.DB.GratorApp)(implicit lang: Lang)
+
+@main(Messages("gratorApp.insert")){
+  <div class="page-header">
+      <h1>@Messages("gratorApp.insert")</h1>
+  </div>
+  
+  @views.html.gratorApp.form(GratorAppForm, route = routes.GratorAppController.update(gratorApp.id.get), row = Some(gratorApp))
+
+  <p>
+    <a href="@controllers.routes.GratorAppController.index()"
+    class="btn">
+    <i class="icon-plus"></i> @Messages("gratorApp.return")</a>
+  </p>
+}

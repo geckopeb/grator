@@ -1,8 +1,8 @@
 package models.fields
 
-import models.DB.FieldRow
+import models.DB.GratorField
 
-class IntegerField(val field: FieldRow) extends Field{
+class IntegerField(val field: GratorField) extends Field{
 	def controllerForm: String = {
 		val formType = if(field.required) "number" else "optional(number)"
 		"\""+field.name+"\" -> "+formType
@@ -10,7 +10,7 @@ class IntegerField(val field: FieldRow) extends Field{
 
 	def fieldTable: String = {
 		val tableName = this.tableName
-		val required = if(field.required){", O.NotNull"} else {""}
+		val required = if(field.required){", O.NotNull"} else {", O.Nullable"}
 		s"""def $name = column[Int]("$tableName"$required)"""
 	}
 

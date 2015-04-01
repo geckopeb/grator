@@ -1,8 +1,8 @@
 package models
-import models.DB.ModuleRow
+import models.DB.GratorModule
 import utils.{TextUtils => tu}
 
-class Module(val module: ModuleRow){
+class Module(val module: GratorModule){
 	val name = module.name
 	val varName = tu.underscoreToCamel(name)
 	val upName = varName.capitalize

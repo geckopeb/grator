@@ -1,9 +1,9 @@
 package models.fields
 
 import models.FieldUtils
-import models.DB.FieldRow
+import models.DB.GratorField
 
-class RelatedField(val field: FieldRow) extends Field{
+class RelatedField(val field: GratorField) extends Field{
 	def controllerForm: String = {
 		val name = field.name
 		val fieldType = if(field.required){
@@ -42,7 +42,7 @@ class RelatedField(val field: FieldRow) extends Field{
 	def fieldTable: String = {
 		val tableName = this.tableName
 		val fieldType = this.fieldType
-		val required = if(field.required){", O.NotNull"} else {""}
+		val required = if(field.required){", O.NotNull"} else {", O.Nullable"}
 		s"""def $name = column[$fieldType]("$tableName"$required)"""
 	}
 	

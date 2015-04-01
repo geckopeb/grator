@@ -1,0 +1,13 @@
+@(rows: List[
+ ( models.DB.GratorModule , models.DB.GratorApp ) ])(implicit lang: Lang)
+
+
+@main(Messages("gratorModule.name")){
+	<div class="page-header">
+    	<h1>@Messages("gratorModule.module_name")</h1>
+  	</div>
+	
+  @views.html.gratorModule.list(rows)
+
+  @views.html.gratorModule.buttons.new_item()
+}

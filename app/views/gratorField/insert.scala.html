@@ -1,0 +1,19 @@
+@(
+  form: Form[models.DB.GratorField], 
+  moduleOptions: Seq[(String,String)], 
+  typeOptions: Seq[(String,String)]
+)(implicit lang: Lang)
+
+@main(Messages("gratorField.insert")){
+  <div class="page-header">
+      <h1>@Messages("gratorField.insert")</h1>
+  </div>
+  
+  @views.html.gratorField.form(form, moduleOptions, typeOptions, route = routes.GratorFieldController.save())
+
+  <p>
+    <a href="@controllers.routes.GratorFieldController.index()"
+    class="btn">
+    <i class="icon-plus"></i>@Messages("gratorField.return")</a>
+  </p>
+}

@@ -1,9 +1,9 @@
 package models.fields
 import models.FieldUtils
-import models.DB.FieldRow
+import models.DB.GratorField
 
 trait Field{
-	def field: FieldRow
+	def field: GratorField
 	def controllerForm: String
 
 	//lazy val name: String = FieldUtils.underscoreToCamel(this.field.name)

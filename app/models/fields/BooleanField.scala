@@ -1,8 +1,8 @@
 package models.fields
 
-import models.DB.FieldRow
+import models.DB.GratorField
 
-class BooleanField(val field: FieldRow) extends Field{
+class BooleanField(val field: GratorField) extends Field{
 	def controllerForm: String = {
 		//val formType = if(field.required) "boolean" else "optional(boolean).getOrElse(false)"
 		val formType = "boolean"

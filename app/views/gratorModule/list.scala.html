@@ -1,0 +1,26 @@
+@(rows: List[( models.DB.GratorModule , models.DB.GratorApp ) ])(implicit lang: Lang)
+
+<table class="table table-bordered table-striped table-hover">
+    <thead>
+      <tr>
+        <th>@Messages("gratorModule.id")</th>
+        <th>@Messages("gratorModule.name")</th>
+        <th>@Messages("gratorModule.applicationId")</th>
+      </tr>
+    </thead>
+    <tbody>
+    @for(( gratorModule , gratorAppapplicationId )  <- rows){
+        <tr>
+            <td>
+              <a href="@controllers.routes.GratorModuleController.detail(gratorModule.id.get)">@gratorModule.id</a>
+            </td>
+            <td>
+              @gratorModule.name
+            </td>
+            <td>
+              @gratorAppapplicationId.name
+            </td>
+        </tr>
+    }
+     </tbody>
+  </table>

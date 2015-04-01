@@ -1,8 +1,8 @@
 package models.fields
 
-import models.DB.FieldRow
+import models.DB.GratorField
 
-class NameField(val field: FieldRow) extends Field{
+class NameField(val field: GratorField) extends Field{
 	def controllerForm: String = {
 		"\"name\" -> nonEmptyText"
 	}

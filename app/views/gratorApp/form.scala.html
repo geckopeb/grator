@@ -1,0 +1,26 @@
+@(rowForm: Form[models.DB.GratorApp], route: play.api.mvc.Call, row: Option[models.DB.GratorApp] = None)(implicit lang: Lang)
+
+@import helper._
+@import helper.twitterBootstrap._
+
+@helper.form(action = route) {
+  <fieldset>
+	@row match {
+    	case Some(row) => {
+    		<input type="hidden" name="id" value="@row.id.get">
+    	}
+    	case None => {}
+	  }
+	<legend>
+			@Messages("gratorApp.item_name")
+	</legend>
+		    @helper.inputText(rowForm("name"))
+	<legend>
+			@Messages("gratorApp.path")
+	</legend>
+		    @helper.inputText(rowForm("path"))
+
+  </fieldset>
+  <p><input type="submit" class="btn primary"
+  value='@Messages("gratorApp.save")'></p>
+}
