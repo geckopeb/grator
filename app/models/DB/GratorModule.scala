@@ -129,10 +129,14 @@ object GratorModule{
     DB.withTransaction { implicit session =>
       val id = this.gratorModuleT.returning(this.gratorModuleT.map(_.id)).insert(gratorModule)
 
-      val moduleId = new GratorField(None, "id", id, "Id", true, None)
+      //The final parameter should be none, but then joins do not work properly. slick3 will provide a solution.
+      //val moduleId = new GratorField(None, "id", id, "Id", true, None)
+      val moduleId = new GratorField(None, "id", id, "Id", true, Some(id))
       GratorField.gratorFieldT.insert(moduleId)
 
-      val moduleName = new GratorField(None, "name", id, "Name", true, None)
+      //The final parameter should be none, but then joins do not work properly. slick3 will provide a solution.
+      //val moduleName = new GratorField(None, "name", id, "Name", true, None)
+      val moduleName = new GratorField(None, "name", id, "Name", true, Some(id))
       GratorField.gratorFieldT.insert(moduleName)
       
       id

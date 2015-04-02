@@ -123,8 +123,8 @@ object GratorField{
   def findByModuleIdWithRelateds(moduleId: Long):List[( GratorField , GratorModule, GratorModule )] = {
     DB.withSession { implicit session =>
       val q = for {
-        gratorField <- this.gratorFieldT if gratorField.id === moduleId
-        gratorModulemoduleId <- gratorModuleT if gratorField.moduleId === moduleId
+        gratorField <- this.gratorFieldT if gratorField.moduleId === moduleId
+        gratorModulemoduleId <- gratorModuleT if gratorField.moduleId === gratorModulemoduleId.id
         gratorModulerelatedModuleId <- gratorModuleT if gratorField.relatedModuleId === gratorModulerelatedModuleId.id
 
       } yield (gratorField , gratorModulemoduleId, gratorModulerelatedModuleId)
