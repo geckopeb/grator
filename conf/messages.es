@@ -74,3 +74,28 @@ gratorField.moduleId = ModuleId
 gratorField.fieldType = FieldType
 gratorField.required = Required
 gratorField.relatedModuleId = RelatedModuleId
+
+#gratorRelationship
+gratorRelationship.module_name = GratorRelationship
+
+gratorRelationship.number = #
+gratorRelationship.item_name = Nombre
+
+gratorRelationship.new = Nuevo GratorRelationship
+gratorRelationship.insert = Insertando un nuevo GratorRelationship
+gratorRelationship.return = Volver
+gratorRelationship.save = Guardar
+gratorRelationship.index = Listado de GratorRelationship
+gratorRelationship.item_detail = Detalles de {0} GratorRelationship
+gratorRelationship.delete = Borrar GratorRelationship {0}
+
+
+gratorRelationship.id = Id
+gratorRelationship.name = Name
+gratorRelationship.relType = RelType
+gratorRelationship.primaryModuleId = PrimaryModuleId
+gratorRelationship.primaryModuleLabel = PrimaryModuleLabel
+gratorRelationship.primaryModuleSubpanel = PrimaryModuleSubpanel
+gratorRelationship.relatedModuleId = RelatedModuleId
+gratorRelationship.relatedModuleLabel = RelatedModuleLabel
+gratorRelationship.relatedModuleSubpanel = RelatedModuleSubpanel

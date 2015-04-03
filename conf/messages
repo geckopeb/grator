@@ -86,3 +86,36 @@ gratorField.delete = Delete GratorField {0}
 	gratorField.required = Required
 
 	gratorField.relatedModuleId = RelatedModuleId
+
+#gratorRelationship
+gratorRelationship.module_name = GratorRelationship
+
+gratorRelationship.number = #
+gratorRelationship.item_name = Name
+
+gratorRelationship.new = New GratorRelationship
+gratorRelationship.insert = A New GratorRelationship
+gratorRelationship.return = Return
+gratorRelationship.save = Save
+gratorRelationship.index = GratorRelationship List
+gratorRelationship.item_detail = {0} GratorRelationship details
+gratorRelationship.delete = Delete GratorRelationship {0}
+
+
+	gratorRelationship.id = Id
+
+	gratorRelationship.name = Name
+
+	gratorRelationship.relType = RelType
+
+	gratorRelationship.primaryModuleId = PrimaryModuleId
+
+	gratorRelationship.primaryModuleLabel = PrimaryModuleLabel
+
+	gratorRelationship.primaryModuleSubpanel = PrimaryModuleSubpanel
+
+	gratorRelationship.relatedModuleId = RelatedModuleId
+
+	gratorRelationship.relatedModuleLabel = RelatedModuleLabel
+
+	gratorRelationship.relatedModuleSubpanel = RelatedModuleSubpanel

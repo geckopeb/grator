@@ -42,6 +42,15 @@ POST  /gratorField/save           controllers.GratorFieldController.save
 POST  /gratorField/:id/delete     controllers.GratorFieldController.delete(id: Long)
 POST  /gratorField/:id/update     controllers.GratorFieldController.update(id: Long)
 
+#gratorRelationship:
+GET   /gratorRelationship                controllers.GratorRelationshipController.index
+GET   /gratorRelationship/:id/detail     controllers.GratorRelationshipController.detail(id: Long)
+GET   /gratorRelationship/insert         controllers.GratorRelationshipController.insert
+GET   /gratorRelationship/:id/edit       controllers.GratorRelationshipController.edit(id: Long)
+POST  /gratorRelationship/save           controllers.GratorRelationshipController.save
+POST  /gratorRelationship/:id/delete     controllers.GratorRelationshipController.delete(id: Long)
+POST  /gratorRelationship/:id/update     controllers.GratorRelationshipController.update(id: Long)
+
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

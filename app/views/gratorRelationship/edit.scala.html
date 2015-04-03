@@ -1,0 +1,17 @@
+
+@(GratorRelationshipForm: Form[models.DB.GratorRelationship], gratorRelationship: models.DB.GratorRelationship, relTypeOptions: Seq[(String,String)], 
+  subpanelOptions: Seq[(String,String)])(implicit lang: Lang)
+
+@main(Messages("gratorRelationship.insert")){
+  <div class="page-header">
+      <h1>@Messages("gratorRelationship.insert")</h1>
+  </div>
+  
+  @views.html.gratorRelationship.form(GratorRelationshipForm, relTypeOptions, subpanelOptions, route = routes.GratorRelationshipController.update(gratorRelationship.id.get), row = Some(gratorRelationship))
+
+  <p>
+    <a href="@controllers.routes.GratorRelationshipController.index()"
+    class="btn">
+    <i class="icon-plus"></i> @Messages("gratorRelationship.return")</a>
+  </p>
+}
