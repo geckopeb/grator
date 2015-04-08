@@ -1,4 +1,4 @@
-@(module: models.Module, fields: List[models.fields.Field], relatedFields: List[models.fields.RelatedField])
+@(module: models.Module, fields: List[models.fields.Field], relatedFields: List[models.fields.RelatedField], primaryRelationships: List[Relationship])
 package controllers
 
 import play.api._
@@ -29,11 +29,7 @@ object @{module.controllerName} extends Controller {
   }
   
 
-  def detail(id: Long) = Action {
-    @{module.rowName}.findByIdWithRelateds(id).map{
-      @{module.varName} => Ok(views.html.@{module.name}.detail(@{module.varName}))
-    }.getOrElse(NotFound)
-  }
+  @views.html.gratorModule.template.tcontroller.detail(module, primaryRelationships)
   
   def save = Action { implicit request =>
     @{module.formName}.bindFromRequest.fold(
@@ -74,4 +70,6 @@ object @{module.controllerName} extends Controller {
     }
     }.getOrElse(NotFound)
   }
+
+  @views.html.gratorModule.template.tcontroller.relationship_controller_actions(module, primaryRelationships)
 }

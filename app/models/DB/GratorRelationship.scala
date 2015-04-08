@@ -7,7 +7,8 @@ import play.api.db.slick.DB
 import play.api.db.slick.Config.driver.simple._
 
 import GratorModule.gratorModuleT
-import GratorModule.gratorModuleT
+
+import models.Module
 
 case class GratorRelationship(
   
@@ -21,6 +22,16 @@ case class GratorRelationship(
     relatedModuleLabel: String,
     relatedModuleSubpanel: String
 ){
+  lazy val primaryModule = GratorModule.findById(this.primaryModuleId)
+  lazy val primaryModuleModule: Option[Module] = this.primaryModule match {
+    case Some(m: GratorModule) => Some(new Module(m))
+    case None => None
+  }
+  lazy val relatedModule = GratorModule.findById(this.relatedModuleId)
+  lazy val relatedModuleModule: Option[Module] = this.relatedModule match {
+    case Some(m: GratorModule) => Some(new Module(m))
+    case None => None
+  }
   
 }
 
@@ -73,8 +84,7 @@ object GratorRelationship{
     }
   }
 
-  def findAllWithRelateds: List[
-( GratorRelationship , GratorModule, GratorModule )] = {
+  def findAllWithRelateds: List[( GratorRelationship , GratorModule, GratorModule )] = {
     DB.withSession { implicit session =>
       val q = for {
         gratorRelationship <- this.gratorRelationshipT
@@ -82,6 +92,28 @@ object GratorRelationship{
 gratorModulerelatedModuleId <- gratorModuleT if gratorRelationship.relatedModuleId === gratorModulerelatedModuleId.id
 
       } yield (gratorRelationship , gratorModuleprimaryModuleId, gratorModulerelatedModuleId)
+      q.list
+    }
+  }
+
+  //                                                      Relationship,       RelatedModule
+  def findByPrimaryModuleId(primaryModuleId: Long): List[(GratorRelationship, GratorModule)] = {
+    DB.withSession { implicit session =>
+      val q = for {
+        gratorRelationship <- this.gratorRelationshipT if gratorRelationship.primaryModuleId === primaryModuleId
+        gratorModulerelatedModuleId <- gratorModuleT if gratorRelationship.relatedModuleId === gratorModulerelatedModuleId.id
+      } yield (gratorRelationship, gratorModulerelatedModuleId)
+      q.list
+    }
+  }
+
+  //                                                       Relationship,       PrimaryModule
+  def findByRelatedModuleId(relatedModuleId: Long): List[( GratorRelationship, GratorModule )] = {
+    DB.withSession { implicit session =>
+      val q = for {
+        gratorRelationship <- this.gratorRelationshipT if gratorRelationship.relatedModuleId === relatedModuleId
+        gratorModuleprimaryModuleId <- gratorModuleT if gratorRelationship.primaryModuleId === gratorModuleprimaryModuleId.id
+      } yield (gratorRelationship , gratorModuleprimaryModuleId)
       q.list
     }
   }
@@ -101,8 +133,7 @@ gratorModulerelatedModuleId <- gratorModuleT if gratorRelationship.relatedModule
     }
   }
 
-  def findByIdWithRelateds(id: Long):Option[
-( GratorRelationship , GratorModule, GratorModule )] = {
+  def findByIdWithRelateds(id: Long):Option[( GratorRelationship , GratorModule, GratorModule )] = {
     DB.withSession { implicit session =>
       val q = for {
         gratorRelationship <- this.gratorRelationshipT if gratorRelationship.id === id
@@ -125,15 +156,15 @@ gratorModulerelatedModuleId <- gratorModuleT if gratorRelationship.relatedModule
 
   def getRelTypeOptions(): Seq[(String,String)] = {
     Seq(
-      ("1aN","1aN"),
+      //("1aN","1aN"),
       ("NaN","NaN")
     )
   }
 
   def getSubpanelOptions(): Seq[(String,String)] = {
     Seq(
-      ("yes","yes"),
-      ("no","no")
+      ("yes","yes")
+      //("no","no")
     )
   }
 }

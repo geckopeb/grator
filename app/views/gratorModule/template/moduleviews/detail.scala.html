@@ -1,5 +1,6 @@
-@(module: models.Module, relatedFields: List[models.fields.RelatedField])
-@@(@{module.varName}: @views.html.gratorModule.template.full_tuple_type(module, relatedFields))(implicit lang: Lang)
+@(module: models.Module, relatedFields: List[models.fields.RelatedField], primaryRelationships: List[models.Relationship])
+@@(@{module.varName}: @views.html.gratorModule.template.full_tuple_type(module, relatedFields)
+	@views.html.gratorRelationship.template.subpanel.detail_params(primaryRelationships))(implicit lang: Lang)
 
 @@main(Messages("@{module.name}.name")){
 	<div class="page-header">
@@ -23,4 +24,6 @@
 		@@views.html.@{module.name}.delete(route = routes.@{module.controllerName}.delete(@{module.varName}._1.id.get), row = Some(@{module.varName}._1))
 		}
 	</p>
+
+	@views.html.gratorRelationship.template.subpanel.load_subpanels(primaryRelationships, module)
 }

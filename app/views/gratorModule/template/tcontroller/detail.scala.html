@@ -1,0 +1,6 @@
+@(module: models.Module, primaryRelationships: List[Relationship])
+def detail(id: Long) = Action {
+    @{module.rowName}.findByIdWithRelateds(id).map{
+      @{module.varName} => Ok(views.html.@{module.name}.detail(@{module.varName} @views.html.gratorModule.template.tcontroller.detail_view_rel_params(primaryRelationships)))
+    }.getOrElse(NotFound)
+}

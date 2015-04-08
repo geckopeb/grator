@@ -1,0 +1,5 @@
+@(primaryRelationships: List[models.Relationship], module: models.Module)
+@if(primaryRelationships.isEmpty){}else{
+@for(rel <- primaryRelationships){
+@@views.html.@{rel.pmVar}.subpanels.@{rel.rmVar}.subpanel(@{rel.varName}, @{module.getId})
+}}

@@ -9,13 +9,17 @@
 @for(module <- modules){
 
 #@{module.name}:
-GET   /@{module.name}                controllers.@{module.name.capitalize}Controller.index
-GET   /@{module.name}/:id/detail     controllers.@{module.name.capitalize}Controller.detail(id: Long)
-GET   /@{module.name}/insert         controllers.@{module.name.capitalize}Controller.insert
-GET   /@{module.name}/:id/edit       controllers.@{module.name.capitalize}Controller.edit(id: Long)
-POST  /@{module.name}/save           controllers.@{module.name.capitalize}Controller.save
-POST  /@{module.name}/:id/delete     controllers.@{module.name.capitalize}Controller.delete(id: Long)
-POST  /@{module.name}/:id/update     controllers.@{module.name.capitalize}Controller.update(id: Long)
+GET   /@{module.name}                				controllers.@{module.name.capitalize}Controller.index
+GET   /@{module.name}/:id/detail     				controllers.@{module.name.capitalize}Controller.detail(id: Long)
+GET   /@{module.name}/insert         				controllers.@{module.name.capitalize}Controller.insert
+GET   /@{module.name}/:id/edit       				controllers.@{module.name.capitalize}Controller.edit(id: Long)
+POST  /@{module.name}/save           				controllers.@{module.name.capitalize}Controller.save
+POST  /@{module.name}/:id/delete     				controllers.@{module.name.capitalize}Controller.delete(id: Long)
+POST  /@{module.name}/:id/update     				controllers.@{module.name.capitalize}Controller.update(id: Long)
+@for(rel <- module.prelRel){
+GET	  /@{module.name}/:id/@{rel.rmVar}_insert   controllers.@{module.name.capitalize}Controller.@{rel.rmVar}Insert(id: Long)
+POST  /@{module.name}/:id/@{rel.rmVar}_save     controllers.@{module.name.capitalize}Controller.@{rel.rmVar}Save(id: Long)
+}
 }
 
 # Map static resources from the /public folder to the /assets URL path

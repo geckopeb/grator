@@ -1,0 +1,23 @@
+@(module: models.Module, rels: List[models.Relationship])
+@for(rel <- rels){
+  val @{rel.upName}Form = Form(
+  mapping(
+    "id" -> optional(longNumber),
+    "@{rel.pmVarId}" -> longNumber,
+    "@{rel.rmVarId}" -> longNumber
+  )(@{rel.rowName}.apply)(@{rel.rowName}.unapply))
+
+  def @{rel.rmVar}Insert(id: Long) = Action {
+    Ok(views.html.@{module.varName}.subpanels.@{rel.rmVar}.insert(@{rel.upName}Form, id, @{rel.rmClassRef}.getOptions))
+  }
+
+  def @{rel.rmVar}Save(id: Long) = Action { implicit request =>
+    @{rel.upName}Form.bindFromRequest.fold(
+      formWithErrors => BadRequest(views.html.@{module.varName}.subpanels.@{rel.rmVar}.insert(@{rel.upName}Form,id, @{rel.rmClassRef}.getOptions)),
+      @{rel.varName} => {
+        @{rel.upName}.save(@{rel.varName})
+        Redirect(routes.@{module.controllerName}.detail(id))
+      }
+    )
+  }
+}

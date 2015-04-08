@@ -1,0 +1,5 @@
+@(primaryRelationships: List[Relationship])
+@if(primaryRelationships.isEmpty){}else{
+@for(rel <- primaryRelationships){
+, @{rel.rowName}.@{rel.pmFindByMethod}(id).map(t => t._2)
+}}

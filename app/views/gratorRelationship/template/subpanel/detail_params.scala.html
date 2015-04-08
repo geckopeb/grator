@@ -1,0 +1,5 @@
+@(primaryRelationships: List[models.Relationship])
+@if(primaryRelationships.isEmpty){}else{
+@for(rel <- primaryRelationships){
+, @{rel.varName}: List[@{rel.rmClassRef}]
+}}

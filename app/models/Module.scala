@@ -15,4 +15,10 @@ class Module(val module: GratorModule){
 	val externalTableRef = rowName+"."+tableProp
 	val formName = upName+"Form"
 	val pluralName = varName+"s" //TODO add plural name field to module and update this method
+
+	lazy val getId: String = if(module.relatedFields.isEmpty){
+								this.varName+".id.get"
+							} else {
+								this.varName+"._1.id.get"
+							}
 }
