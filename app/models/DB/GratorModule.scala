@@ -21,22 +21,23 @@ case class GratorModule(
     name: String,
     applicationId: Long
 ){
-  lazy val fields = GratorField.findByModule(this.id.get)
-  lazy val renderFields = for (field <- this.fields) yield (FieldFactory.get(field))
-  lazy val application = GratorApp.findById(this.applicationId)
+  
+  def fields = GratorField.findByModule(this.id.get)
+  def renderFields = for (field <- this.fields) yield (FieldFactory.get(field))
+  def application = GratorApp.findById(this.applicationId)
 
-  lazy val prel = GratorRelationship.findByPrimaryModuleId(this.id.get)
-  lazy val prelRel = prel.map(p => new Relationship(p._1)) 
+  def prel = GratorRelationship.findByPrimaryModuleId(this.id.get)
+  def prelRel = prel.map(p => new Relationship(p._1)) 
 
-  lazy val rrel = GratorRelationship.findByRelatedModuleId(this.id.get)
+  def rrel = GratorRelationship.findByRelatedModuleId(this.id.get)
 
 
-  lazy val relatedFields: List[RelatedField] = for{
+  def relatedFields: List[RelatedField] = for{
     field <- this.fields
     if(field.fieldType == "Related")
   }  yield(new RelatedField(field))
 
-  lazy val module = new Module(this)
+  def module = new Module(this)
 
   def getPath(folder: String, fileTermination: String): String = {
     val basePath = this.application.get.path

@@ -86,4 +86,13 @@ object GratorAppController extends Controller {
       }
     }.getOrElse(NotFound)
   }
+
+  def backupAll(id: Long) = Action {
+    GratorApp.findById(id).map{
+      application:GratorApp => {
+        application.backupAll
+        Redirect(routes.GratorAppController.detail(application.id.get)) 
+      }
+    }.getOrElse(NotFound)
+  }
 }

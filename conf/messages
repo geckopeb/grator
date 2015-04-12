@@ -27,6 +27,7 @@ gratorApp.delete = Delete GratorApp {0}
 gratorApp.generate_all = Generate All
 gratorApp.detail = Detail
 gratorApp.module_list = Module List
+gratorApp.backup = Backup
 
 
 

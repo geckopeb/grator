@@ -19,17 +19,17 @@ case class GratorField(
     required: Boolean,
     relatedModuleId: Option[Long]
 ){
-  lazy val module = GratorModule.findById(this.moduleId).get
-  lazy val moduleModule = new Module(this.module)
+  def module = GratorModule.findById(this.moduleId).get
+  def moduleModule = new Module(this.module)
 
-  lazy val relatedModule: Option[GratorModule] = {
+  def relatedModule: Option[GratorModule] = {
     this.relatedModuleId match{
       case Some(id) => Some(GratorModule.findById(id).get)
       case None => None
     }
   }
 
-  lazy val relatedModuleModule: Option[Module] = this.relatedModule match {
+  def relatedModuleModule: Option[Module] = this.relatedModule match {
     case Some(module) => Some(new Module(module))
     case None => None
   }
@@ -146,6 +146,16 @@ object GratorField{
       val q = for{
         s <- GratorField.gratorFieldT if s.moduleId === moduleId
       } yield (s)
+      q.list
+    }
+  }
+
+  def findByApplication(applicationId: Long): List[GratorField] = {
+    DB.withSession { implicit session =>
+      val q = for{
+        s <- GratorModule.gratorModuleT if s.applicationId === applicationId
+        f <- GratorField.gratorFieldT if s.id === f.moduleId
+      } yield (f)
       q.list
     }
   }

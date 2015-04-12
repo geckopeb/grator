@@ -22,13 +22,13 @@ case class GratorRelationship(
     relatedModuleLabel: String,
     relatedModuleSubpanel: String
 ){
-  lazy val primaryModule = GratorModule.findById(this.primaryModuleId)
-  lazy val primaryModuleModule: Option[Module] = this.primaryModule match {
+  def primaryModule = GratorModule.findById(this.primaryModuleId)
+  def primaryModuleModule: Option[Module] = this.primaryModule match {
     case Some(m: GratorModule) => Some(new Module(m))
     case None => None
   }
-  lazy val relatedModule = GratorModule.findById(this.relatedModuleId)
-  lazy val relatedModuleModule: Option[Module] = this.relatedModule match {
+  def relatedModule = GratorModule.findById(this.relatedModuleId)
+  def relatedModuleModule: Option[Module] = this.relatedModule match {
     case Some(m: GratorModule) => Some(new Module(m))
     case None => None
   }
@@ -142,6 +142,16 @@ gratorModulerelatedModuleId <- gratorModuleT if gratorRelationship.relatedModule
 
       } yield (gratorRelationship , gratorModuleprimaryModuleId, gratorModulerelatedModuleId)
       q.firstOption
+    }
+  }
+
+  def findByApplication(applicationId: Long): List[GratorRelationship] = {
+    DB.withSession { implicit session =>
+      val q = for{
+        s <- GratorModule.gratorModuleT if s.applicationId === applicationId
+        r <- GratorRelationship.gratorRelationshipT if s.id === r.primaryModuleId
+      } yield (r)
+      q.list
     }
   }
 

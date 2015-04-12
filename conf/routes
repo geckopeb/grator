@@ -15,6 +15,7 @@ POST  /gratorApp/save             controllers.GratorAppController.save
 POST  /gratorApp/:id/delete       controllers.GratorAppController.delete(id: Long)
 POST  /gratorApp/:id/update       controllers.GratorAppController.update(id: Long)
 GET   /gratorApp/:id/generateall  controllers.GratorAppController.generateAll(id: Long)
+GET   /gratorApp/:id/backupAll	  controllers.GratorAppController.backupAll(id: Long)
 
 
 #gratorModule:

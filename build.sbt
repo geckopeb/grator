@@ -14,3 +14,5 @@ libraryDependencies ++= Seq(
 libraryDependencies += "mysql" % "mysql-connector-java" % "5.1.34"
 
 libraryDependencies += "com.typesafe.play" %% "play-slick" % "0.8.1"
+
+scalaVersion := "2.11.6"

@@ -20,6 +20,7 @@ gratorApp.delete = Borrar GratorApp {0}
 gratorApp.generate_all = Generar Todo
 gratorApp.detail = Detalle
 gratorApp.module_list = Lista de Modulos
+gratorApp.backup = Respaldar
 
 
 gratorApp.id = Id

@@ -7,13 +7,18 @@ import play.api.db.slick.Config.driver.simple._
 
 import utils.FileUtils
 
+import play.api.libs.json._
 
 case class GratorApp(
     id: Option[Long] = None,
     name: String,
     path: String
 ){
-  lazy val modules = GratorModule.findByApplication(this.id.get)
+  def modules = GratorModule.findByApplication(this.id.get)
+
+  def fields = GratorField.findByApplication(this.id.get)
+
+  def relationships = GratorRelationship.findByApplication(this.id.get)
 
   def generateAll(): Unit = {
     val modules = GratorModule.findByApplication(this.id.get)
@@ -41,6 +46,73 @@ case class GratorApp(
   def generateMenu(modules: List[GratorModule]): Unit = {
     val path = this.path+"app/views/main.scala.html"
     FileUtils.writeToFile(path,views.html.gratorApp.template.main(modules).toString)
+  }
+
+  implicit val GratorAppWrites = new Writes[GratorApp] {
+    def writes(app: GratorApp) = Json.obj(
+      "id" -> app.id,
+      "name" -> app.name,
+      "path" -> app.path
+    )
+  }
+
+  implicit val GratorModuleWrites = new Writes[GratorModule] {
+    def writes(module: GratorModule) = Json.obj(
+      "id" -> module.id,
+      "name" -> module.name,
+      "applicationId" -> module.applicationId
+    )
+  }
+
+  implicit val GratorFieldWrites = new Writes[GratorField] {
+    def writes(field: GratorField) = Json.obj(
+      "id" -> field.id,
+      "name" -> field.name,
+      "moduleId" -> field.moduleId,
+      "fieldType" -> field.fieldType,
+      "required" -> field.required,
+      "relatedModuleId" -> field.relatedModuleId
+    )
+  }
+
+  implicit val GratorRelationshipWrites = new Writes[GratorRelationship] {
+    def writes(rel: GratorRelationship) = Json.obj(
+      "id" -> rel.id,
+      "name" -> rel.name,
+      "relType" -> rel.relType,
+      "primaryModuleId" -> rel.primaryModuleId,
+      "primaryModuleLabel" -> rel.primaryModuleLabel,
+      "primaryModuleSubpanel" -> rel.primaryModuleSubpanel,
+      "relatedModuleId" -> rel.relatedModuleId,
+      "relatedModuleLabel" -> rel.relatedModuleLabel,
+      "relatedModuleSubpanel" -> rel.relatedModuleSubpanel
+    )
+  }
+
+  def backupAll: Unit = {
+    val appJson = Json.toJson(this)
+    val appString = Json.stringify(appJson)
+    val appPath = this.path+"backup/"+this.name+".json"
+
+    FileUtils.writeToFile(appPath, appString)
+
+    val modulesJson = Json.toJson(this.modules)
+    val modulesString = Json.stringify(modulesJson)
+    val modulesPath = this.path+"backup/"+this.name+"_modules.json"
+
+    FileUtils.writeToFile(modulesPath, modulesString)
+
+    val fieldsJson = Json.toJson(this.fields)
+    val fieldsString = Json.stringify(fieldsJson)
+    val fieldsPath = this.path+"backup/"+this.name+"_fields.json"
+
+    FileUtils.writeToFile(fieldsPath, fieldsString)
+
+    val relJson = Json.toJson(this.relationships)
+    val relString = Json.stringify(relJson)
+    val relPath = this.path+"backup/"+this.name+"_relationships.json"
+
+    FileUtils.writeToFile(relPath, relString)
   }
 }
 
