@@ -26,11 +26,11 @@ GET   /gratorModule/:id/edit       controllers.GratorModuleController.edit(id: L
 POST  /gratorModule/save           controllers.GratorModuleController.save
 POST  /gratorModule/:id/delete     controllers.GratorModuleController.delete(id: Long)
 POST  /gratorModule/:id/update     controllers.GratorModuleController.update(id: Long)
-GET   /gratorModule/:id/generateall controllers.GratorModuleController.generateAll(id: Long)
-GET   /gratorModule/:id/controller  controllers.GratorModuleController.generateController(id: Long)
-GET   /gratorModule/:id/table       controllers.GratorModuleController.generateTable(id: Long)
-GET   /gratorModule/:id/row         controllers.GratorModuleController.generateRow(id: Long)
-GET   /gratorModule/:id/views       controllers.GratorModuleController.generateViews(id: Long)
+#GET   /gratorModule/:id/generateall controllers.GratorModuleController.generateAll(id: Long)
+#GET   /gratorModule/:id/controller  controllers.GratorModuleController.generateController(id: Long)
+#GET   /gratorModule/:id/table       controllers.GratorModuleController.generateTable(id: Long)
+#GET   /gratorModule/:id/row         controllers.GratorModuleController.generateRow(id: Long)
+#GET   /gratorModule/:id/views       controllers.GratorModuleController.generateViews(id: Long)
 
 
 

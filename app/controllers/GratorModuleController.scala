@@ -77,7 +77,7 @@ object GratorModuleController extends Controller {
     }
     }.getOrElse(NotFound)
   }
-
+/*
   def generateAll(id: Long) = Action {
     GratorModule.findById(id).map{
       module:GratorModule => {
@@ -122,4 +122,5 @@ object GratorModuleController extends Controller {
       }
     }.getOrElse(NotFound)
   }
+*/
 }

@@ -1,0 +1,23 @@
+@(module: it.grator.module_source.Module, rels: List[it.grator.module_source.relationships.Relationship])
+@for(rel <- rels){
+  val @{rel.formName} = Form(
+  mapping(
+    "id" -> optional(longNumber),
+    "@{rel.primaryModule.varNameId}" -> longNumber,
+    "@{rel.relatedModule.varNameId}" -> longNumber
+  )(@{rel.className}.apply)(@{rel.className}.unapply))
+
+  def @{rel.relatedModule.varName}Insert(id: Long) = Action {
+    Ok(views.html.@{module.varName}.subpanels.@{rel.varName}.insert(@{rel.formName}, id, @{rel.relatedModule.fullClassName}.getOptions))
+  }
+
+  def @{rel.relatedModule.varName}Save(id: Long) = Action { implicit request =>
+    @{rel.formName}.bindFromRequest.fold(
+      formWithErrors => BadRequest(views.html.@{module.varName}.subpanels.@{rel.varName}.insert(@{rel.formName},id, @{rel.relatedModule.fullClassName}.getOptions)),
+      @{rel.varName} => {
+        @{rel.className}.save(@{rel.varName})
+        Redirect(routes.@{module.controllerName}.detail(id))
+      }
+    )
+  }
+}

@@ -11,6 +11,10 @@ import play.api.data.Forms._
 import play.api.db.slick.DB
 import play.api.db.slick.Config.driver.simple._
 
+import play.api.Logger
+
+import it.grator.module_source.{App, AppFactory}
+
 object GratorAppController extends Controller {
   def index = Action {
     val gratorApps = GratorApp.findAllWithRelateds
@@ -81,11 +85,19 @@ object GratorAppController extends Controller {
   def generateAll(id: Long) = Action {
     GratorApp.findById(id).map{
       application:GratorApp => {
-        application.generateAll
+        val gModules = application.modules
+        val gFields = application.fields
+        val gRelationships = application.relationships
+
+        //val app = AppFactory.construct(application.name, application.path, gModules, gFields, gRelationships)
+        val app = AppFactory.construct(application.name, application.path, gModules, gFields, gRelationships)
+        app.generateAll()
+
         Redirect(routes.GratorAppController.detail(application.id.get)) 
       }
     }.getOrElse(NotFound)
   }
+
 
   def backupAll(id: Long) = Action {
     GratorApp.findById(id).map{

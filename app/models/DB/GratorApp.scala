@@ -20,34 +20,6 @@ case class GratorApp(
 
   def relationships = GratorRelationship.findByApplication(this.id.get)
 
-  def generateAll(): Unit = {
-    val modules = GratorModule.findByApplication(this.id.get)
-    for(module <- modules){
-      module.generateAll
-    }
-
-    this.generateRoutes(modules)
-    this.generateMessages(modules)
-    this.generateMenu(modules)
-  }
-
-  def generateMessages(modules: List[GratorModule]): Unit = {
-    val path = this.path+"conf/messages"
-
-    FileUtils.writeToFile(path,views.html.gratorApp.template.messages(this.name, modules).toString)
-    FileUtils.writeToFile(path+".es",views.html.gratorApp.template.messages_es(this.name, modules).toString)
-  }
-
-  def generateRoutes(modules: List[GratorModule]): Unit = {
-    val path = this.path+"conf/routes"
-    FileUtils.writeToFile(path,views.html.gratorApp.template.routes(modules).toString)
-  }
-
-  def generateMenu(modules: List[GratorModule]): Unit = {
-    val path = this.path+"app/views/main.scala.html"
-    FileUtils.writeToFile(path,views.html.gratorApp.template.main(modules).toString)
-  }
-
   implicit val GratorAppWrites = new Writes[GratorApp] {
     def writes(app: GratorApp) = Json.obj(
       "id" -> app.id,

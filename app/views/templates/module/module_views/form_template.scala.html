@@ -1,0 +1,15 @@
+@(module: it.grator.module_source.Module, fields: List[it.grator.module_source.fields.Field])
+@@(rowForm: Form[models.DB.@{module.className}], route: play.api.mvc.Call, row: Option[models.DB.@{module.className}] = None)(implicit lang: Lang)
+
+@@import helper._
+@@import helper.twitterBootstrap._
+
+@@helper.form(action = route) {
+  <fieldset>
+    @for(field <- fields){
+		@{Html(field.htmlForm)}
+	}
+  </fieldset>
+  <p><input type="submit" class="btn primary"
+  value='@@Messages("@{module.name}.save")'></p>
+}

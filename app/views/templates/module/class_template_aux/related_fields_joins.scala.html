@@ -1,0 +1,2 @@
+@(module: it.grator.module_source.Module, relatedFields: List[it.grator.module_source.fields.RelatedField])@for(relatedField <- relatedFields){@relatedField.varName <- @relatedField.relatedModule.queryName if @{module.varName}.@{relatedField.name} === @{relatedField.varName}.id
+}

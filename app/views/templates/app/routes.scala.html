@@ -1,0 +1,26 @@
+@(app: it.grator.module_source.App)
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+#GET     /                    controllers.Application.index
+
+@for(module <- app.modules){
+
+#@{module.name}:
+GET   /@{module.name}                				controllers.@{module.controllerName}.index
+GET   /@{module.name}/:id/detail     				controllers.@{module.controllerName}.detail(id: Long)
+GET   /@{module.name}/insert         				controllers.@{module.controllerName}.insert
+GET   /@{module.name}/:id/edit       				controllers.@{module.controllerName}.edit(id: Long)
+POST  /@{module.name}/save           				controllers.@{module.controllerName}.save
+POST  /@{module.name}/:id/delete     				controllers.@{module.controllerName}.delete(id: Long)
+POST  /@{module.name}/:id/update     				controllers.@{module.controllerName}.update(id: Long)
+@for(rel <- app.getPrimaryRelationships(module)){
+GET	  /@{module.name}/:id/@{rel.relatedModule.varName}_insert   controllers.@{module.controllerName}.@{rel.relatedModule.varName}Insert(id: Long)
+POST  /@{module.name}/:id/@{rel.relatedModule.varName}_save     controllers.@{module.controllerName}.@{rel.relatedModule.varName}Save(id: Long)
+}
+}
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.at(path="/public", file)

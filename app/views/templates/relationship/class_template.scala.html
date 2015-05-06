@@ -1,0 +1,86 @@
+@(rel: it.grator.module_source.relationships.Relationship)
+package models.DB
+
+import play.api.Play.current
+
+import play.api.db.slick.DB
+import play.api.db.slick.Config.driver.simple._
+
+import @rel.primaryModule.externalTableRef
+import @rel.relatedModule.externalTableRef
+
+
+case class @{rel.className}(
+  id: Option[Long] = None,
+  @{rel.primaryModule.varName}: Long,
+  @{rel.relatedModule.varName}: Long
+){
+  
+}
+
+object @{rel.className}{
+  @views.html.templates.relationship.table_template(rel)
+
+  val @{rel.queryName} = TableQuery[@rel.tableClassName]
+
+  def save(@{rel.varName}: @{rel.className}):Long = {
+    DB.withTransaction { implicit session =>
+      this.@{rel.queryName}.returning(@{rel.queryName}.map(_.id)).insert(@{rel.varName})
+    }
+  }
+  
+  def update(@{rel.varName}: @{rel.className}):Int = {
+    DB.withTransaction { implicit session =>
+      val q = for {
+        s <- @{rel.queryName}
+        if s.id === @{rel.varName}.id
+      } yield(s)
+      q.update(@{rel.varName})
+    }
+  }
+  
+  def delete(@{rel.varName}: @{rel.className}):Int = {
+    DB.withTransaction { implicit session =>
+       val q = for {
+        s <- @{rel.queryName}
+        if s.id === @{rel.varName}.id.get
+      } yield(s)
+      q.delete
+    }
+  }
+  
+  def findAll: List[@{rel.className}] = {
+    DB.withSession { implicit session =>
+      @{rel.queryName}.list
+    }
+  }
+  
+  def findById(id: Long):Option[@{rel.className}] = {
+    DB.withSession { implicit session =>
+      val q = for{
+        s <- @{rel.queryName} if s.id === id
+      } yield (s)
+      q.firstOption
+    }
+  }
+
+  def @{rel.primaryModule.findByMethod}(@{rel.primaryModule.varNameId}: Long): List[(@{rel.className}, @{rel.relatedModule.className})] = {
+    DB.withSession { implicit session =>
+      val q = for {
+        @rel.varName <- @rel.queryName   if @{rel.varName}.@{rel.primaryModule.varName} === @{rel.primaryModule.varNameId}
+        @{rel.relatedModule.varName} <- @{rel.relatedModule.externalTableRef} if @{rel.varName}.@{rel.relatedModule.varName} === @{rel.relatedModule.varName}.id
+      } yield (@{rel.varName}, @{rel.relatedModule.varName})
+      q.list
+    }
+  }
+
+  def @{rel.relatedModule.findByMethod}(@{rel.relatedModule.varNameId}: Long): List[(@{rel.className}, @{rel.primaryModule.className} )] = {
+    DB.withSession { implicit session =>
+      val q = for {
+        @rel.varName <- @rel.queryName   if @{rel.varName}.@{rel.relatedModule.varName} === @{rel.relatedModule.varNameId}
+        @{rel.primaryModule.varName} <- @{rel.primaryModule.externalTableRef} if @{rel.varName}.@{rel.primaryModule.varName} === @{rel.primaryModule.varName}.id
+      } yield (@{rel.varName} , @{rel.primaryModule.varName})
+      q.list
+    }
+  }
+}

@@ -1,0 +1,32 @@
+@(app: it.grator.module_source.App, module: it.grator.module_source.Module, relatedFields: List[it.grator.module_source.fields.RelatedField], primaryRelationships: List[it.grator.module_source.relationships.Relationship])
+@import views.html.templates.{module => tmodule}
+@@(@{module.varName}: @{module.tupleType(app)} @for(rel <- primaryRelationships){, @{rel.varName}: List[@{rel.relatedModule.fullClassName}]})
+	
+@@main(Messages("@{module.name}.name")){
+	<div class="page-header">
+		@if(relatedFields.isEmpty){
+    	<h1>@@Messages("@{module.name}.item_detail",@{module.varName}.name)</h1>
+    	} else {
+    	<h1>@@Messages("@{module.name}.item_detail",@{module.varName}._1.name)</h1>
+    	}
+  </div>
+	
+  @@views.html.@{module.name}.list(List(@{module.varName}))
+
+ 	<p>
+		<a href="@@controllers.routes.@{module.controllerName}.index()"
+		class="btn">
+		<i class="icon-plus"></i> @@Messages("@{module.name}.index")</a>
+
+		@if(relatedFields.isEmpty){
+		@@views.html.@{module.name}.delete(route = routes.@{module.controllerName}.delete(@{module.varName}.id.get), @{module.varName} = Some(@{module.varName}))
+		} else {
+		@@views.html.@{module.name}.delete(route = routes.@{module.controllerName}.delete(@{module.varName}._1.id.get), @{module.varName} = Some(@{module.varName}._1))
+		}
+	</p>
+
+	@* load subpanels *@
+	@for(rel <- primaryRelationships){
+	@@views.html.@{rel.primaryModule.varName}.subpanels.@{rel.varName}.subpanel(@{rel.varName}, @{module.getId(primaryRelationships.isEmpty)})
+	}
+}

@@ -1,0 +1,5 @@
+@(primaryRelationships: List[it.grator.module_source.relationships.Relationship])
+@if(primaryRelationships.isEmpty){}else{
+@for(rel <- primaryRelationships){
+, @{rel.className}.@{rel.primaryModule.findByMethod}(id).map(t => t._2)
+}}

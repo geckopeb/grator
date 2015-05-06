@@ -8,8 +8,6 @@ import play.api.db.slick.Config.driver.simple._
 
 import GratorModule.gratorModuleT
 
-import models.Module
-
 case class GratorRelationship(
   
     id: Option[Long] = None,
@@ -22,17 +20,7 @@ case class GratorRelationship(
     relatedModuleLabel: String,
     relatedModuleSubpanel: String
 ){
-  def primaryModule = GratorModule.findById(this.primaryModuleId)
-  def primaryModuleModule: Option[Module] = this.primaryModule match {
-    case Some(m: GratorModule) => Some(new Module(m))
-    case None => None
-  }
-  def relatedModule = GratorModule.findById(this.relatedModuleId)
-  def relatedModuleModule: Option[Module] = this.relatedModule match {
-    case Some(m: GratorModule) => Some(new Module(m))
-    case None => None
-  }
-  
+
 }
 
 object GratorRelationship{
@@ -167,7 +155,7 @@ gratorModulerelatedModuleId <- gratorModuleT if gratorRelationship.relatedModule
   def getRelTypeOptions(): Seq[(String,String)] = {
     Seq(
       //("1aN","1aN"),
-      ("NaN","NaN")
+      ("ManyToMany","ManyToMany")
     )
   }
 

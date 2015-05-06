@@ -1,3 +1,0 @@
-@(module: models.Module, relatedFields: List[models.fields.RelatedField])
-@if(relatedFields.isEmpty){ @{module.varName}
-} else { ( @{module.varName} @for(relatedField <- relatedFields){, @relatedField.varName} ) }

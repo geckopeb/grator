@@ -1,0 +1,16 @@
+@(rel: it.grator.module_source.relationships.Relationship)
+@@(@{rel.relatedModule.varName}: List[@{rel.relatedModule.fullClassName}], @{rel.primaryModule.varNameId}: Long)
+<legend>
+	<b>Contacts</b>
+</legend>
+
+<div id="@{rel.relatedModule.className}_subpanel_select">
+	<p>
+		<a href="@@controllers.routes.@{rel.primaryModule.controllerName}.@{rel.relatedModule.varName}Insert(@{rel.primaryModule.varNameId})"
+		class="btn">
+		<i class="icon-plus"></i> @@Messages("@{rel.relatedModule.varName}.select")</a>
+	</p>
+</div>
+<div id="@{rel.relatedModule.className}_subpanel_list">
+	@@views.html.@{rel.relatedModule.varName}.list(@{rel.relatedModule.varName})
+</div>

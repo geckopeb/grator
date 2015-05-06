@@ -1,0 +1,92 @@
+@(app: it.grator.module_source.App, module: it.grator.module_source.Module, fields: List[it.grator.module_source.fields.Field], relatedFields: List[it.grator.module_source.fields.RelatedField])
+package @{module.packageName}
+
+import play.api.Play.current
+
+import play.api.db.slick.DB
+import play.api.db.slick.Config.driver.simple._
+
+@for(relatedField <- relatedFields){import @{relatedField.relatedModule.externalTableRef}
+}
+case class @{module.className}(
+  @for((field,index) <- fields.zipWithIndex){
+    @{Html(field.classDefinition)}@{if(index != fields.length - 1){','}else{""}}}
+){
+  
+}
+
+object @{module.className}{
+  @views.html.templates.module.class_template_aux.table_template(module, fields, relatedFields)
+
+  val @{module.queryName} = TableQuery[@module.tableClassName]
+
+  def save(@{module.varName}: @{module.className}):Long = {
+    DB.withTransaction { implicit session =>
+      @{module.queryName}.returning(@{module.queryName}.map(_.id)).insert(@{module.varName})
+    }
+  }
+  
+  def update(@{module.varName}: @{module.className}):Int = {
+    DB.withTransaction { implicit session =>
+      val q = for {
+        s <- @{module.queryName}
+        if s.id === @{module.varName}.id
+      } yield(s)
+      q.update(@{module.varName})
+    }
+  }
+  
+  def delete(@{module.varName}: @{module.className}):Int = {
+    DB.withTransaction { implicit session =>
+       val q = for {
+        s <- @{module.queryName}
+        if s.id === @{module.varName}.id.get
+      } yield(s)
+      q.delete
+    }
+  }
+
+  def findAllWithRelateds: List[@{module.tupleType(app)}] = {
+    DB.withSession { implicit session =>
+      val q = for {
+        @{module.varName} <- @{module.queryName}
+        @views.html.templates.module.class_template_aux.related_fields_joins(module,relatedFields)
+      } yield (@views.html.templates.module.class_template_aux.related_fields_yield(module,relatedFields))
+      q.list
+    }
+  }
+  
+  def findAll: List[@{module.className}] = {
+    DB.withSession { implicit session =>
+      @{module.queryName}.list
+    }
+  }
+  
+  def findById(id: Long):Option[@{module.className}] = {
+    DB.withSession { implicit session =>
+      val q = for{
+        s <- @{module.queryName} if s.id === id
+      } yield (s)
+      q.firstOption
+    }
+  }
+
+  def findByIdWithRelateds(id: Long):Option[@{module.tupleType(app)}] = {
+    DB.withSession { implicit session =>
+      val q = for {
+        @{module.varName} <- @{module.queryName} if @{module.varName}.id === id
+        @views.html.templates.module.class_template_aux.related_fields_joins(module,relatedFields)
+      } yield (@views.html.templates.module.class_template_aux.related_fields_yield(module,relatedFields))
+      q.firstOption
+    }
+  }
+
+  def getOptions(): Seq[(String,String)] = {
+    DB.withSession { implicit session =>
+      val @{module.pluralName} = for {
+        p <- @{module.queryName}
+      } yield(p)
+      for(@{module.varName} <- @{module.pluralName}.list) yield(@{module.varName}.id.get.toString,@{module.varName}.name) 
+    }
+  }
+}

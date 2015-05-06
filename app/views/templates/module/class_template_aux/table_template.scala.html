@@ -1,0 +1,7 @@
+@(module: it.grator.module_source.Module, fields: List[it.grator.module_source.fields.Field], relatedFields: List[it.grator.module_source.fields.RelatedField])
+  class @{module.tableClassName}(tag: Tag) extends Table[@{module.className}](tag, "@{module.tableName}"){
+    @views.html.templates.module.class_template_aux.fields_table_template(fields)
+    def * = ( @Html(fields.map(_.nameInTable).mkString(", ")) ) <> ((@{module.className}.apply _).tupled, @{module.className}.unapply _)
+    @for(relatedField <- relatedFields){@Html(relatedField.tableIndex)
+	}
+  }

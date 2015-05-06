@@ -6,9 +6,8 @@ import play.api.db.slick.DB
 import play.api.db.slick.Config.driver.simple._
 
 import GratorModule.gratorModuleT
-import GratorModule.gratorModuleT
 
-import models.Module
+//import models.Module
 import models.DB.GratorModule
 
 case class GratorField(
@@ -20,18 +19,12 @@ case class GratorField(
     relatedModuleId: Option[Long]
 ){
   def module = GratorModule.findById(this.moduleId).get
-  def moduleModule = new Module(this.module)
 
   def relatedModule: Option[GratorModule] = {
     this.relatedModuleId match{
       case Some(id) => Some(GratorModule.findById(id).get)
       case None => None
     }
-  }
-
-  def relatedModuleModule: Option[Module] = this.relatedModule match {
-    case Some(module) => Some(new Module(module))
-    case None => None
   }
 }
 

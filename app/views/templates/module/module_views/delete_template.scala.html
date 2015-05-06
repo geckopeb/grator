@@ -1,0 +1,10 @@
+@(module: it.grator.module_source.Module)
+@@(route: play.api.mvc.Call, @{module.varName}: Option[@{module.fullClassName}] = None)
+
+@@import helper._
+
+@@helper.form(action = route) {
+  <input type="hidden" id="id" name="id" value="@@{@{module.varName}.get.id.get}"></input>
+  <p><input type="submit" class="btn primary"
+  value='@@Messages("@{module.name}.delete", @{module.varName}.get.name)'></p>
+}

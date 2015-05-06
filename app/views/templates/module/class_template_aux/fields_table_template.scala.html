@@ -1,0 +1,3 @@
+@(fields: List[it.grator.module_source.fields.Field])
+@for((field,index) <- fields.zipWithIndex){    @{Html(field.fieldTable)}
+}

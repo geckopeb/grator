@@ -1,0 +1,12 @@
+@(rel: it.grator.module_source.relationships.Relationship)
+  class @{rel.tableClassName}(tag: Tag) extends Table[@{rel.className}](tag, "@{rel.tableName}"){
+
+  	def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
+  	def @rel.primaryModule.varName = column[Long]("@{rel.primaryModule.relationshipTableColumn}")
+  	def @rel.relatedModule.varName = column[Long]("@{rel.relatedModule.relationshipTableColumn}")
+
+  	def * = (id.?, @rel.primaryModule.varName, @rel.relatedModule.varName) <> ((@{rel.className}.apply _).tupled, @{rel.className}.unapply _)
+
+  	def @rel.primaryModule.relationshipIndexVar = foreignKey("@{rel.primaryModule.relationshipIndexName}", @rel.primaryModule.varName, @rel.primaryModule.externalTableRef)(_.id)
+    def @rel.relatedModule.relationshipIndexVar = foreignKey("@{rel.relatedModule.relationshipIndexName}", @rel.relatedModule.varName, @rel.relatedModule.externalTableRef)(_.id)
+  }

@@ -1,0 +1,16 @@
+@(module: it.grator.module_source.Module, relatedFields: List[it.grator.module_source.fields.RelatedField], tupleType: String)
+@@(rows: List[@{tupleType}])(implicit lang: Lang)
+
+@@main(Messages("@{module.name}.name")){
+	<div class="page-header">
+    	<h1>@@Messages("@{module.name}.module_name")</h1>
+  </div>
+	
+  @@views.html.@{module.name}.list(rows)
+
+ 	<p>
+		<a href="@@controllers.routes.@{module.controllerName}.insert()"
+		class="btn">
+		<i class="icon-plus"></i> @@Messages("@{module.name}.new")</a>
+	</p>
+}

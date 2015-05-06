@@ -1,0 +1,37 @@
+@(module: it.grator.module_source.Module, rel: it.grator.module_source.relationships.Relationship)
+@@(@{rel.formName}: Form[@{rel.fullClassName}], id: Long, @{rel.relatedModule.varName}Options: Seq[(String,String)] )(implicit lang: Lang)
+
+@@import helper._
+@@import helper.twitterBootstrap._
+
+@@main(Messages("@{rel.relatedModule.varName}.add_rel")){
+  <div class="page-header">
+      <h1>@@Messages("@{module.varName}.add_rel")</h1>
+  </div>
+
+@@helper.form(action = routes.@{module.controllerName}.@{rel.relatedModule.varName}Save(id)) {
+  <fieldset>
+    <input type="hidden" name="id" value="">
+
+    <input type="hidden" name="@{rel.primaryModule.varNameId}" id="@{rel.primaryModule.varNameId}" value="@@id">
+
+	<legend>
+			@@Messages("@{rel.relatedModule.varName}.item_name")
+		   </legend>
+		    @@select(
+	          @{rel.formName}("@{rel.relatedModule.varNameId}"),
+	          @{rel.relatedModule.varName}Options,
+	          'default -> "-- select --"
+	       )
+
+  </fieldset>
+  <p><input type="submit" class="btn primary"
+  value='@@Messages("@{rel.relatedModule.varName}.save")'></p>
+}
+
+  <p>
+    <a href="@@controllers.routes.@{module.controllerName}.index()"
+    class="btn">
+    <i class="icon-plus"></i>@@Messages("@{module.varName}.return")</a>
+  </p>
+}
