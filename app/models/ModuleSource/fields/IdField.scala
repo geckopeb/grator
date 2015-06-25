@@ -1,6 +1,6 @@
 package it.grator.module_source.fields
 
-import it.grator.module_source.Module
+import it.grator.module_source._
 
 case class IdField(
 	name: String,
@@ -15,10 +15,13 @@ case class IdField(
 		s""""id" -> $formType"""
 	}
 
-	override def htmlForm: String = {
- """@row match {
-    	case Some(row) => {
-    		<input type="hidden" name="id" value="@row.id.get">
+	override def htmlForm(app: App): String = {
+		val varOrTuple = this.module.varOrTuple(app)
+		val templateId = this.module.templateId(app)
+
+ s"""@$varOrTuple match {
+    	case Some($varOrTuple) => {
+    		<input type="hidden" name="id" value="@$templateId">
     	}
     	case None => {}
 	  }"""

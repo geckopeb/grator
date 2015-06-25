@@ -1,5 +1,5 @@
 @(module: it.grator.module_source.Module)
-@@(route: play.api.mvc.Call, @{module.varName}: Option[@{module.fullClassName}] = None)
+@@(route: play.api.mvc.Call, @{module.varName}: Option[@{module.fullClassName}] = None)(implicit messages: Messages, req: RequestHeader)
 
 @@import helper._
 

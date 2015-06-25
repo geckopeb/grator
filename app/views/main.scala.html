@@ -1,43 +1,54 @@
-@(title: String)(content: Html)
-<!DOCTYPE html>
 
+@(title: String)(content: Html)(implicit messages: Messages, req: RequestHeader)
+<!DOCTYPE html>
+@import helper._
 <html>
     <head>
         <title>@title</title>
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/bootstrap.min.css")">
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
-        <script src="@routes.Assets.at("javascripts/jquery-1.9.0.min.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/jquery-2.1.4.min.js")" type="text/javascript"></script>
+        @helper.javascriptRouter("jsRoutes")(
+          
+          routes.javascript.GratorAppController.relatedCombo,
+          
+          routes.javascript.GratorModuleController.relatedCombo,
+          
+          routes.javascript.GratorFieldController.relatedCombo,
+          
+          routes.javascript.GratorRelationshipController.relatedCombo
+          
+        )
     </head>
     <body>
-       <div class="navbar navbar-fixed-top">
-      <div class="navbar-inner">
-        <div class="container">
+	     <div class="navbar navbar-fixed-top">
+			<div class="navbar-inner">
+				<div class="container">
           
           
           <a class="brand" href="@routes.GratorAppController.index()">
-            @Messages("gratorApp.module_name")
+            @Messages("GratorApp.module_name")
           </a>
           
           <a class="brand" href="@routes.GratorModuleController.index()">
-            @Messages("gratorModule.module_name")
+            @Messages("GratorModule.module_name")
           </a>
           
           <a class="brand" href="@routes.GratorFieldController.index()">
-            @Messages("gratorField.module_name")
+            @Messages("GratorField.module_name")
           </a>
-
-		  <a class="brand" href="@routes.GratorRelationshipController.index()">
-            @Messages("gratorRelationship.module_name")
+          
+          <a class="brand" href="@routes.GratorRelationshipController.index()">
+            @Messages("GratorRelationship.module_name")
           </a>
-           
+          
 
         </div>
-      </div>
-    </div>
-    <div class="container">
-      @content
-    </div>
+			</div>
+		</div>
+		<div class="container">
+			@content
+		</div>
     </body>
 </html>
-

@@ -11,6 +11,8 @@ case class Module(
 	def packageName = Module.packageName
 
 	def varName = Module.varName(this.name)
+	def futureVarName = Module.futureVarName(this.name)
+	def tupleName = Module.tupleName(this.name)
 	def className = Module.className(this.name)
 	def fullClassName = Module.fullClassName(this.name)
 
@@ -20,15 +22,33 @@ case class Module(
 	def externalTableRef = Module.externalTableRef(this.name)
 	def formName = Module.formName(this.name)
 	def findByMethod = Module.findByMethod(this.name)
+	def findByMethodWithRelateds = Module.findByMethodWithRelateds(this.name)
+
+	def writesMethod = Module.writesMethod(this.name) //toJson
+	def relatedComboJsonMethod = Module.relatedComboJsonMethod(this.name)
+	def jsRoutes = Module.jsRoutes(this.name)
+
 	def varNameId = Module.varNameId(this.name)
 	def tableName = Module.tableName(this.name)
 	def pluralName = Module.pluralName(this.name)//TODO add plural name field to module and update this method
 
 	def relationshipTableColumn = Module.relationshipTableColumn(name)
-	def relationshipIndexVar = Module.relationshipIndexVar(name) 
-	def relationshipIndexName = Module.relationshipIndexName(name) 
-	
-	def getId(hasRelationships: Boolean) = Module.getId(this.name, hasRelationships)
+	def relationshipIndexVar = Module.relationshipIndexVar(name)
+	def relationshipIndexName = Module.relationshipIndexName(name)
+
+	def hasRelatedFields(app: App) = Module.hasRelatedFields(this, app)
+
+	def templateRow(app: App) = Module.templateRow(this, app)
+	def templateId(app: App) = Module.templateId(this, app)
+
+	def varOrTuple(app: App) = Module.varOrTuple(this, app)
+
+	def findByIdMethod(app: App) = Module.findByIdMethod(this, app)
+
+	/*
+	ESP: Pendiente implementar tupleType y renombrar tupleType a fullTupleType
+	Tuple type no tiene que tener el full path de la clase.
+	*/
 
 	def tupleType(app: App): String = {
 		val rFields = this.relatedFields(app)
@@ -38,7 +58,7 @@ case class Module(
 
 		val simpleType = s"""$packageName.$className"""
 
-		if(rFields.isEmpty){ 
+		if(rFields.isEmpty){
 			simpleType
 		} else {
 			val restType = for {rField <- rFields} yield (packageName+"."+rField.relatedModule.className)
@@ -63,6 +83,32 @@ case class Module(
 		}
 	}
 
+	def detailTupleExtractor(app: App): String = {
+		val rels = this.primaryRelationships(app)
+
+		if(rels.isEmpty){
+			s"""(Some($varName))"""
+		} else {
+			val restName = for {rel <- rels} yield ( rel.varName )
+			val restNameStr = restName.mkString(", ")
+
+			s"""Some($varName), $restNameStr"""
+		}
+	}
+
+	def detailParams(app: App): String = {
+		val rels = this.primaryRelationships(app)
+
+		if(rels.isEmpty){
+			s"""($varName)"""
+		} else {
+			val restName = for {rel <- rels} yield ( rel.varName )
+			val restNameStr = restName.mkString(", ")
+
+			s"""$varName, $restNameStr"""
+		}
+	}
+
 	def fields(app: App): List[Field] = app.fields.filter(_.module == this)
 
 	def relatedFields(app: App) = this.fields(app).flatMap {
@@ -81,7 +127,7 @@ case class Module(
 	def generateController(app: App): Unit = {
     	val path = this.generatePath(app, "app/controllers/", this.controllerName, ".scala")
 
-    	FileUtils.writeToFile(path,views.html.templates.module.controller_template(this,this.fields(app), this.relatedFields(app), this.primaryRelationships(app)).toString)
+    	FileUtils.writeToFile(path,views.html.templates.module.controller_template(app, this, this.fields(app), this.relatedFields(app), this.primaryRelationships(app)).toString)
   	}
 
 	def generateClass(app: App): Unit = {
@@ -100,14 +146,15 @@ case class Module(
 
 	def generateEditView(app: App): Unit = {
     	val path = this.generatePath(app, "app/views/"+this.name+"/", "edit", ".scala.html")
-    	val edit = views.html.templates.module.module_views.edit_template(this).toString
+
+    	val edit = views.html.templates.module.module_views.edit_template(app, this).toString
 
     	FileUtils.writeToFile(path, edit)
   	}
 
   	def generateFormView(app: App): Unit = {
 	    val path = this.generatePath(app, "app/views/"+this.name+"/", "form", ".scala.html")
-	    val form = 	views.html.templates.module.module_views.form_template(this, this.fields(app)).toString
+	    val form = 	views.html.templates.module.module_views.form_template(app, this, this.fields(app)).toString
 
 	    FileUtils.writeToFile(path,form)
   	}
@@ -144,6 +191,31 @@ case class Module(
 		FileUtils.writeToFile(path,delete)
 	}
 
+	def generateRelatedComboView(app: App): Unit = {
+		val path = this.generatePath(app, "app/views/"+this.name+"/widgets/", "related_combo", ".scala.html")
+
+		/*
+		ESP: no es posible interpolar la palabra case en un template,
+		La única forma es generandolo como string, lo cual no se puede realizar dentro del mismo,
+		Y en este punto no tenemos disponible el campo, este template es el que manejaría a todos
+		Los campos del tipo relatedCombo que apuntan al mismo módulo.
+		val varName = this.varName
+		*/
+
+		val matchExpression = s"""@$varName match{
+          case Some(row) => {
+            <input id="@{fieldName}_input_search" value="@row.name">
+          }
+          case None => {
+            <input id="@{fieldName}_input_search" value="">
+          }
+        }"""
+
+		val combo = views.html.templates.module.module_views.widgets.related_combo(app, this, matchExpression).toString
+
+		FileUtils.writeToFile(path, combo)
+	}
+
 	def generateViews(app: App): Unit = {
 		this.generateDetailView(app)
 		this.generateEditView(app)
@@ -152,12 +224,13 @@ case class Module(
 		this.generateInsertView(app)
 		this.generateListView(app)
 		this.generateDeleteView(app)
+		this.generateRelatedComboView(app)
 	}
 
 	def generateRelationshipRow(app: App, rel: Relationship): Unit = {
 		val path = this.generatePath(app, "app/models/DB/", rel.className, ".scala")
 
-		val relRow = views.html.templates.relationship.class_template(rel).toString
+		val relRow = views.html.templates.relationship.class_template(app, rel).toString
 
 		FileUtils.writeToFile(path, relRow)
 	}
@@ -165,9 +238,9 @@ case class Module(
 	def generateRelationshipViews(app: App, rel: Relationship): Unit = {
 		val path = this.generatePath(app, "app/views/"+this.varName+"/subpanels/"+rel.varName+"/","subpanel" ,".scala.html")
 
-		val subpanel = views.html.templates.relationship.subpanel.subpanel_template(rel).toString
+		val subpanel = views.html.templates.relationship.subpanel.subpanel_template(app, rel).toString
 
-		FileUtils.writeToFile(path,subpanel) 
+		FileUtils.writeToFile(path,subpanel)
 
 		val insertPath = this.generatePath(app, "app/views/"+this.varName+"/subpanels/"+rel.varName+"/","insert" ,".scala.html")
 
@@ -175,7 +248,7 @@ case class Module(
 
 		FileUtils.writeToFile(insertPath, insert)
 	}
-	
+
 	def generateRelationship(app: App, rel: Relationship): Unit = {
 		this.generateRelationshipRow(app, rel)
 		this.generateRelationshipViews(app, rel)
@@ -200,12 +273,14 @@ object Module {
 
 	def packageName = "models.DB"
 	def varName(name: String) = name
+	def futureVarName(name: String) = "future"+name
+	def tupleName(name: String) = Module.varName(name)+"Tuple"
 	def className(name: String) = name.capitalize
 	def fullClassName(name: String) = Module.packageName+"."+Module.className(name)
 	def controllerName(name: String) = name.capitalize+"Controller"
 	def tableClassName(name: String) = name.capitalize+"T"
 	def queryName(name: String) = name+"T"
-	
+
 	def externalTableRef(name: String) = {
 		val packageName = Module.packageName
 		val className = Module.className(name)
@@ -216,6 +291,11 @@ object Module {
 
 	def formName(name: String) = name+"Form"
 	def findByMethod(name: String) = "findBy"+Module.className(name)
+	def findByMethodWithRelateds(name: String) = Module.findByMethod(name)+"WithRelateds"
+	def writesMethod(name: String) = Module.varName(name)+"Writes" //toJson
+	def relatedComboJsonMethod(name: String) = "relatedCombo"
+	def jsRoutes(name: String) = "jsRoutes"+Module.className(name)
+
 	def varNameId(name: String) = name+"Id"
 	//This is the table name in the database.
 	def tableName(name: String) = TextUtils.camelToUnderscores(name)
@@ -225,14 +305,31 @@ object Module {
 	def relationshipIndexVar(name: String) = TextUtils.underscoreToCamel(name)+"Index"
 	def relationshipIndexName(name: String) = Module.tableName(name)+"_"+Module.relationshipTableColumn(name)
 
-	def getId(name: String, hasRelationships: Boolean): String = {
-		val varName = Module.varName(name)
-		if(hasRelationships){
-			varName+".id.get"
+	def hasRelatedFields(module: Module, app: App): Boolean = {
+		! module.relatedFields(app).isEmpty
+	}
+
+	// ESP templateRow y varOrTuple deberían revisarse...
+	def templateRow(module: Module, app: App): String = {
+		if(module.hasRelatedFields(app)){
+			module.tupleName+"._1"
 		} else {
-			varName+"._1.id.get"
+			module.varName
 		}
 	}
 
-	
+	def templateId(module: Module, app: App): String = {
+		Module.templateRow(module,app)+".id.get"
+	}
+
+	// ESP templateRow y varOrTuple deberían revisarse...
+	def varOrTuple(module: Module, app: App): String = {
+		if(module.hasRelatedFields(app)){
+			module.tupleName
+		} else {
+			module.varName
+		}
+	}
+
+	def findByIdMethod(module: Module, app: App): String = if(module.hasRelatedFields(app)) "findByIdWithRelateds" else "findById"
 }

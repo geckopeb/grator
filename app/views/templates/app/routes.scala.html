@@ -4,7 +4,7 @@
 # ~~~~
 
 # Home page
-#GET     /                    controllers.Application.index
+GET     /                    controllers.GratorAppController.index
 
 @for(module <- app.modules){
 
@@ -16,10 +16,11 @@ GET   /@{module.name}/:id/edit       				controllers.@{module.controllerName}.ed
 POST  /@{module.name}/save           				controllers.@{module.controllerName}.save
 POST  /@{module.name}/:id/delete     				controllers.@{module.controllerName}.delete(id: Long)
 POST  /@{module.name}/:id/update     				controllers.@{module.controllerName}.update(id: Long)
-@for(rel <- app.getPrimaryRelationships(module)){
+@for(rel <- module.primaryRelationships(app)){
 GET	  /@{module.name}/:id/@{rel.relatedModule.varName}_insert   controllers.@{module.controllerName}.@{rel.relatedModule.varName}Insert(id: Long)
 POST  /@{module.name}/:id/@{rel.relatedModule.varName}_save     controllers.@{module.controllerName}.@{rel.relatedModule.varName}Save(id: Long)
 }
+GET  /@{module.name}/@{module.relatedComboJsonMethod}/:q        controllers.@{module.controllerName}.@{module.relatedComboJsonMethod}(q: String)
 }
 
 # Map static resources from the /public folder to the /assets URL path

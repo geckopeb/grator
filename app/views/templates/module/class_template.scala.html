@@ -1,92 +1,107 @@
 @(app: it.grator.module_source.App, module: it.grator.module_source.Module, fields: List[it.grator.module_source.fields.Field], relatedFields: List[it.grator.module_source.fields.RelatedField])
 package @{module.packageName}
 
-import play.api.Play.current
+import scala.concurrent.Future
 
-import play.api.db.slick.DB
-import play.api.db.slick.Config.driver.simple._
+import play.api.libs.json._
+import play.api.Play
+import play.api.db.slick.DatabaseConfigProvider
+import play.api.db.slick.HasDatabaseConfig
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
+
+import slick.driver.JdbcProfile
+
+import it.grator.grator_base.Row
 
 @for(relatedField <- relatedFields){import @{relatedField.relatedModule.externalTableRef}
 }
 case class @{module.className}(
   @for((field,index) <- fields.zipWithIndex){
     @{Html(field.classDefinition)}@{if(index != fields.length - 1){','}else{""}}}
-){
-  
+) extends Row{
+  def description: String = this.id+"-"+this.name
 }
 
-object @{module.className}{
+object @{module.className} extends HasDatabaseConfig[JdbcProfile]{
+  import driver.api._
+  protected val dbConfig = DatabaseConfigProvider.get[JdbcProfile](Play.current)
+
   @views.html.templates.module.class_template_aux.table_template(module, fields, relatedFields)
 
   val @{module.queryName} = TableQuery[@module.tableClassName]
 
-  def save(@{module.varName}: @{module.className}):Long = {
-    DB.withTransaction { implicit session =>
-      @{module.queryName}.returning(@{module.queryName}.map(_.id)).insert(@{module.varName})
-    }
+  def save(@{module.varName}: @{module.className}): Future[Long] = {
+    db.run(@{module.queryName}.returning(@{module.queryName}.map(_.id)) += @{module.varName} )
   }
-  
-  def update(@{module.varName}: @{module.className}):Int = {
-    DB.withTransaction { implicit session =>
+
+  def update(@{module.varName}: @{module.className}): Future[Long] = {
       val q = for {
         s <- @{module.queryName}
         if s.id === @{module.varName}.id
       } yield(s)
-      q.update(@{module.varName})
-    }
+      db.run(q.update(@{module.varName})).map(_.toLong)
   }
-  
-  def delete(@{module.varName}: @{module.className}):Int = {
-    DB.withTransaction { implicit session =>
+
+  def delete(@{module.varName}: @{module.className}):Future[Int] = {
        val q = for {
         s <- @{module.queryName}
         if s.id === @{module.varName}.id.get
       } yield(s)
-      q.delete
-    }
+      db.run(q.delete)
   }
 
-  def findAllWithRelateds: List[@{module.tupleType(app)}] = {
-    DB.withSession { implicit session =>
+  def findAllWithRelateds: Future[List[@{module.tupleType(app)}]] = {
       val q = for {
         @{module.varName} <- @{module.queryName}
         @views.html.templates.module.class_template_aux.related_fields_joins(module,relatedFields)
       } yield (@views.html.templates.module.class_template_aux.related_fields_yield(module,relatedFields))
-      q.list
-    }
+      db.run(q.result).map(_.toList)
   }
-  
-  def findAll: List[@{module.className}] = {
-    DB.withSession { implicit session =>
-      @{module.queryName}.list
-    }
+
+  def findAll: Future[List[@{module.className}]] = {
+    db.run(@{module.queryName}.result).map(_.toList)
   }
-  
-  def findById(id: Long):Option[@{module.className}] = {
-    DB.withSession { implicit session =>
+
+  def findById(id: Long): Future[Option[@{module.className}]] = {
       val q = for{
         s <- @{module.queryName} if s.id === id
       } yield (s)
-      q.firstOption
-    }
+      db.run(q.result).map(_.headOption)
   }
 
-  def findByIdWithRelateds(id: Long):Option[@{module.tupleType(app)}] = {
-    DB.withSession { implicit session =>
+  def findByIdWithRelateds(id: Long): Future[Option[@{module.tupleType(app)}]] = {
       val q = for {
         @{module.varName} <- @{module.queryName} if @{module.varName}.id === id
         @views.html.templates.module.class_template_aux.related_fields_joins(module,relatedFields)
       } yield (@views.html.templates.module.class_template_aux.related_fields_yield(module,relatedFields))
-      q.firstOption
-    }
+      db.run(q.result).map(_.headOption)
   }
 
-  def getOptions(): Seq[(String,String)] = {
-    DB.withSession { implicit session =>
-      val @{module.pluralName} = for {
-        p <- @{module.queryName}
-      } yield(p)
-      for(@{module.varName} <- @{module.pluralName}.list) yield(@{module.varName}.id.get.toString,@{module.varName}.name) 
+  def getOptions(): Future[Seq[(String,String)]] = {
+    val q = for {
+      p <- @{module.queryName}
+    } yield(p.id, p.name)
+
+    db.run(q.result).map(rows => rows.map { case (id, name) => (id.toString, name) })
+  }
+
+  def findByQueryString(q: String): Future[List[@{module.className}]] = {
+      val qstring = "%"+q+"%"
+      val p = for{
+        @{module.varName} <- @{module.queryName} if @{module.varName}.name like qstring
+      } yield (@{module.varName})
+      db.run(p.result).map(_.toList)
+  }
+
+  def toJsonRelatedCombo(@{module.varName}: List[@{module.className}]) = {
+    implicit val @{module.writesMethod} = new Writes[@{module.className}] {
+      def writes(@{module.varName}: @{module.className}) = Json.obj(
+        "value" -> @{module.varName}.id.get,
+        "label" -> @{module.varName}.name,
+        "desc" -> @{module.varName}.toString //ESP pendiente generar una descripción!!!
+      )
     }
+    val jsonList = Json.toJson(@{module.varName})
+    Json.stringify(jsonList)
   }
 }

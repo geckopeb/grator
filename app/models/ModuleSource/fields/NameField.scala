@@ -1,6 +1,6 @@
 package it.grator.module_source.fields
 
-import it.grator.module_source.Module
+import it.grator.module_source._
 
 case class NameField(
 	name: String,
@@ -13,7 +13,7 @@ case class NameField(
 		s""""name" -> $formType"""
 	}
 
-	override def htmlForm: String = {
+	override def htmlForm(app: App): String = {
 		s"""<legend>
 				@Messages("$moduleName.item_name")
 		   </legend>
@@ -21,7 +21,7 @@ case class NameField(
 	}
 
 	def fieldTable: String = {
-		"""def name = column[String]("name",O.NotNull)"""
+		"""def name = column[String]("name")"""
 	}
 
 	def fieldType: String = "String"

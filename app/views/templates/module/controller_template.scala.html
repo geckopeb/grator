@@ -1,4 +1,4 @@
-@(module: it.grator.module_source.Module, fields: List[it.grator.module_source.fields.Field], relatedFields: List[it.grator.module_source.fields.RelatedField], primaryRelationships: List[it.grator.module_source.relationships.Relationship])
+@(app: it.grator.module_source.App, module: it.grator.module_source.Module, fields: List[it.grator.module_source.fields.Field], relatedFields: List[it.grator.module_source.fields.RelatedField], primaryRelationships: List[it.grator.module_source.relationships.Relationship])
 package controllers
 
 import play.api._
@@ -6,17 +6,22 @@ import play.api.mvc._
 
 import models.DB._
 
+import javax.inject.Inject
+
 import play.api.data._
 import play.api.data.Forms._
+import play.api.i18n.{MessagesApi, I18nSupport}
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
-import play.api.db.slick.DB
-import play.api.db.slick.Config.driver.simple._
+import scala.util.{Success, Failure}
+import scala.concurrent.Future
 
-object @{module.controllerName} extends Controller {
-  def index = Action {
-    val @{module.varName} = @{module.className}.findAllWithRelateds
-
-    Ok(views.html.@{module.name}.index(@{module.varName}))
+class @{module.controllerName} @@Inject() (val messagesApi: MessagesApi) extends Controller with I18nSupport {
+  def index = Action.async { implicit request =>
+    val @{module.futureVarName} = @{module.className}.findAllWithRelateds
+    @{module.futureVarName}.map{
+      @{module.varName} => Ok(views.html.@{module.name}.index(@{module.varName}))
+    }.recover {case ex: Exception => Ok("Fallo")}
   }
 
   val @{module.formName} = Form(
@@ -24,52 +29,80 @@ object @{module.controllerName} extends Controller {
       )(@{module.className}.apply)(@{module.className}.unapply)
   )
 
-  def insert = Action {
+  def insert = Action { implicit request =>
     Ok(views.html.@{module.name}.insert(@{module.formName}))
   }
-  
 
-  @views.html.templates.module.controller_template_aux.detail(module, primaryRelationships)
-  
-  def save = Action { implicit request =>
+  def detail(id: Long) = Action.async { implicit request =>
+    val futureData = for {
+      @{module.varName} <- @{module.className}.findByIdWithRelateds(id)
+      @for( rel <- primaryRelationships ) {
+      @rel.varName <- @{rel.className}.@{rel.primaryModule.findByMethodWithRelateds}(id)
+      }
+    } yield ( @{module.detailParams(app)} )
+    futureData.map{
+      @{"case"} (@{module.detailTupleExtractor(app)}) => Ok(views.html.@{module.name}.detail(@{module.detailParams(app)}))
+      @{"case"} _ => NotFound
+    }.recover { case ex: Exception => Ok("Fallo") }
+  }
+
+  def save = Action.async { implicit request =>
     @{module.formName}.bindFromRequest.fold(
-      formWithErrors => BadRequest(views.html.@{module.name}.insert(formWithErrors)),
+      formWithErrors => Future.successful(BadRequest(views.html.@{module.name}.insert(formWithErrors))),
       @{module.varName} => {
-        val id = @{module.className}.save(@{module.varName})
-        Redirect(routes.@{module.controllerName}.detail(id))
+        val @{module.futureVarName} = @{module.className}.save(@{module.varName})
+
+        @{module.futureVarName}.map{ result => Redirect(routes.@{module.controllerName}.detail(result))}.recover{
+          case ex: Exception => Redirect(routes.@{module.controllerName}.index())
+        }
       }
     )
   }
-  
-  def edit(id: Long) = Action{
-    @{module.className}.findById(id).map{
-      @{module.varName}:@{module.className} => Ok(views.html.@{module.name}.edit(@{module.formName}.fill(@{module.varName}),@{module.varName}))
-    }.getOrElse(NotFound)
+
+  def edit(id: Long) = Action.async{ implicit request =>
+    @{module.className}.@{module.findByIdMethod(app)}(id).map{
+      @{"case Some"}(@{module.varOrTuple(app)}) => Ok(views.html.@{module.name}.edit(@{module.formName}.fill(@{module.templateRow(app)}),@{module.varOrTuple(app)}))
+      @{"case None"} => NotFound
+    }.recover { case ex: Exception => Ok("Fallo")}
   }
-  
-  def delete(id: Long) = Action{
+
+  def delete(id: Long) = Action.async{
     implicit request =>
     @{module.className}.findById(id).map{
-      @{module.varName} => {
+      @{"case Some"}(@{module.varName}) => {
           @{module.className}.delete(@{module.varName})
           Redirect(routes.@{module.controllerName}.index())
-    }
-    }.getOrElse(NotFound)
-  }
-  
-  def update(id: Long) = Action{ implicit request =>
-    @{module.className}.findById(id).map{
-      @{module.varName} => {
-      @{module.formName}.bindFromRequest.fold(
-        formWithErrors => BadRequest(views.html.@{module.name}.edit(formWithErrors,@{module.varName})),
-        @{module.varName} => {
-          @{module.className}.update(@{module.varName})
-          Redirect(routes.@{module.controllerName}.detail(@{module.varName}.id.get))
         }
-      )
-    }
-    }.getOrElse(NotFound)
+      @{"case None"} => NotFound
+    }.recover { case ex: Exception => Ok("Fallo") }
+  }
+
+  def update(id: Long) = Action.async{ implicit request =>
+    @{module.className}.@{module.findByIdMethod(app)}(id).map{
+      @{"case Some"}(@{module.varOrTuple(app)}) => {
+        @{module.formName}.bindFromRequest.fold(
+          formWithErrors => BadRequest(views.html.@{module.name}.edit(formWithErrors,@{module.varOrTuple(app)})),
+          @{module.varName} => {
+            @{module.className}.update(@{module.varName})
+            Redirect(routes.@{module.controllerName}.detail(@{module.varName}.id.get))
+          }
+        )
+      }
+      @{"case None"} => NotFound
+    }.recover { case ex: Exception => Ok("Fallo") }
   }
 
   @views.html.templates.module.controller_template_aux.relationship_actions(module, primaryRelationships)
+
+  def @{module.relatedComboJsonMethod}(q: String) = Action.async { implicit request =>
+    val futureOptions = @{module.className}.findByQueryString(q)
+
+    futureOptions.map{
+      @{"case"} options => {
+        val @{module.varName} = @{module.className}.toJsonRelatedCombo(options)
+        Ok(@{module.varName}).as("application/json")
+      }
+    }.recover { case ex: Exception => Ok("Fallo") }
+  }
+
 }

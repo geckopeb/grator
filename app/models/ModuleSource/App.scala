@@ -24,6 +24,14 @@ case class App(
     	FileUtils.writeToFile(path,routes)
 	}
 
+	def generateAppController(): Unit = {
+		val path = this.path+"app/controllers/GratorAppController.scala"
+
+		val controller = views.html.templates.app.grator_app_controller_template(this).toString
+
+		FileUtils.writeToFile(path,controller)
+	}
+
 	def generateMessages(): Unit = {
 		val path = this.path+"conf/messages"
 
@@ -33,13 +41,50 @@ case class App(
 
 	def generateMenu(): Unit = {
 	    val path = this.path+"app/views/main.scala.html"
-		FileUtils.writeToFile(path,views.html.templates.app.main(this).toString)	
+		FileUtils.writeToFile(path,views.html.templates.app.main(this).toString)
+	}
+
+	def generateMainIndex(): Unit = {
+	  val path = this.path+"app/views/index.scala.html"
+
+	  FileUtils.writeToFile(path,views.html.templates.app.index_template().toString)
+	}
+
+	def generateApplicationController(): Unit = {
+	  val path = this.path+"app/controllers/Application.scala"
+
+	  FileUtils.writeToFile(path,views.html.templates.app.application_controller_template().toString)
+	}
+
+	def copyAssets(): Unit = {
+		val destBasePath = this.path+"public/"
+
+		FileUtils.copy("public/javascripts", destBasePath+"javascripts")
+		FileUtils.copy("public/stylesheets", destBasePath+"stylesheets")
+	}
+
+	def generateHome(): Unit = {
+		val path = this.path+"app/views/home/index.scala.html"
+
+		FileUtils.writeToFile(path,views.html.templates.app.home_template().toString)
+	}
+
+	def copyBase(): Unit = {
+		val destBasePath = this.path+"app/gratorBase/"
+
+		FileUtils.copy("app/gratorBase", destBasePath)
 	}
 
 	def generateAll(): Unit = {
 		this.generateRoutes()
+		this.generateAppController()
 	    this.generateMessages()
 	    this.generateMenu()
+	    this.generateMainIndex()
+	    //this.generateApplicationController()
+	    this.copyAssets()
+	    this.generateHome()
+			this.copyBase()
 
 	    for(module <- this.modules){
 	    	module.generateAll(this)

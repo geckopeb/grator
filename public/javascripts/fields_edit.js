@@ -6,7 +6,7 @@ $(document).ready(function(){
 function checkType(){
 	var type = $("#fieldType").val();
 
-	if(type == 'Related'){
+	if(type == 'RelatedCombo' || type == 'RelatedDropdown'){
 		$("#related_aux").show();
 	} else {
 		$("#related_aux").hide();

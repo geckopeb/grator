@@ -1,11 +1,11 @@
 @(module: it.grator.module_source.Module)
-@@(form: Form[@{module.fullClassName}])(implicit lang: Lang)
+@@(form: Form[@{module.fullClassName}])(implicit messages: Messages, req: RequestHeader)
 
 @@main(Messages("@{module.name}.insert")){
   <div class="page-header">
       <h1>@@Messages("@{module.name}.insert")</h1>
   </div>
-  
+
   @@views.html.@{module.name}.form(form, route = routes.@{module.controllerName}.save())
 
   <p>

@@ -1,0 +1,16 @@
+
+@(form: Form[models.DB.GratorField])(implicit messages: Messages, req: RequestHeader)
+
+@main(Messages("GratorField.insert")){
+  <div class="page-header">
+      <h1>@Messages("GratorField.insert")</h1>
+  </div>
+
+  @views.html.GratorField.form(form, route = routes.GratorFieldController.save())
+
+  <p>
+    <a href="@controllers.routes.GratorFieldController.index()"
+    class="btn">
+    <i class="icon-plus"></i>@Messages("GratorField.return")</a>
+  </p>
+}

@@ -18,6 +18,7 @@ trait Relationship{
     def fullClassName = this.packageName+"."+this.className
     def formName = this.className+"Form"
     def varName = this.name
+		def futureVarName = "future"+this.name
     def varNameId = this.name+"Id"
 
     def queryName = this.name+"T"

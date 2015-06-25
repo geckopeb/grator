@@ -1,6 +1,8 @@
 package it.grator.module_source.fields
 
-import it.grator.module_source.Module
+import it.grator.module_source._
+
+import utils._
 
 trait Field{
 	def name: String
@@ -12,16 +14,17 @@ trait Field{
 
 	def moduleName: String = this.module.name
 	def varName: String = this.name
-	def tableName: String = this.name
+	def tableName: String = TextUtils.camelToUnderscores(this.name)
 	def moduleVarName: String = Module.varName(this.moduleName)
 
-	def tableRequired = if(this.required){", O.NotNull"} else {", O.Nullable"}
-	
+	//ESP: slick3: si es requerido o nullable sale del tipo de la columna (ej: Long, Option[Long] ???)
+	def tableRequired = if(this.required){""} else {""}
+
 	def controllerForm: String = {
 		s""""$name" -> $formType"""
 	}
 
-	def htmlForm: String = {
+	def htmlForm(app: App): String = {
 		s"""<legend>
 				@Messages("$moduleName.$name")
 		   </legend>
@@ -30,11 +33,11 @@ trait Field{
 
 	def nameInTable: String = {
 		if(this.required){
-			this.name	
+			this.name
 		} else {
 			this.name+".?"
 		}
-		
+
 	}
 
 	def list: String = {

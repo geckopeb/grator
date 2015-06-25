@@ -7,7 +7,7 @@ import it.grator.module_source.fields.{
   FieldFactory => FF
 }
 
-import it.grator.module_source.{Module => M, App}
+import it.grator.module_source.{Module => M}
 
 import it.grator.module_source.relationships.{
   Relationship => R,

@@ -1,0 +1,54 @@
+
+@(rowForm: Form[models.DB.GratorField], route: play.api.mvc.Call, GratorFieldTuple: Option[( models.DB.GratorField, models.DB.GratorModule, models.DB.GratorModule )] = None)(implicit messages: Messages, req: RequestHeader)
+
+@import helper._
+
+@helper.form(action = route) {
+  <fieldset>
+    
+		@GratorFieldTuple match {
+    	case Some(GratorFieldTuple) => {
+    		<input type="hidden" name="id" value="@GratorFieldTuple._1.id.get">
+    	}
+    	case None => {}
+	  }
+	
+		<legend>
+				@Messages("GratorField.item_name")
+		   </legend>
+		    @helper.inputText(rowForm("name"))
+	
+		<legend>
+				@Messages("GratorField.moduleId")
+		   </legend>
+		   @select(
+		   		rowForm("moduleId"),
+		   		models.DB.GratorModule.getOptions,
+		   		'default -> "-- select --"
+		   )
+	
+		<legend>
+				@Messages("GratorField.fieldType")
+		   </legend>
+		    @helper.inputText(rowForm("fieldType"))
+	
+		<legend>
+				@Messages("GratorField.required")
+		   </legend>
+		 @helper.checkbox(
+	      rowForm("required")
+	    )
+	
+		<legend>
+				@Messages("GratorField.relatedModuleId")
+		   </legend>
+		   @select(
+		   		rowForm("relatedModuleId"),
+		   		models.DB.GratorModule.getOptions,
+		   		'default -> "-- select --"
+		   )
+	
+  </fieldset>
+  <p><input type="submit" class="btn primary"
+  value='@Messages("GratorField.save")'></p>
+}

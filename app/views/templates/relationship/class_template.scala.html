@@ -1,10 +1,14 @@
-@(rel: it.grator.module_source.relationships.Relationship)
+@(app: it.grator.module_source.App, rel: it.grator.module_source.relationships.Relationship)
 package models.DB
 
-import play.api.Play.current
+import scala.concurrent.Future
 
-import play.api.db.slick.DB
-import play.api.db.slick.Config.driver.simple._
+import play.api.Play
+import play.api.db.slick.DatabaseConfigProvider
+import play.api.db.slick.HasDatabaseConfig
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
+
+import slick.driver.JdbcProfile
 
 import @rel.primaryModule.externalTableRef
 import @rel.relatedModule.externalTableRef
@@ -15,72 +19,70 @@ case class @{rel.className}(
   @{rel.primaryModule.varName}: Long,
   @{rel.relatedModule.varName}: Long
 ){
-  
+
 }
 
-object @{rel.className}{
+object @{rel.className} extends HasDatabaseConfig[JdbcProfile]{
+  import driver.api._
+  protected val dbConfig = DatabaseConfigProvider.get[JdbcProfile](Play.current)
   @views.html.templates.relationship.table_template(rel)
 
   val @{rel.queryName} = TableQuery[@rel.tableClassName]
 
-  def save(@{rel.varName}: @{rel.className}):Long = {
-    DB.withTransaction { implicit session =>
-      this.@{rel.queryName}.returning(@{rel.queryName}.map(_.id)).insert(@{rel.varName})
-    }
+  def save(@{rel.varName}: @{rel.className}): Future[Long] = {
+    db.run(this.@{rel.queryName}.returning(@{rel.queryName}.map(_.id)) += @{rel.varName} )
   }
-  
-  def update(@{rel.varName}: @{rel.className}):Int = {
-    DB.withTransaction { implicit session =>
+
+  def update(@{rel.varName}: @{rel.className}): Future[Int] = {
       val q = for {
         s <- @{rel.queryName}
         if s.id === @{rel.varName}.id
       } yield(s)
-      q.update(@{rel.varName})
-    }
+      db.run(q.update(@{rel.varName}))
   }
-  
-  def delete(@{rel.varName}: @{rel.className}):Int = {
-    DB.withTransaction { implicit session =>
+
+  def delete(@{rel.varName}: @{rel.className}): Future[Int] = {
        val q = for {
         s <- @{rel.queryName}
         if s.id === @{rel.varName}.id.get
       } yield(s)
-      q.delete
-    }
+      db.run(q.delete)
   }
-  
-  def findAll: List[@{rel.className}] = {
-    DB.withSession { implicit session =>
-      @{rel.queryName}.list
-    }
+
+  def findAll: Future[List[@{rel.className}]] = {
+      db.run( @{rel.queryName}.result).map(_.toList)
   }
-  
-  def findById(id: Long):Option[@{rel.className}] = {
-    DB.withSession { implicit session =>
+
+  def findById(id: Long): Future[Option[@{rel.className}]] = {
       val q = for{
         s <- @{rel.queryName} if s.id === id
       } yield (s)
-      q.firstOption
-    }
+      db.run(q.result).map(_.headOption)
   }
 
-  def @{rel.primaryModule.findByMethod}(@{rel.primaryModule.varNameId}: Long): List[(@{rel.className}, @{rel.relatedModule.className})] = {
-    DB.withSession { implicit session =>
+  def @{rel.primaryModule.findByMethod}(@{rel.primaryModule.varNameId}: Long): Future[List[(@{rel.className}, @{rel.relatedModule.className})]] = {
       val q = for {
         @rel.varName <- @rel.queryName   if @{rel.varName}.@{rel.primaryModule.varName} === @{rel.primaryModule.varNameId}
         @{rel.relatedModule.varName} <- @{rel.relatedModule.externalTableRef} if @{rel.varName}.@{rel.relatedModule.varName} === @{rel.relatedModule.varName}.id
       } yield (@{rel.varName}, @{rel.relatedModule.varName})
-      q.list
-    }
+      db.run(q.result).map(_.toList)
   }
 
-  def @{rel.relatedModule.findByMethod}(@{rel.relatedModule.varNameId}: Long): List[(@{rel.className}, @{rel.primaryModule.className} )] = {
-    DB.withSession { implicit session =>
+  def @{rel.primaryModule.findByMethodWithRelateds}(@{rel.primaryModule.varNameId}: Long): Future[List[@{rel.relatedModule.tupleType(app)}]] = {
+      val q = for {
+        @rel.varName <- @rel.queryName   if @{rel.varName}.@{rel.primaryModule.varName} === @{rel.primaryModule.varNameId}
+        @{rel.relatedModule.varName} <- @{rel.relatedModule.externalTableRef} if @{rel.varName}.@{rel.relatedModule.varName} === @{rel.relatedModule.varName}.id
+        @views.html.templates.module.class_template_aux.related_fields_joins(rel.relatedModule,rel.relatedModule.relatedFields(app))
+      } yield (@views.html.templates.module.class_template_aux.related_fields_yield(rel.relatedModule,rel.relatedModule.relatedFields(app)))
+
+      db.run(q.result).map(_.toList)
+  }
+
+  def @{rel.relatedModule.findByMethod}(@{rel.relatedModule.varNameId}: Long): Future[List[(@{rel.className}, @{rel.primaryModule.className} )]] = {
       val q = for {
         @rel.varName <- @rel.queryName   if @{rel.varName}.@{rel.relatedModule.varName} === @{rel.relatedModule.varNameId}
         @{rel.primaryModule.varName} <- @{rel.primaryModule.externalTableRef} if @{rel.varName}.@{rel.primaryModule.varName} === @{rel.primaryModule.varName}.id
       } yield (@{rel.varName} , @{rel.primaryModule.varName})
-      q.list
-    }
+      db.run(q.result).map(_.toList)
   }
 }

@@ -1,0 +1,16 @@
+
+@(rows: List[( models.DB.GratorField, models.DB.GratorModule, models.DB.GratorModule )])(implicit messages: Messages, req: RequestHeader)
+
+@main(Messages("GratorField.name")){
+	<div class="page-header">
+    	<h1>@Messages("GratorField.module_name")</h1>
+  </div>
+
+  @views.html.GratorField.list(rows)
+
+ 	<p>
+		<a href="@controllers.routes.GratorFieldController.insert()"
+		class="btn">
+		<i class="icon-plus"></i> @Messages("GratorField.new")</a>
+	</p>
+}

@@ -1,7 +1,7 @@
 @(app: it.grator.module_source.App, module: it.grator.module_source.Module, relatedFields: List[it.grator.module_source.fields.RelatedField], primaryRelationships: List[it.grator.module_source.relationships.Relationship])
 @import views.html.templates.{module => tmodule}
-@@(@{module.varName}: @{module.tupleType(app)} @for(rel <- primaryRelationships){, @{rel.varName}: List[@{rel.relatedModule.fullClassName}]})
-	
+@@(@{module.varName}: @{module.tupleType(app)} @for(rel <- primaryRelationships){, @{rel.varName}: List[@{rel.relatedModule.tupleType(app)}]})(implicit messages: Messages, req: RequestHeader)
+
 @@main(Messages("@{module.name}.name")){
 	<div class="page-header">
 		@if(relatedFields.isEmpty){
@@ -10,7 +10,7 @@
     	<h1>@@Messages("@{module.name}.item_detail",@{module.varName}._1.name)</h1>
     	}
   </div>
-	
+
   @@views.html.@{module.name}.list(List(@{module.varName}))
 
  	<p>
@@ -27,6 +27,6 @@
 
 	@* load subpanels *@
 	@for(rel <- primaryRelationships){
-	@@views.html.@{rel.primaryModule.varName}.subpanels.@{rel.varName}.subpanel(@{rel.varName}, @{module.getId(primaryRelationships.isEmpty)})
+	@@views.html.@{rel.primaryModule.varName}.subpanels.@{rel.varName}.subpanel(@{rel.varName}, @{module.templateId(app)})
 	}
 }

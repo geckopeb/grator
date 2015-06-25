@@ -1,3 +1,4 @@
+
 package controllers
 
 import play.api._
@@ -5,21 +6,22 @@ import play.api.mvc._
 
 import models.DB._
 
+import javax.inject.Inject
+
 import play.api.data._
 import play.api.data.Forms._
+import play.api.i18n.{MessagesApi, I18nSupport}
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
-import play.api.db.slick.DB
-import play.api.db.slick.Config.driver.simple._
+import scala.util.{Success, Failure}
+import scala.concurrent.Future
 
-import play.api.Logger
-
-import it.grator.module_source.{App, AppFactory}
-
-object GratorAppController extends Controller {
-  def index = Action {
-    val gratorApps = GratorApp.findAllWithRelateds
-
-    Ok(views.html.gratorApp.index(gratorApps))
+class GratorAppController @Inject() (val messagesApi: MessagesApi) extends Controller with I18nSupport {
+  def index = Action.async { implicit request =>
+    val futureGratorApp = GratorApp.findAllWithRelateds
+    futureGratorApp.map{
+      GratorApp => Ok(views.html.GratorApp.index(GratorApp))
+    }.recover {case ex: Exception => Ok("Fallo")}
   }
 
   val GratorAppForm = Form(
@@ -31,80 +33,80 @@ object GratorAppController extends Controller {
       )(GratorApp.apply)(GratorApp.unapply)
   )
 
-  def insert = Action {
-    Ok(views.html.gratorApp.insert(GratorAppForm))
+  def insert = Action { implicit request =>
+    Ok(views.html.GratorApp.insert(GratorAppForm))
   }
-  
 
-  def detail(id: Long) = Action {
-    GratorApp.findByIdWithRelateds(id).map{
-      gratorApp => Ok(views.html.gratorApp.detail(gratorApp, GratorModule.findByApplicationWithRelateds(gratorApp.id.get)))
-    }.getOrElse(NotFound)
+  def detail(id: Long) = Action.async { implicit request =>
+    val futureData = for {
+      GratorApp <- GratorApp.findByIdWithRelateds(id)
+      
+    } yield ( (GratorApp) )
+    futureData.map{
+      case ((Some(GratorApp))) => Ok(views.html.GratorApp.detail((GratorApp)))
+      case _ => NotFound
+    }.recover { case ex: Exception => Ok("Fallo") }
   }
-  
-  def save = Action { implicit request =>
+
+  def save = Action.async { implicit request =>
     GratorAppForm.bindFromRequest.fold(
-      formWithErrors => BadRequest(views.html.gratorApp.insert(formWithErrors)),
-      gratorApp => {
-        val id = GratorApp.save(gratorApp)
-        Redirect(routes.GratorAppController.detail(id))
+      formWithErrors => Future.successful(BadRequest(views.html.GratorApp.insert(formWithErrors))),
+      GratorApp => {
+        val futureGratorApp = GratorApp.save(GratorApp)
+
+        futureGratorApp.map{ result => Redirect(routes.GratorAppController.detail(result))}.recover{
+          case ex: Exception => Redirect(routes.GratorAppController.index())
+        }
       }
     )
   }
-  
-  def edit(id: Long) = Action{
+
+  def edit(id: Long) = Action.async{ implicit request =>
     GratorApp.findById(id).map{
-      gratorApp:GratorApp => Ok(views.html.gratorApp.edit(GratorAppForm.fill(gratorApp),gratorApp))
-    }.getOrElse(NotFound)
+      case Some(GratorApp) => Ok(views.html.GratorApp.edit(GratorAppForm.fill(GratorApp),GratorApp))
+      case None => NotFound
+    }.recover { case ex: Exception => Ok("Fallo")}
   }
-  
-  def delete(id: Long) = Action{
+
+  def delete(id: Long) = Action.async{
     implicit request =>
     GratorApp.findById(id).map{
-      gratorApp => {
-          GratorApp.delete(gratorApp)
+      case Some(GratorApp) => {
+          GratorApp.delete(GratorApp)
           Redirect(routes.GratorAppController.index())
-    }
-    }.getOrElse(NotFound)
-  }
-  
-  def update(id: Long) = Action{ implicit request =>
-    GratorApp.findById(id).map{
-      gratorApp => {
-      GratorAppForm.bindFromRequest.fold(
-        formWithErrors => BadRequest(views.html.gratorApp.edit(formWithErrors,gratorApp)),
-        gratorApp => {
-          GratorApp.update(gratorApp)
-          Redirect(routes.GratorAppController.detail(gratorApp.id.get))
         }
-      )
-    }
-    }.getOrElse(NotFound)
+      case None => NotFound
+    }.recover { case ex: Exception => Ok("Fallo") }
   }
 
-  def generateAll(id: Long) = Action {
+  def update(id: Long) = Action.async{ implicit request =>
     GratorApp.findById(id).map{
-      application:GratorApp => {
-        val gModules = application.modules
-        val gFields = application.fields
-        val gRelationships = application.relationships
-
-        //val app = AppFactory.construct(application.name, application.path, gModules, gFields, gRelationships)
-        val app = AppFactory.construct(application.name, application.path, gModules, gFields, gRelationships)
-        app.generateAll()
-
-        Redirect(routes.GratorAppController.detail(application.id.get)) 
+      case Some(GratorApp) => {
+        GratorAppForm.bindFromRequest.fold(
+          formWithErrors => BadRequest(views.html.GratorApp.edit(formWithErrors,GratorApp)),
+          GratorApp => {
+            GratorApp.update(GratorApp)
+            Redirect(routes.GratorAppController.detail(GratorApp.id.get))
+          }
+        )
       }
-    }.getOrElse(NotFound)
+      case None => NotFound
+    }.recover { case ex: Exception => Ok("Fallo") }
   }
 
+  
 
-  def backupAll(id: Long) = Action {
-    GratorApp.findById(id).map{
-      application:GratorApp => {
-        application.backupAll
-        Redirect(routes.GratorAppController.detail(application.id.get)) 
+
+
+  def relatedCombo(q: String) = Action.async { implicit request =>
+    val futureOptions = GratorApp.findByQueryString(q)
+
+    futureOptions.map{
+      case options => {
+        val GratorApp = GratorApp.toJsonRelatedCombo(options)
+        Ok(GratorApp).as("application/json")
       }
-    }.getOrElse(NotFound)
+    }.recover { case ex: Exception => Ok("Fallo") }
   }
+
 }

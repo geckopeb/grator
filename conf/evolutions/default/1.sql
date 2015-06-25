@@ -24,4 +24,3 @@ drop table `grator_relationship`;
 drop table `grator_module`;
 drop table `grator_field`;
 drop table `grator_app`;
-

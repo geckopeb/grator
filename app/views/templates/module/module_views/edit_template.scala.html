@@ -1,12 +1,12 @@
-@(module: it.grator.module_source.Module)
-@@(@{module.formName}: Form[models.DB.@{module.className}], @{module.varName}: models.DB.@{module.className})(implicit lang: Lang)
+@(app: it.grator.module_source.App, module: it.grator.module_source.Module)
+@@(@{module.formName}: Form[models.DB.@{module.className}], @{module.varOrTuple(app)}: @{module.tupleType(app)})(implicit messages: Messages, req: RequestHeader)
 
 @@main(Messages("@{module.name}.insert")){
   <div class="page-header">
       <h1>@@Messages("@{module.name}.insert")</h1>
   </div>
-  
-  @@views.html.@{module.name}.form(@{module.formName}, route = routes.@{module.controllerName}.update(@{module.varName}.id.get), row = Some(@{module.varName}))
+
+  @@views.html.@{module.name}.form(@{module.formName}, route = routes.@{module.controllerName}.update(@{module.templateId(app)}), @{module.varOrTuple(app)} = Some(@{module.varOrTuple(app)}))
 
   <p>
     <a href="@@controllers.routes.@{module.controllerName}.index()"

@@ -1,14 +1,19 @@
 @(app: it.grator.module_source.App)
-@@(title: String)(content: Html)
+@@(title: String)(content: Html)(implicit messages: Messages, req: RequestHeader)
 <!DOCTYPE html>
-
+@@import helper._
 <html>
     <head>
         <title>@@title</title>
         <link rel="stylesheet" media="screen" href="@@routes.Assets.at("stylesheets/bootstrap.min.css")">
         <link rel="stylesheet" media="screen" href="@@routes.Assets.at("stylesheets/main.css")">
         <link rel="shortcut icon" type="image/png" href="@@routes.Assets.at("images/favicon.png")">
-        <script src="@@routes.Assets.at("javascripts/jquery-1.9.0.min.js")" type="text/javascript"></script>
+        <script src="@@routes.Assets.at("javascripts/jquery-2.1.4.min.js")" type="text/javascript"></script>
+        @@helper.javascriptRouter("jsRoutes")(
+          @for((module,index) <- app.modules.zipWithIndex){
+          routes.javascript.@{module.controllerName}.@{module.relatedComboJsonMethod}@{if(index != app.modules.length - 1){","}else{""}}
+          }
+        )
     </head>
     <body>
 	     <div class="navbar navbar-fixed-top">
@@ -23,7 +28,7 @@
           <a class="brand" href="@@routes.@{module.controllerName}.index()">
             @@Messages("@{module.name}.module_name")
           </a>
-          } 
+          }
 
         </div>
 			</div>

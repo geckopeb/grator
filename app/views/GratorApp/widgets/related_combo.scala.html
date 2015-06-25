@@ -1,0 +1,75 @@
+
+@(fieldName: String, field: Field, GratorApp: Option[models.DB.GratorApp])(implicit messages: Messages, req: RequestHeader)
+  
+  @import helper._
+
+  <script src="@routes.Assets.at("javascripts/jquery-2.1.4.min.js")"></script>
+  <link rel="stylesheet" href="@routes.Assets.at("javascripts/jquery-ui-1.11.4.custom/jquery-ui.min.css")">
+  <link rel="stylesheet" href="@routes.Assets.at("javascripts/jquery-ui-1.11.4.custom/jquery-ui.theme.min.css")">
+
+  <script src="@routes.Assets.at("javascripts/jquery-ui-1.11.4.custom/jquery-ui.min.js")"></script>
+
+<script>
+  $(function() {
+    $("#@{fieldName}_clear").click(function(){
+      $("#@{fieldName}").val("");
+      $("#@{fieldName}").trigger("change"); //ESP Siempre propagar el evento del cambio de valor.
+      $("#@{fieldName}_input_search").val("");
+    });
+    $( "#@{fieldName}_input_search" ).autocomplete({
+      minLength: 0,
+      source: function( request, response ) {
+                if(request.term != ""){
+                  var genUrl = jsRoutes.controllers.GratorAppController.relatedCombo(request.term).url
+                } else {
+                  var genUrl = jsRoutes.controllers.GratorAppController.relatedCombo("NULL").url
+                }
+
+                $.ajax({
+                  url: genUrl,
+                  dataType: "json",
+                  success: function( data ) {
+                    response( data );
+                  }
+                });
+              },
+      focus: function( event, ui ) {
+        $( "#@{fieldName}_input_search" ).val( ui.item.label );
+        return false;
+      },
+      select: function( event, ui ) {
+        $( "#@{fieldName}_input_search" ).val( ui.item.label );
+        $( "#@{fieldName}" ).val( ui.item.value );
+        $( "#@{fieldName}" ).trigger("change"); //ESP Siempre propagar el evento del cambio de valor.
+
+        return false;
+      }
+    })
+    .autocomplete( "instance" )._renderItem = function( ul, item ) {
+      return $( "<li>" )
+        .append( "<a>" + item.label + "<br>" + item.desc + "</a>" )
+        .appendTo( ul );
+    };
+  });
+  </script>
+
+<dl id="@{fieldName}_field">
+    <dt>
+      <label for="@{fieldName}">
+          @Messages("GratorApp.module_name")
+      </label>
+    </dt>
+    <dd>
+        @GratorApp match{
+          case Some(row) => {
+            <input id="@{fieldName}_input_search" value="@row.name">
+          }
+          case None => {
+            <input id="@{fieldName}_input_search" value="">
+          }
+        }
+        <input type="button" class="btn" id="@{fieldName}_clear" name="@{fieldName}_clear" value="@Messages("GratorApp.clear")" />
+        @helper.inputText(field, 'type -> "hidden")
+        <p id="@{fieldName}_description"></p>
+  </dd>
+</dl>

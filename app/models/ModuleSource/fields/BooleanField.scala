@@ -1,6 +1,6 @@
 package it.grator.module_source.fields
 
-import it.grator.module_source.Module
+import it.grator.module_source._
 
 case class BooleanField(
 	name: String,
@@ -14,7 +14,7 @@ case class BooleanField(
 		s""""$name" -> $formType"""
 	}
 
-	override def htmlForm: String = {
+	override def htmlForm(app: App): String = {
 		s"""<legend>
 				@Messages("$moduleName.$name")
 		   </legend>

@@ -4,53 +4,56 @@
 # ~~~~
 
 # Home page
-GET     /                    	  controllers.GratorAppController.index
-
-#gratorApp:
-GET   /gratorApp                  controllers.GratorAppController.index
-GET   /gratorApp/:id/detail       controllers.GratorAppController.detail(id: Long)
-GET   /gratorApp/insert           controllers.GratorAppController.insert
-GET   /gratorApp/:id/edit         controllers.GratorAppController.edit(id: Long)
-POST  /gratorApp/save             controllers.GratorAppController.save
-POST  /gratorApp/:id/delete       controllers.GratorAppController.delete(id: Long)
-POST  /gratorApp/:id/update       controllers.GratorAppController.update(id: Long)
-GET   /gratorApp/:id/generateall  controllers.GratorAppController.generateAll(id: Long)
-GET   /gratorApp/:id/backupAll	  controllers.GratorAppController.backupAll(id: Long)
-
-
-#gratorModule:
-GET   /gratorModule                controllers.GratorModuleController.index
-GET   /gratorModule/:id/detail     controllers.GratorModuleController.detail(id: Long)
-GET   /gratorModule/insert         controllers.GratorModuleController.insert
-GET   /gratorModule/:id/edit       controllers.GratorModuleController.edit(id: Long)
-POST  /gratorModule/save           controllers.GratorModuleController.save
-POST  /gratorModule/:id/delete     controllers.GratorModuleController.delete(id: Long)
-POST  /gratorModule/:id/update     controllers.GratorModuleController.update(id: Long)
-#GET   /gratorModule/:id/generateall controllers.GratorModuleController.generateAll(id: Long)
-#GET   /gratorModule/:id/controller  controllers.GratorModuleController.generateController(id: Long)
-#GET   /gratorModule/:id/table       controllers.GratorModuleController.generateTable(id: Long)
-#GET   /gratorModule/:id/row         controllers.GratorModuleController.generateRow(id: Long)
-#GET   /gratorModule/:id/views       controllers.GratorModuleController.generateViews(id: Long)
+GET     /                    controllers.GratorAppController.index
 
 
 
-#gratorField:
-GET   /gratorField                controllers.GratorFieldController.index
-GET   /gratorField/:id/detail     controllers.GratorFieldController.detail(id: Long)
-GET   /gratorField/insert         controllers.GratorFieldController.insert
-GET   /gratorField/:id/edit       controllers.GratorFieldController.edit(id: Long)
-POST  /gratorField/save           controllers.GratorFieldController.save
-POST  /gratorField/:id/delete     controllers.GratorFieldController.delete(id: Long)
-POST  /gratorField/:id/update     controllers.GratorFieldController.update(id: Long)
+#GratorApp:
+GET   /GratorApp                				controllers.GratorAppController.index
+GET   /GratorApp/:id/detail     				controllers.GratorAppController.detail(id: Long)
+GET   /GratorApp/insert         				controllers.GratorAppController.insert
+GET   /GratorApp/:id/edit       				controllers.GratorAppController.edit(id: Long)
+POST  /GratorApp/save           				controllers.GratorAppController.save
+POST  /GratorApp/:id/delete     				controllers.GratorAppController.delete(id: Long)
+POST  /GratorApp/:id/update     				controllers.GratorAppController.update(id: Long)
 
-#gratorRelationship:
-GET   /gratorRelationship                controllers.GratorRelationshipController.index
-GET   /gratorRelationship/:id/detail     controllers.GratorRelationshipController.detail(id: Long)
-GET   /gratorRelationship/insert         controllers.GratorRelationshipController.insert
-GET   /gratorRelationship/:id/edit       controllers.GratorRelationshipController.edit(id: Long)
-POST  /gratorRelationship/save           controllers.GratorRelationshipController.save
-POST  /gratorRelationship/:id/delete     controllers.GratorRelationshipController.delete(id: Long)
-POST  /gratorRelationship/:id/update     controllers.GratorRelationshipController.update(id: Long)
+GET  /GratorApp/relatedCombo/:q        controllers.GratorAppController.relatedCombo(q: String)
+
+
+#GratorModule:
+GET   /GratorModule                				controllers.GratorModuleController.index
+GET   /GratorModule/:id/detail     				controllers.GratorModuleController.detail(id: Long)
+GET   /GratorModule/insert         				controllers.GratorModuleController.insert
+GET   /GratorModule/:id/edit       				controllers.GratorModuleController.edit(id: Long)
+POST  /GratorModule/save           				controllers.GratorModuleController.save
+POST  /GratorModule/:id/delete     				controllers.GratorModuleController.delete(id: Long)
+POST  /GratorModule/:id/update     				controllers.GratorModuleController.update(id: Long)
+
+GET  /GratorModule/relatedCombo/:q        controllers.GratorModuleController.relatedCombo(q: String)
+
+
+#GratorField:
+GET   /GratorField                				controllers.GratorFieldController.index
+GET   /GratorField/:id/detail     				controllers.GratorFieldController.detail(id: Long)
+GET   /GratorField/insert         				controllers.GratorFieldController.insert
+GET   /GratorField/:id/edit       				controllers.GratorFieldController.edit(id: Long)
+POST  /GratorField/save           				controllers.GratorFieldController.save
+POST  /GratorField/:id/delete     				controllers.GratorFieldController.delete(id: Long)
+POST  /GratorField/:id/update     				controllers.GratorFieldController.update(id: Long)
+
+GET  /GratorField/relatedCombo/:q        controllers.GratorFieldController.relatedCombo(q: String)
+
+
+#GratorRelationship:
+GET   /GratorRelationship                				controllers.GratorRelationshipController.index
+GET   /GratorRelationship/:id/detail     				controllers.GratorRelationshipController.detail(id: Long)
+GET   /GratorRelationship/insert         				controllers.GratorRelationshipController.insert
+GET   /GratorRelationship/:id/edit       				controllers.GratorRelationshipController.edit(id: Long)
+POST  /GratorRelationship/save           				controllers.GratorRelationshipController.save
+POST  /GratorRelationship/:id/delete     				controllers.GratorRelationshipController.delete(id: Long)
+POST  /GratorRelationship/:id/update     				controllers.GratorRelationshipController.update(id: Long)
+
+GET  /GratorRelationship/relatedCombo/:q        controllers.GratorRelationshipController.relatedCombo(q: String)
 
 
 # Map static resources from the /public folder to the /assets URL path

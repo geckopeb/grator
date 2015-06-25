@@ -1,3 +1,4 @@
+
 package controllers
 
 import play.api._
@@ -5,17 +6,22 @@ import play.api.mvc._
 
 import models.DB._
 
+import javax.inject.Inject
+
 import play.api.data._
 import play.api.data.Forms._
+import play.api.i18n.{MessagesApi, I18nSupport}
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
-import play.api.db.slick.DB
-import play.api.db.slick.Config.driver.simple._
+import scala.util.{Success, Failure}
+import scala.concurrent.Future
 
-object GratorModuleController extends Controller {
-  def index = Action {
-    val gratorModules = GratorModule.findAllWithRelateds
-
-    Ok(views.html.gratorModule.index(gratorModules))
+class GratorModuleController @Inject() (val messagesApi: MessagesApi) extends Controller with I18nSupport {
+  def index = Action.async { implicit request =>
+    val futureGratorModule = GratorModule.findAllWithRelateds
+    futureGratorModule.map{
+      GratorModule => Ok(views.html.GratorModule.index(GratorModule))
+    }.recover {case ex: Exception => Ok("Fallo")}
   }
 
   val GratorModuleForm = Form(
@@ -27,100 +33,80 @@ object GratorModuleController extends Controller {
       )(GratorModule.apply)(GratorModule.unapply)
   )
 
-  def insert = Action {
-    Ok(views.html.gratorModule.insert(GratorModuleForm, GratorApp.getOptions))
+  def insert = Action { implicit request =>
+    Ok(views.html.GratorModule.insert(GratorModuleForm))
   }
-  
 
-  def detail(id: Long) = Action {
-    GratorModule.findByIdWithRelateds(id).map{
-      gratorModule => Ok(views.html.gratorModule.detail(gratorModule, GratorField.findByModuleIdWithRelateds(gratorModule._1.id.get)))
-    }.getOrElse(NotFound)
+  def detail(id: Long) = Action.async { implicit request =>
+    val futureData = for {
+      GratorModule <- GratorModule.findByIdWithRelateds(id)
+      
+    } yield ( (GratorModule) )
+    futureData.map{
+      case ((Some(GratorModule))) => Ok(views.html.GratorModule.detail((GratorModule)))
+      case _ => NotFound
+    }.recover { case ex: Exception => Ok("Fallo") }
   }
-  
-  def save = Action { implicit request =>
+
+  def save = Action.async { implicit request =>
     GratorModuleForm.bindFromRequest.fold(
-      formWithErrors => BadRequest(views.html.gratorModule.insert(formWithErrors, GratorApp.getOptions)),
-      gratorModule => {
-        val id = GratorModule.save(gratorModule)
-        Redirect(routes.GratorModuleController.detail(id))
+      formWithErrors => Future.successful(BadRequest(views.html.GratorModule.insert(formWithErrors))),
+      GratorModule => {
+        val futureGratorModule = GratorModule.save(GratorModule)
+
+        futureGratorModule.map{ result => Redirect(routes.GratorModuleController.detail(result))}.recover{
+          case ex: Exception => Redirect(routes.GratorModuleController.index())
+        }
       }
     )
   }
-  
-  def edit(id: Long) = Action{
-    GratorModule.findById(id).map{
-      gratorModule:GratorModule => Ok(views.html.gratorModule.edit(GratorModuleForm.fill(gratorModule), GratorApp.getOptions,gratorModule))
-    }.getOrElse(NotFound)
+
+  def edit(id: Long) = Action.async{ implicit request =>
+    GratorModule.findByIdWithRelateds(id).map{
+      case Some(GratorModuleTuple) => Ok(views.html.GratorModule.edit(GratorModuleForm.fill(GratorModuleTuple._1),GratorModuleTuple))
+      case None => NotFound
+    }.recover { case ex: Exception => Ok("Fallo")}
   }
-  
-  def delete(id: Long) = Action{
+
+  def delete(id: Long) = Action.async{
     implicit request =>
     GratorModule.findById(id).map{
-      gratorModule => {
-          GratorModule.delete(gratorModule)
+      case Some(GratorModule) => {
+          GratorModule.delete(GratorModule)
           Redirect(routes.GratorModuleController.index())
-    }
-    }.getOrElse(NotFound)
-  }
-  
-  def update(id: Long) = Action{ implicit request =>
-    GratorModule.findById(id).map{
-      gratorModule => {
-      GratorModuleForm.bindFromRequest.fold(
-        formWithErrors => BadRequest(views.html.gratorModule.edit(formWithErrors, GratorApp.getOptions,gratorModule)),
-        gratorModule => {
-          GratorModule.update(gratorModule)
-          Redirect(routes.GratorModuleController.detail(gratorModule.id.get))
         }
-      )
-    }
-    }.getOrElse(NotFound)
-  }
-/*
-  def generateAll(id: Long) = Action {
-    GratorModule.findById(id).map{
-      module:GratorModule => {
-        module.generateAll
-        Redirect(routes.GratorModuleController.detail(module.id.get)) 
-      }
-    }.getOrElse(NotFound)
+      case None => NotFound
+    }.recover { case ex: Exception => Ok("Fallo") }
   }
 
-  def generateController(id: Long) = Action {
-    GratorModule.findById(id).map{
-      module:GratorModule => {
-        module.generateController
-        Redirect(routes.GratorModuleController.detail(module.id.get)) 
+  def update(id: Long) = Action.async{ implicit request =>
+    GratorModule.findByIdWithRelateds(id).map{
+      case Some(GratorModuleTuple) => {
+        GratorModuleForm.bindFromRequest.fold(
+          formWithErrors => BadRequest(views.html.GratorModule.edit(formWithErrors,GratorModuleTuple)),
+          GratorModule => {
+            GratorModule.update(GratorModule)
+            Redirect(routes.GratorModuleController.detail(GratorModule.id.get))
+          }
+        )
       }
-    }.getOrElse(NotFound)
+      case None => NotFound
+    }.recover { case ex: Exception => Ok("Fallo") }
   }
 
-  def generateTable(id: Long) = Action {
-    GratorModule.findById(id).map{
-      module:GratorModule => {
-        //module.generateTable
-        Redirect(routes.GratorModuleController.detail(module.id.get)) 
+  
+
+
+
+  def relatedCombo(q: String) = Action.async { implicit request =>
+    val futureOptions = GratorModule.findByQueryString(q)
+
+    futureOptions.map{
+      case options => {
+        val GratorModule = GratorModule.toJsonRelatedCombo(options)
+        Ok(GratorModule).as("application/json")
       }
-    }.getOrElse(NotFound)
+    }.recover { case ex: Exception => Ok("Fallo") }
   }
 
-  def generateRow(id: Long) = Action {
-    GratorModule.findById(id).map{
-      module:GratorModule => {
-        module.generateRow()
-        Redirect(routes.GratorModuleController.detail(module.id.get)) 
-      }
-    }.getOrElse(NotFound)
-  }
-
-  def generateViews(id: Long) = Action {
-    GratorModule.findById(id).map{
-      module:GratorModule => {
-        module.generateViews()
-        Redirect(routes.GratorModuleController.detail(module.id.get)) 
-      }
-    }.getOrElse(NotFound)
-  }
-*/
 }

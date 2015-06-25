@@ -1,7 +1,5 @@
-@(message: String)
+@(message: String)(implicit messages: Messages, req: RequestHeader)
 
-@main("Welcome to Play 2.1") {
-    
+@main("Welcome to Play") {
     @play20.welcome(message)
-    
 }

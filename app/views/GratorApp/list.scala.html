@@ -1,0 +1,27 @@
+
+@(rows: List[models.DB.GratorApp])(implicit messages: Messages, req: RequestHeader)
+
+<table class="table table-bordered table-striped table-hover">
+    <thead>
+      <tr>
+        <th>@Messages("GratorApp.id")</th>
+        <th>@Messages("GratorApp.name")</th>
+        <th>@Messages("GratorApp.path")</th>
+      </tr>
+    </thead>
+    <tbody>
+    @for( GratorApp <- rows){
+        <tr>
+            <td>
+              <a href="@controllers.routes.GratorAppController.detail(GratorApp.id.get)">@GratorApp.id</a>
+            </td>
+            <td>
+              @GratorApp.name
+            </td>
+            <td>
+              @GratorApp.path
+            </td>
+        </tr>
+    }
+     </tbody>
+  </table>

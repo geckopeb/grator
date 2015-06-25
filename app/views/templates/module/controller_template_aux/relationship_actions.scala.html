@@ -7,16 +7,29 @@
     "@{rel.relatedModule.varNameId}" -> longNumber
   )(@{rel.className}.apply)(@{rel.className}.unapply))
 
-  def @{rel.relatedModule.varName}Insert(id: Long) = Action {
-    Ok(views.html.@{module.varName}.subpanels.@{rel.varName}.insert(@{rel.formName}, id, @{rel.relatedModule.fullClassName}.getOptions))
+  def @{rel.relatedModule.varName}Insert(id: Long) = Action.async { implicit request =>
+    val futureOptions = @{rel.relatedModule.fullClassName}.getOptions
+
+    futureOptions.map{
+      case options =>  Ok(views.html.@{module.varName}.subpanels.@{rel.varName}.insert(@{rel.formName}, id, options))
+    }.recover { case ex: Exception => Redirect(routes.@{module.controllerName}.detail(id)) }
+
   }
 
-  def @{rel.relatedModule.varName}Save(id: Long) = Action { implicit request =>
+  def @{rel.relatedModule.varName}Save(id: Long) = Action.async { implicit request =>
     @{rel.formName}.bindFromRequest.fold(
-      formWithErrors => BadRequest(views.html.@{module.varName}.subpanels.@{rel.varName}.insert(@{rel.formName},id, @{rel.relatedModule.fullClassName}.getOptions)),
+      formWithErrors => {
+        val futureOptions = @{rel.relatedModule.fullClassName}.getOptions
+
+        futureOptions.map{
+          case options =>  BadRequest(views.html.@{module.varName}.subpanels.@{rel.varName}.insert(formWithErrors, id, options))
+        }.recover { case ex: Exception => Redirect(routes.@{module.controllerName}.detail(id)) }
+      },
       @{rel.varName} => {
-        @{rel.className}.save(@{rel.varName})
-        Redirect(routes.@{module.controllerName}.detail(id))
+        val @{rel.futureVarName} = @{rel.className}.save(@{rel.varName})
+        @{rel.futureVarName}.map{
+          result => Redirect(routes.@{module.controllerName}.detail(id))
+        }.recover { case ex: Exception => Redirect(routes.@{module.controllerName}.detail(id)) }
       }
     )
   }

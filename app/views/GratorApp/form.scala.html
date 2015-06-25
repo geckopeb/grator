@@ -1,0 +1,29 @@
+
+@(rowForm: Form[models.DB.GratorApp], route: play.api.mvc.Call, GratorApp: Option[models.DB.GratorApp] = None)(implicit messages: Messages, req: RequestHeader)
+
+@import helper._
+
+@helper.form(action = route) {
+  <fieldset>
+    
+		@GratorApp match {
+    	case Some(GratorApp) => {
+    		<input type="hidden" name="id" value="@GratorApp.id.get">
+    	}
+    	case None => {}
+	  }
+	
+		<legend>
+				@Messages("GratorApp.item_name")
+		   </legend>
+		    @helper.inputText(rowForm("name"))
+	
+		<legend>
+				@Messages("GratorApp.path")
+		   </legend>
+		    @helper.inputText(rowForm("path"))
+	
+  </fieldset>
+  <p><input type="submit" class="btn primary"
+  value='@Messages("GratorApp.save")'></p>
+}

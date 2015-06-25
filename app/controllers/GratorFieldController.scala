@@ -6,17 +6,22 @@ import play.api.mvc._
 
 import models.DB._
 
+import javax.inject.Inject
+
 import play.api.data._
 import play.api.data.Forms._
+import play.api.i18n.{MessagesApi, I18nSupport}
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
-import play.api.db.slick.DB
-import play.api.db.slick.Config.driver.simple._
+import scala.util.{Success, Failure}
+import scala.concurrent.Future
 
-object GratorFieldController extends Controller {
-  def index = Action {
-    val gratorFields = GratorField.findAllWithRelateds
-
-    Ok(views.html.gratorField.index(gratorFields))
+class GratorFieldController @Inject() (val messagesApi: MessagesApi) extends Controller with I18nSupport {
+  def index = Action.async { implicit request =>
+    val futureGratorField = GratorField.findAllWithRelateds
+    futureGratorField.map{
+      GratorField => Ok(views.html.GratorField.index(GratorField))
+    }.recover {case ex: Exception => Ok("Fallo")}
   }
 
   val GratorFieldForm = Form(
@@ -31,64 +36,80 @@ object GratorFieldController extends Controller {
       )(GratorField.apply)(GratorField.unapply)
   )
 
-  def insert = Action {
-    val moduleOptions = GratorModule.getOptions
-    val typeOptions = GratorField.getTypeOptions
-    Ok(views.html.gratorField.insert(GratorFieldForm,moduleOptions,typeOptions))
+  def insert = Action { implicit request =>
+    Ok(views.html.GratorField.insert(GratorFieldForm))
   }
-  
 
-  def detail(id: Long) = Action {
-    GratorField.findByIdWithRelateds(id).map{
-      gratorField => Ok(views.html.gratorField.detail(gratorField))
-    }.getOrElse(NotFound)
+  def detail(id: Long) = Action.async { implicit request =>
+    val futureData = for {
+      GratorField <- GratorField.findByIdWithRelateds(id)
+      
+    } yield ( (GratorField) )
+    futureData.map{
+      case ((Some(GratorField))) => Ok(views.html.GratorField.detail((GratorField)))
+      case _ => NotFound
+    }.recover { case ex: Exception => Ok("Fallo") }
   }
-  
-  def save = Action { implicit request =>
+
+  def save = Action.async { implicit request =>
     GratorFieldForm.bindFromRequest.fold(
-      formWithErrors => BadRequest(views.html.gratorField.insert(formWithErrors, GratorModule.getOptions, GratorField.getTypeOptions)),
-      gratorField => {
-        val id = GratorField.save(gratorField)
-        Redirect(routes.GratorFieldController.detail(id))
+      formWithErrors => Future.successful(BadRequest(views.html.GratorField.insert(formWithErrors))),
+      GratorField => {
+        val futureGratorField = GratorField.save(GratorField)
+
+        futureGratorField.map{ result => Redirect(routes.GratorFieldController.detail(result))}.recover{
+          case ex: Exception => Redirect(routes.GratorFieldController.index())
+        }
       }
     )
   }
-  
-  def edit(id: Long) = Action{
-    GratorField.findById(id).map{
-      field:GratorField => {
-        val moduleOptions = GratorModule.getOptions
-        val typeOptions = GratorField.getTypeOptions
-        Ok(views.html.gratorField.edit(GratorFieldForm.fill(field),moduleOptions, typeOptions, field))
-      }
-    }.getOrElse(NotFound)
+
+  def edit(id: Long) = Action.async{ implicit request =>
+    GratorField.findByIdWithRelateds(id).map{
+      case Some(GratorFieldTuple) => Ok(views.html.GratorField.edit(GratorFieldForm.fill(GratorFieldTuple._1),GratorFieldTuple))
+      case None => NotFound
+    }.recover { case ex: Exception => Ok("Fallo")}
   }
-  
-  def delete(id: Long) = Action{
+
+  def delete(id: Long) = Action.async{
     implicit request =>
     GratorField.findById(id).map{
-      gratorField => {
-          GratorField.delete(gratorField)
+      case Some(GratorField) => {
+          GratorField.delete(GratorField)
           Redirect(routes.GratorFieldController.index())
-    }
-    }.getOrElse(NotFound)
-  }
-  
-  def update(id: Long) = Action{ implicit request =>
-    GratorField.findById(id).map{
-      field => {
-      GratorFieldForm.bindFromRequest.fold(
-        formWithErrors => {
-          val moduleOptions = GratorModule.getOptions
-          val typeOptions = GratorField.getTypeOptions
-          BadRequest(views.html.gratorField.edit(formWithErrors, moduleOptions, typeOptions, field))
-        },
-        field => {
-          GratorField.update(field)
-          Redirect(routes.GratorFieldController.detail(field.id.get))
         }
-      )
-    }
-    }.getOrElse(NotFound)
+      case None => NotFound
+    }.recover { case ex: Exception => Ok("Fallo") }
   }
+
+  def update(id: Long) = Action.async{ implicit request =>
+    GratorField.findByIdWithRelateds(id).map{
+      case Some(GratorFieldTuple) => {
+        GratorFieldForm.bindFromRequest.fold(
+          formWithErrors => BadRequest(views.html.GratorField.edit(formWithErrors,GratorFieldTuple)),
+          GratorField => {
+            GratorField.update(GratorField)
+            Redirect(routes.GratorFieldController.detail(GratorField.id.get))
+          }
+        )
+      }
+      case None => NotFound
+    }.recover { case ex: Exception => Ok("Fallo") }
+  }
+
+  
+
+
+
+  def relatedCombo(q: String) = Action.async { implicit request =>
+    val futureOptions = GratorField.findByQueryString(q)
+
+    futureOptions.map{
+      case options => {
+        val GratorField = GratorField.toJsonRelatedCombo(options)
+        Ok(GratorField).as("application/json")
+      }
+    }.recover { case ex: Exception => Ok("Fallo") }
+  }
+
 }

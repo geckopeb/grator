@@ -1,6 +1,6 @@
 package it.grator.module_source.fields
 
-import it.grator.module_source.Module
+import it.grator.module_source._
 
 case class TextField(
 	name: String,

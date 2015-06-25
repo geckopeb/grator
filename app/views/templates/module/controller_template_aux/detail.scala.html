@@ -1,6 +1,0 @@
-@(module: it.grator.module_source.Module, primaryRelationships: List[it.grator.module_source.relationships.Relationship])
-def detail(id: Long) = Action {
-    @{module.className}.findByIdWithRelateds(id).map{
-      @{module.varName} => Ok(views.html.@{module.name}.detail(@{module.varName} @views.html.templates.module.controller_template_aux.detail_view_rel_params(primaryRelationships)))
-    }.getOrElse(NotFound)
-}

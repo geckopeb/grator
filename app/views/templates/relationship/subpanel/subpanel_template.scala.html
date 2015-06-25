@@ -1,5 +1,5 @@
-@(rel: it.grator.module_source.relationships.Relationship)
-@@(@{rel.relatedModule.varName}: List[@{rel.relatedModule.fullClassName}], @{rel.primaryModule.varNameId}: Long)
+@(app: it.grator.module_source.App, rel: it.grator.module_source.relationships.Relationship)
+@@(@{rel.relatedModule.varName}: List[@{rel.relatedModule.tupleType(app)}], @{rel.primaryModule.varNameId}: Long)(implicit messages: Messages, req: RequestHeader)
 <legend>
 	<b>Contacts</b>
 </legend>

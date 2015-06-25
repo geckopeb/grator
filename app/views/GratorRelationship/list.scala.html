@@ -1,0 +1,51 @@
+
+@(rows: List[( models.DB.GratorRelationship, models.DB.GratorModule, models.DB.GratorModule )])(implicit messages: Messages, req: RequestHeader)
+
+<table class="table table-bordered table-striped table-hover">
+    <thead>
+      <tr>
+        <th>@Messages("GratorRelationship.id")</th>
+        <th>@Messages("GratorRelationship.name")</th>
+        <th>@Messages("GratorRelationship.relType")</th>
+        <th>@Messages("GratorRelationship.primaryModuleId")</th>
+        <th>@Messages("GratorRelationship.primaryModuleLabel")</th>
+        <th>@Messages("GratorRelationship.primaryModuleSubpanel")</th>
+        <th>@Messages("GratorRelationship.relatedModuleId")</th>
+        <th>@Messages("GratorRelationship.relatedModuleLabel")</th>
+        <th>@Messages("GratorRelationship.relatedModuleSubpanel")</th>
+      </tr>
+    </thead>
+    <tbody>
+    @for( ( GratorRelationship, primaryModuleId, relatedModuleId ) <- rows){
+        <tr>
+            <td>
+              <a href="@controllers.routes.GratorRelationshipController.detail(GratorRelationship.id.get)">@GratorRelationship.id</a>
+            </td>
+            <td>
+              @GratorRelationship.name
+            </td>
+            <td>
+              @GratorRelationship.relType
+            </td>
+            <td>
+              @primaryModuleId.name
+            </td>
+            <td>
+              @GratorRelationship.primaryModuleLabel
+            </td>
+            <td>
+              @GratorRelationship.primaryModuleSubpanel
+            </td>
+            <td>
+              @relatedModuleId.name
+            </td>
+            <td>
+              @GratorRelationship.relatedModuleLabel
+            </td>
+            <td>
+              @GratorRelationship.relatedModuleSubpanel
+            </td>
+        </tr>
+    }
+     </tbody>
+  </table>

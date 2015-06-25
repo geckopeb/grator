@@ -1,13 +1,12 @@
-@(module: it.grator.module_source.Module, fields: List[it.grator.module_source.fields.Field])
-@@(rowForm: Form[models.DB.@{module.className}], route: play.api.mvc.Call, row: Option[models.DB.@{module.className}] = None)(implicit lang: Lang)
+@(app: it.grator.module_source.App, module: it.grator.module_source.Module, fields: List[it.grator.module_source.fields.Field])
+@@(rowForm: Form[models.DB.@{module.className}], route: play.api.mvc.Call, @{module.varOrTuple(app)}: Option[@{module.tupleType(app)}] = None)(implicit messages: Messages, req: RequestHeader)
 
 @@import helper._
-@@import helper.twitterBootstrap._
 
 @@helper.form(action = route) {
   <fieldset>
     @for(field <- fields){
-		@{Html(field.htmlForm)}
+		@{Html(field.htmlForm(app))}
 	}
   </fieldset>
   <p><input type="submit" class="btn primary"

@@ -6,17 +6,22 @@ import play.api.mvc._
 
 import models.DB._
 
+import javax.inject.Inject
+
 import play.api.data._
 import play.api.data.Forms._
+import play.api.i18n.{MessagesApi, I18nSupport}
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
-import play.api.db.slick.DB
-import play.api.db.slick.Config.driver.simple._
+import scala.util.{Success, Failure}
+import scala.concurrent.Future
 
-object GratorRelationshipController extends Controller {
-  def index = Action {
-    val gratorRelationships = GratorRelationship.findAllWithRelateds
-
-    Ok(views.html.gratorRelationship.index(gratorRelationships))
+class GratorRelationshipController @Inject() (val messagesApi: MessagesApi) extends Controller with I18nSupport {
+  def index = Action.async { implicit request =>
+    val futureGratorRelationship = GratorRelationship.findAllWithRelateds
+    futureGratorRelationship.map{
+      GratorRelationship => Ok(views.html.GratorRelationship.index(GratorRelationship))
+    }.recover {case ex: Exception => Ok("Fallo")}
   }
 
   val GratorRelationshipForm = Form(
@@ -34,54 +39,80 @@ object GratorRelationshipController extends Controller {
       )(GratorRelationship.apply)(GratorRelationship.unapply)
   )
 
-  def insert = Action {
-    Ok(views.html.gratorRelationship.insert(GratorRelationshipForm, GratorRelationship.getRelTypeOptions, GratorRelationship.getSubpanelOptions))
+  def insert = Action { implicit request =>
+    Ok(views.html.GratorRelationship.insert(GratorRelationshipForm))
   }
-  
 
-  def detail(id: Long) = Action {
-    GratorRelationship.findByIdWithRelateds(id).map{
-      gratorRelationship => Ok(views.html.gratorRelationship.detail(gratorRelationship))
-    }.getOrElse(NotFound)
+  def detail(id: Long) = Action.async { implicit request =>
+    val futureData = for {
+      GratorRelationship <- GratorRelationship.findByIdWithRelateds(id)
+      
+    } yield ( (GratorRelationship) )
+    futureData.map{
+      case ((Some(GratorRelationship))) => Ok(views.html.GratorRelationship.detail((GratorRelationship)))
+      case _ => NotFound
+    }.recover { case ex: Exception => Ok("Fallo") }
   }
-  
-  def save = Action { implicit request =>
+
+  def save = Action.async { implicit request =>
     GratorRelationshipForm.bindFromRequest.fold(
-      formWithErrors => BadRequest(views.html.gratorRelationship.insert(formWithErrors, GratorRelationship.getRelTypeOptions, GratorRelationship.getSubpanelOptions)),
-      gratorRelationship => {
-        val id = GratorRelationship.save(gratorRelationship)
-        Redirect(routes.GratorRelationshipController.detail(id))
+      formWithErrors => Future.successful(BadRequest(views.html.GratorRelationship.insert(formWithErrors))),
+      GratorRelationship => {
+        val futureGratorRelationship = GratorRelationship.save(GratorRelationship)
+
+        futureGratorRelationship.map{ result => Redirect(routes.GratorRelationshipController.detail(result))}.recover{
+          case ex: Exception => Redirect(routes.GratorRelationshipController.index())
+        }
       }
     )
   }
-  
-  def edit(id: Long) = Action{
-    GratorRelationship.findById(id).map{
-      gratorRelationship:GratorRelationship => Ok(views.html.gratorRelationship.edit(GratorRelationshipForm.fill(gratorRelationship),gratorRelationship, GratorRelationship.getRelTypeOptions, GratorRelationship.getSubpanelOptions))
-    }.getOrElse(NotFound)
+
+  def edit(id: Long) = Action.async{ implicit request =>
+    GratorRelationship.findByIdWithRelateds(id).map{
+      case Some(GratorRelationshipTuple) => Ok(views.html.GratorRelationship.edit(GratorRelationshipForm.fill(GratorRelationshipTuple._1),GratorRelationshipTuple))
+      case None => NotFound
+    }.recover { case ex: Exception => Ok("Fallo")}
   }
-  
-  def delete(id: Long) = Action{
+
+  def delete(id: Long) = Action.async{
     implicit request =>
     GratorRelationship.findById(id).map{
-      gratorRelationship => {
-          GratorRelationship.delete(gratorRelationship)
+      case Some(GratorRelationship) => {
+          GratorRelationship.delete(GratorRelationship)
           Redirect(routes.GratorRelationshipController.index())
-    }
-    }.getOrElse(NotFound)
-  }
-  
-  def update(id: Long) = Action{ implicit request =>
-    GratorRelationship.findById(id).map{
-      gratorRelationship => {
-      GratorRelationshipForm.bindFromRequest.fold(
-        formWithErrors => BadRequest(views.html.gratorRelationship.edit(formWithErrors,gratorRelationship, GratorRelationship.getRelTypeOptions, GratorRelationship.getSubpanelOptions)),
-        gratorRelationship => {
-          GratorRelationship.update(gratorRelationship)
-          Redirect(routes.GratorRelationshipController.detail(gratorRelationship.id.get))
         }
-      )
-    }
-    }.getOrElse(NotFound)
+      case None => NotFound
+    }.recover { case ex: Exception => Ok("Fallo") }
   }
+
+  def update(id: Long) = Action.async{ implicit request =>
+    GratorRelationship.findByIdWithRelateds(id).map{
+      case Some(GratorRelationshipTuple) => {
+        GratorRelationshipForm.bindFromRequest.fold(
+          formWithErrors => BadRequest(views.html.GratorRelationship.edit(formWithErrors,GratorRelationshipTuple)),
+          GratorRelationship => {
+            GratorRelationship.update(GratorRelationship)
+            Redirect(routes.GratorRelationshipController.detail(GratorRelationship.id.get))
+          }
+        )
+      }
+      case None => NotFound
+    }.recover { case ex: Exception => Ok("Fallo") }
+  }
+
+  
+
+
+
+  def relatedCombo(q: String) = Action.async { implicit request =>
+    val futureOptions = GratorRelationship.findByQueryString(q)
+
+    futureOptions.map{
+      case options => {
+        val GratorRelationship = GratorRelationship.toJsonRelatedCombo(options)
+        Ok(GratorRelationship).as("application/json")
+      }
+    }.recover { case ex: Exception => Ok("Fallo") }
+  }
+
 }

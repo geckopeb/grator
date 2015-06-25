@@ -1,8 +1,7 @@
 @(module: it.grator.module_source.Module, rel: it.grator.module_source.relationships.Relationship)
-@@(@{rel.formName}: Form[@{rel.fullClassName}], id: Long, @{rel.relatedModule.varName}Options: Seq[(String,String)] )(implicit lang: Lang)
+@@(@{rel.formName}: Form[@{rel.fullClassName}], id: Long, @{rel.relatedModule.varName}Options: Seq[(String,String)] )(implicit messages: Messages, req: RequestHeader)
 
 @@import helper._
-@@import helper.twitterBootstrap._
 
 @@main(Messages("@{rel.relatedModule.varName}.add_rel")){
   <div class="page-header">
