@@ -1,10 +1,5 @@
 @(app: it.grator.module_source.App, relatedModule: it.grator.module_source.Module, matchExpression: String)
 @@(fieldName: String, field: Field, @{relatedModule.varName}: Option[@{relatedModule.fullClassName}])(implicit messages: Messages, req: RequestHeader)
-  @*
-  @@helper.javascriptRouter("@{relatedModule.jsRoutes}"){
-    routes.javascript.@{relatedModule.controllerName}.@{relatedModule.relatedComboJsonMethod}
-  }
-  *@
   @@import helper._
 
   <script src="@@routes.Assets.at("javascripts/jquery-2.1.4.min.js")"></script>

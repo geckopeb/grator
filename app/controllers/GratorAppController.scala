@@ -5,6 +5,7 @@ import play.api._
 import play.api.mvc._
 
 import models.DB._
+import it.grator.module_source.{App, AppFactory}
 
 import javax.inject.Inject
 
@@ -40,7 +41,7 @@ class GratorAppController @Inject() (val messagesApi: MessagesApi) extends Contr
   def detail(id: Long) = Action.async { implicit request =>
     val futureData = for {
       gratorApp <- GratorApp.findByIdWithRelateds(id)
-      
+
     } yield ( (gratorApp) )
     futureData.map{
       case ((Some(gratorApp))) => Ok(views.html.gratorApp.detail((gratorApp)))
@@ -94,10 +95,6 @@ class GratorAppController @Inject() (val messagesApi: MessagesApi) extends Contr
     }.recover { case ex: Exception => Ok("Fallo") }
   }
 
-  
-
-
-
   def relatedCombo(q: String) = Action.async { implicit request =>
     val futureOptions = GratorApp.findByQueryString(q)
 
@@ -109,4 +106,46 @@ class GratorAppController @Inject() (val messagesApi: MessagesApi) extends Contr
     }.recover { case ex: Exception => Ok("Fallo") }
   }
 
+  /* CUSTOM CODE */
+
+  def generateAll(id: Long) = Action.async {
+    /*
+    GratorApp.findById(id).map{
+      application:GratorApp => {
+        val gModules = application.modules
+        val gFields = application.fields
+        val gRelationships = application.relationships
+
+        //val app = AppFactory.construct(application.name, application.path, gModules, gFields, gRelationships)
+        val app = AppFactory.construct(application.name, application.path, gModules, gFields, gRelationships)
+        app.generateAll()
+
+        Redirect(routes.GratorAppController.detail(application.id.get))
+      }
+    }.getOrElse(NotFound)
+
+    yield ( (gratorApp) )
+   futureData.map{
+     case ((Some(gratorApp))) => Ok(views.html.gratorApp.detail((gratorApp)))
+     case _ => NotFound
+   }.recover { case ex: Exception => Ok("Fallo") }
+    */
+    val futureData = for{
+      gApp           <- GratorApp.findById(id)
+      gModules       <- GratorModule.findAllByApplicationId(id)
+      gFields        <- GratorField.findAllByApplicationId(id)
+      gRelationships <- GratorRelationship.findAllByApplicationId(id)
+    } yield (gApp, gModules, gFields, gRelationships)
+
+    futureData.map{
+      case ( Some(gApp: GratorApp), gModules: List[GratorModule], gFields: List[GratorField], gRelationships: List[GratorRelationship]) => {
+        val app = AppFactory.construct(gApp.name, gApp.path, gModules, gFields, gRelationships)
+        app.generateAll()
+
+        Redirect(routes.GratorAppController.detail(id))
+      }
+    }
+  }
+
+  /* END CUSTOM CODE */
 }

@@ -1,6 +1,7 @@
 name := """grator"""
-
-version := "1.0-SNAPSHOT"
+//Reboot Numero 2.
+//..
+version := "0.1.1"
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala)
 

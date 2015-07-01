@@ -16,7 +16,7 @@ import it.grator.grator_base.Row
 import models.DB.GratorApp.gratorAppT
 
 case class GratorModule(
-  
+
     id: Option[Long] = None,
     name: String,
     applicationId: Long
@@ -28,16 +28,16 @@ object GratorModule extends HasDatabaseConfig[JdbcProfile]{
   import driver.api._
   protected val dbConfig = DatabaseConfigProvider.get[JdbcProfile](Play.current)
 
-  
+
   class GratorModuleT(tag: Tag) extends Table[GratorModule](tag, "grator_module"){
-    
+
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
     def name = column[String]("name")
     def applicationId = column[Long]("application_id")
 
     def * = ( id.?, name, applicationId ) <> ((GratorModule.apply _).tupled, GratorModule.unapply _)
     def applicationIdKey = foreignKey("grator_module_grator_app_application_id", applicationId, models.DB.GratorApp.gratorAppT)(_.id)
-	
+
   }
 
   val gratorModuleT = TableQuery[GratorModuleT]
@@ -118,4 +118,11 @@ object GratorModule extends HasDatabaseConfig[JdbcProfile]{
     val jsonList = Json.toJson(gratorModule)
     Json.stringify(jsonList)
   }
+
+  /* CUSTOM CODE */
+  def findAllByApplicationId(appId: Long): Future[List[GratorModule]] = {
+    val q = gratorModuleT.filter(_.applicationId === appId)
+    db.run(q.result).map(_.toList)
+  }
+  /* END CUSTOM CODE */
 }

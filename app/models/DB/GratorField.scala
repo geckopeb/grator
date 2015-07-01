@@ -17,7 +17,7 @@ import models.DB.GratorModule.gratorModuleT
 import models.DB.GratorModule.gratorModuleT
 
 case class GratorField(
-  
+
     id: Option[Long] = None,
     name: String,
     moduleId: Long,
@@ -32,9 +32,9 @@ object GratorField extends HasDatabaseConfig[JdbcProfile]{
   import driver.api._
   protected val dbConfig = DatabaseConfigProvider.get[JdbcProfile](Play.current)
 
-  
+
   class GratorFieldT(tag: Tag) extends Table[GratorField](tag, "grator_field"){
-    
+
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
     def name = column[String]("name")
     def moduleId = column[Long]("module_id")
@@ -45,7 +45,7 @@ object GratorField extends HasDatabaseConfig[JdbcProfile]{
     def * = ( id.?, name, moduleId, fieldType, required, relatedModuleId.? ) <> ((GratorField.apply _).tupled, GratorField.unapply _)
     def moduleIdKey = foreignKey("grator_field_grator_module_module_id", moduleId, models.DB.GratorModule.gratorModuleT)(_.id)
 	def relatedModuleIdKey = foreignKey("grator_field_grator_module_related_module_id", relatedModuleId, models.DB.GratorModule.gratorModuleT)(_.id)
-	
+
   }
 
   val gratorFieldT = TableQuery[GratorFieldT]
@@ -128,4 +128,14 @@ relatedModuleId <- gratorModuleT if gratorField.relatedModuleId === relatedModul
     val jsonList = Json.toJson(gratorField)
     Json.stringify(jsonList)
   }
+
+  /* CUSTOM CODE */
+  def findAllByApplicationId(applicationId: Long): Future[List[GratorField]] = {
+    val q = for{
+      s <- GratorModule.gratorModuleT if s.applicationId === applicationId
+      f <- GratorField.gratorFieldT if s.id === f.moduleId
+    } yield (f)
+    db.run(q.result).map(_.toList)
+  }
+  /* END CUSTOM CODE */
 }

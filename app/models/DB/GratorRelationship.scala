@@ -17,7 +17,7 @@ import models.DB.GratorModule.gratorModuleT
 import models.DB.GratorModule.gratorModuleT
 
 case class GratorRelationship(
-  
+
     id: Option[Long] = None,
     name: String,
     relType: String,
@@ -35,9 +35,9 @@ object GratorRelationship extends HasDatabaseConfig[JdbcProfile]{
   import driver.api._
   protected val dbConfig = DatabaseConfigProvider.get[JdbcProfile](Play.current)
 
-  
+
   class GratorRelationshipT(tag: Tag) extends Table[GratorRelationship](tag, "grator_relationship"){
-    
+
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
     def name = column[String]("name")
     def relType = column[String]("rel_type")
@@ -51,7 +51,7 @@ object GratorRelationship extends HasDatabaseConfig[JdbcProfile]{
     def * = ( id.?, name, relType, primaryModuleId, primaryModuleLabel, primaryModuleSubpanel, relatedModuleId, relatedModuleLabel, relatedModuleSubpanel ) <> ((GratorRelationship.apply _).tupled, GratorRelationship.unapply _)
     def primaryModuleIdKey = foreignKey("grator_relationship_grator_module_primary_module_id", primaryModuleId, models.DB.GratorModule.gratorModuleT)(_.id)
 	def relatedModuleIdKey = foreignKey("grator_relationship_grator_module_related_module_id", relatedModuleId, models.DB.GratorModule.gratorModuleT)(_.id)
-	
+
   }
 
   val gratorRelationshipT = TableQuery[GratorRelationshipT]
@@ -134,4 +134,14 @@ relatedModuleId <- gratorModuleT if gratorRelationship.relatedModuleId === relat
     val jsonList = Json.toJson(gratorRelationship)
     Json.stringify(jsonList)
   }
+
+  /* CUSTOM CODE */
+  def findAllByApplicationId(applicationId: Long): Future[List[GratorRelationship]] = {
+    val q = for{
+      s <- GratorModule.gratorModuleT if s.applicationId === applicationId
+      r <- GratorRelationship.gratorRelationshipT if s.id === r.primaryModuleId
+    } yield (r)
+    db.run(q.result).map(_.toList)
+  }
+  /* END CUSTOM CODE */
 }
