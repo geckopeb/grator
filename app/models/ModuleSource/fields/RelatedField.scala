@@ -2,13 +2,13 @@ package it.grator.module_source.fields
 
 import it.grator.module_source._
 
-import utils._
+import it.grator.utils._
 
 import play.api.Logger
 
 trait RelatedField extends Field{
   def relatedModule: Module
-  
+
   val formType: String = if(this.required) "longNumber" else "optional(longNumber)"
   val relatedClassName = Module.className(this.relatedModuleName)
 
@@ -17,7 +17,7 @@ trait RelatedField extends Field{
   def fieldTable: String = {
     s"""def $name = column[$fieldType]("$tableName"$tableRequired)"""
   }
-  
+
   def fieldType: String = "Long"
 
   def tableIndex: String = {
@@ -30,7 +30,7 @@ trait RelatedField extends Field{
 
     s"""def $keyName = foreignKey("$sqlKeyName", $name, $relatedTable)(_.id)"""
   }
-  
+
   override def list: String = {
     //val varName = Module.varName(this.relatedModuleName)+this.name.capitalize
     s"@$varName.name"

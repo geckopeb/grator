@@ -2,7 +2,7 @@ package it.grator.module_source
 
 import it.grator.module_source.fields._
 import it.grator.module_source.relationships._
-import utils._
+import it.grator.utils._
 import views.html._
 
 case class Module(
@@ -216,6 +216,31 @@ case class Module(
 		FileUtils.writeToFile(path, combo)
 	}
 
+	def generateRelatedDropdownView(app: App): Unit = {
+		val path = this.generatePath(app, "app/views/"+this.name+"/widgets/", "related_dropdown", ".scala.html")
+
+		/*
+		ESP: no es posible interpolar la palabra case en un template,
+		La única forma es generandolo como string, lo cual no se puede realizar dentro del mismo,
+		Y en este punto no tenemos disponible el campo, este template es el que manejaría a todos
+		Los campos del tipo relatedCombo que apuntan al mismo módulo.
+		val varName = this.varName
+		*/
+
+		val matchExpression = s"""@$varName match{
+          case Some(row) => {
+            <input id="@{fieldName}_input_search" value="@row.name">
+          }
+          case None => {
+            <input id="@{fieldName}_input_search" value="">
+          }
+        }"""
+
+		val dropdown = views.html.templates.module.module_views.widgets.related_dropdown(app, this, matchExpression).toString
+
+		FileUtils.writeToFile(path, dropdown)
+	}
+
 	def generateViews(app: App): Unit = {
 		this.generateDetailView(app)
 		this.generateEditView(app)
@@ -225,6 +250,7 @@ case class Module(
 		this.generateListView(app)
 		this.generateDeleteView(app)
 		this.generateRelatedComboView(app)
+		this.generateRelatedDropdownView(app)
 	}
 
 	def generateRelationshipRow(app: App, rel: Relationship): Unit = {

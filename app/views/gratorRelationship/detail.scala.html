@@ -1,0 +1,25 @@
+
+@(gratorRelationship: ( models.DB.GratorRelationship, models.DB.GratorModule, models.DB.GratorModule ) )(implicit messages: Messages, req: RequestHeader)
+
+@main(Messages("gratorRelationship.name")){
+	<div class="page-header">
+		
+    	<h1>@Messages("gratorRelationship.item_detail",gratorRelationship._1.name)</h1>
+    	
+  </div>
+
+  @views.html.gratorRelationship.list(List(gratorRelationship))
+
+ 	<p>
+		<a href="@controllers.routes.GratorRelationshipController.index()"
+		class="btn">
+		<i class="icon-plus"></i> @Messages("gratorRelationship.index")</a>
+
+		
+		@views.html.gratorRelationship.delete(route = routes.GratorRelationshipController.delete(gratorRelationship._1.id.get), gratorRelationship = Some(gratorRelationship._1))
+		
+	</p>
+
+	
+	
+}

@@ -18,13 +18,13 @@ import scala.concurrent.Future
 
 class GratorAppController @Inject() (val messagesApi: MessagesApi) extends Controller with I18nSupport {
   def index = Action.async { implicit request =>
-    val futureGratorApp = GratorApp.findAllWithRelateds
-    futureGratorApp.map{
-      GratorApp => Ok(views.html.GratorApp.index(GratorApp))
+    val futuregratorApp = GratorApp.findAllWithRelateds
+    futuregratorApp.map{
+      gratorApp => Ok(views.html.gratorApp.index(gratorApp))
     }.recover {case ex: Exception => Ok("Fallo")}
   }
 
-  val GratorAppForm = Form(
+  val gratorAppForm = Form(
       mapping(
 					"id" -> optional(longNumber),
 					"name" -> nonEmptyText,
@@ -34,27 +34,27 @@ class GratorAppController @Inject() (val messagesApi: MessagesApi) extends Contr
   )
 
   def insert = Action { implicit request =>
-    Ok(views.html.GratorApp.insert(GratorAppForm))
+    Ok(views.html.gratorApp.insert(gratorAppForm))
   }
 
   def detail(id: Long) = Action.async { implicit request =>
     val futureData = for {
-      GratorApp <- GratorApp.findByIdWithRelateds(id)
+      gratorApp <- GratorApp.findByIdWithRelateds(id)
       
-    } yield ( (GratorApp) )
+    } yield ( (gratorApp) )
     futureData.map{
-      case ((Some(GratorApp))) => Ok(views.html.GratorApp.detail((GratorApp)))
+      case ((Some(gratorApp))) => Ok(views.html.gratorApp.detail((gratorApp)))
       case _ => NotFound
     }.recover { case ex: Exception => Ok("Fallo") }
   }
 
   def save = Action.async { implicit request =>
-    GratorAppForm.bindFromRequest.fold(
-      formWithErrors => Future.successful(BadRequest(views.html.GratorApp.insert(formWithErrors))),
-      GratorApp => {
-        val futureGratorApp = GratorApp.save(GratorApp)
+    gratorAppForm.bindFromRequest.fold(
+      formWithErrors => Future.successful(BadRequest(views.html.gratorApp.insert(formWithErrors))),
+      gratorApp => {
+        val futuregratorApp = GratorApp.save(gratorApp)
 
-        futureGratorApp.map{ result => Redirect(routes.GratorAppController.detail(result))}.recover{
+        futuregratorApp.map{ result => Redirect(routes.GratorAppController.detail(result))}.recover{
           case ex: Exception => Redirect(routes.GratorAppController.index())
         }
       }
@@ -63,7 +63,7 @@ class GratorAppController @Inject() (val messagesApi: MessagesApi) extends Contr
 
   def edit(id: Long) = Action.async{ implicit request =>
     GratorApp.findById(id).map{
-      case Some(GratorApp) => Ok(views.html.GratorApp.edit(GratorAppForm.fill(GratorApp),GratorApp))
+      case Some(gratorApp) => Ok(views.html.gratorApp.edit(gratorAppForm.fill(gratorApp),gratorApp))
       case None => NotFound
     }.recover { case ex: Exception => Ok("Fallo")}
   }
@@ -71,8 +71,8 @@ class GratorAppController @Inject() (val messagesApi: MessagesApi) extends Contr
   def delete(id: Long) = Action.async{
     implicit request =>
     GratorApp.findById(id).map{
-      case Some(GratorApp) => {
-          GratorApp.delete(GratorApp)
+      case Some(gratorApp) => {
+          GratorApp.delete(gratorApp)
           Redirect(routes.GratorAppController.index())
         }
       case None => NotFound
@@ -81,12 +81,12 @@ class GratorAppController @Inject() (val messagesApi: MessagesApi) extends Contr
 
   def update(id: Long) = Action.async{ implicit request =>
     GratorApp.findById(id).map{
-      case Some(GratorApp) => {
-        GratorAppForm.bindFromRequest.fold(
-          formWithErrors => BadRequest(views.html.GratorApp.edit(formWithErrors,GratorApp)),
-          GratorApp => {
-            GratorApp.update(GratorApp)
-            Redirect(routes.GratorAppController.detail(GratorApp.id.get))
+      case Some(gratorApp) => {
+        gratorAppForm.bindFromRequest.fold(
+          formWithErrors => BadRequest(views.html.gratorApp.edit(formWithErrors,gratorApp)),
+          gratorApp => {
+            GratorApp.update(gratorApp)
+            Redirect(routes.GratorAppController.detail(gratorApp.id.get))
           }
         )
       }
@@ -103,8 +103,8 @@ class GratorAppController @Inject() (val messagesApi: MessagesApi) extends Contr
 
     futureOptions.map{
       case options => {
-        val GratorApp = GratorApp.toJsonRelatedCombo(options)
-        Ok(GratorApp).as("application/json")
+        val gratorApp = GratorApp.toJsonRelatedCombo(options)
+        Ok(gratorApp).as("application/json")
       }
     }.recover { case ex: Exception => Ok("Fallo") }
   }

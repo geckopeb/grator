@@ -1,0 +1,16 @@
+
+@(gratorModuleForm: Form[models.DB.GratorModule], gratorModuleTuple: ( models.DB.GratorModule, models.DB.GratorApp ))(implicit messages: Messages, req: RequestHeader)
+
+@main(Messages("gratorModule.insert")){
+  <div class="page-header">
+      <h1>@Messages("gratorModule.insert")</h1>
+  </div>
+
+  @views.html.gratorModule.form(gratorModuleForm, route = routes.GratorModuleController.update(gratorModuleTuple._1.id.get), gratorModuleTuple = Some(gratorModuleTuple))
+
+  <p>
+    <a href="@controllers.routes.GratorModuleController.index()"
+    class="btn">
+    <i class="icon-plus"></i> @Messages("gratorModule.return")</a>
+  </p>
+}

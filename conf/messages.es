@@ -2,95 +2,95 @@
 application.name = grator
 
 
-#GratorApp
-GratorApp.module_name = GratorApp
+#gratorApp
+gratorApp.module_name = GratorApp
 
-GratorApp.number = #
-GratorApp.item_name = Nombre
+gratorApp.number = #
+gratorApp.item_name = Nombre
 
-GratorApp.new = Nuevo GratorApp
-GratorApp.insert = Insertando un nuevo GratorApp
-GratorApp.return = Volver
-GratorApp.save = Guardar
-GratorApp.index = Listado de GratorApp
-GratorApp.item_detail = Detalles de {0} GratorApp
-GratorApp.delete = Borrar GratorApp {0}
-GratorApp.select = Seleccionar
-GratorApp.add_rel = Agregar Relacion
-GratorApp.clear = Vaciar
+gratorApp.new = Nuevo GratorApp
+gratorApp.insert = Insertando un nuevo GratorApp
+gratorApp.return = Volver
+gratorApp.save = Guardar
+gratorApp.index = Listado de GratorApp
+gratorApp.item_detail = Detalles de {0} GratorApp
+gratorApp.delete = Borrar GratorApp {0}
+gratorApp.select = Seleccionar
+gratorApp.add_rel = Agregar Relacion
+gratorApp.clear = Vaciar
 
-GratorApp.id = Id
-GratorApp.name = Name
-GratorApp.path = Path
+gratorApp.id = Id
+gratorApp.name = Name
+gratorApp.path = Path
 
-#GratorModule
-GratorModule.module_name = GratorModule
+#gratorModule
+gratorModule.module_name = GratorModule
 
-GratorModule.number = #
-GratorModule.item_name = Nombre
+gratorModule.number = #
+gratorModule.item_name = Nombre
 
-GratorModule.new = Nuevo GratorModule
-GratorModule.insert = Insertando un nuevo GratorModule
-GratorModule.return = Volver
-GratorModule.save = Guardar
-GratorModule.index = Listado de GratorModule
-GratorModule.item_detail = Detalles de {0} GratorModule
-GratorModule.delete = Borrar GratorModule {0}
-GratorModule.select = Seleccionar
-GratorModule.add_rel = Agregar Relacion
-GratorModule.clear = Vaciar
+gratorModule.new = Nuevo GratorModule
+gratorModule.insert = Insertando un nuevo GratorModule
+gratorModule.return = Volver
+gratorModule.save = Guardar
+gratorModule.index = Listado de GratorModule
+gratorModule.item_detail = Detalles de {0} GratorModule
+gratorModule.delete = Borrar GratorModule {0}
+gratorModule.select = Seleccionar
+gratorModule.add_rel = Agregar Relacion
+gratorModule.clear = Vaciar
 
-GratorModule.id = Id
-GratorModule.name = Name
-GratorModule.applicationId = ApplicationId
+gratorModule.id = Id
+gratorModule.name = Name
+gratorModule.applicationId = ApplicationId
 
-#GratorField
-GratorField.module_name = GratorField
+#gratorField
+gratorField.module_name = GratorField
 
-GratorField.number = #
-GratorField.item_name = Nombre
+gratorField.number = #
+gratorField.item_name = Nombre
 
-GratorField.new = Nuevo GratorField
-GratorField.insert = Insertando un nuevo GratorField
-GratorField.return = Volver
-GratorField.save = Guardar
-GratorField.index = Listado de GratorField
-GratorField.item_detail = Detalles de {0} GratorField
-GratorField.delete = Borrar GratorField {0}
-GratorField.select = Seleccionar
-GratorField.add_rel = Agregar Relacion
-GratorField.clear = Vaciar
+gratorField.new = Nuevo GratorField
+gratorField.insert = Insertando un nuevo GratorField
+gratorField.return = Volver
+gratorField.save = Guardar
+gratorField.index = Listado de GratorField
+gratorField.item_detail = Detalles de {0} GratorField
+gratorField.delete = Borrar GratorField {0}
+gratorField.select = Seleccionar
+gratorField.add_rel = Agregar Relacion
+gratorField.clear = Vaciar
 
-GratorField.id = Id
-GratorField.name = Name
-GratorField.moduleId = ModuleId
-GratorField.fieldType = FieldType
-GratorField.required = Required
-GratorField.relatedModuleId = RelatedModuleId
+gratorField.id = Id
+gratorField.name = Name
+gratorField.moduleId = ModuleId
+gratorField.fieldType = FieldType
+gratorField.required = Required
+gratorField.relatedModuleId = RelatedModuleId
 
-#GratorRelationship
-GratorRelationship.module_name = GratorRelationship
+#gratorRelationship
+gratorRelationship.module_name = GratorRelationship
 
-GratorRelationship.number = #
-GratorRelationship.item_name = Nombre
+gratorRelationship.number = #
+gratorRelationship.item_name = Nombre
 
-GratorRelationship.new = Nuevo GratorRelationship
-GratorRelationship.insert = Insertando un nuevo GratorRelationship
-GratorRelationship.return = Volver
-GratorRelationship.save = Guardar
-GratorRelationship.index = Listado de GratorRelationship
-GratorRelationship.item_detail = Detalles de {0} GratorRelationship
-GratorRelationship.delete = Borrar GratorRelationship {0}
-GratorRelationship.select = Seleccionar
-GratorRelationship.add_rel = Agregar Relacion
-GratorRelationship.clear = Vaciar
+gratorRelationship.new = Nuevo GratorRelationship
+gratorRelationship.insert = Insertando un nuevo GratorRelationship
+gratorRelationship.return = Volver
+gratorRelationship.save = Guardar
+gratorRelationship.index = Listado de GratorRelationship
+gratorRelationship.item_detail = Detalles de {0} GratorRelationship
+gratorRelationship.delete = Borrar GratorRelationship {0}
+gratorRelationship.select = Seleccionar
+gratorRelationship.add_rel = Agregar Relacion
+gratorRelationship.clear = Vaciar
 
-GratorRelationship.id = Id
-GratorRelationship.name = Name
-GratorRelationship.relType = RelType
-GratorRelationship.primaryModuleId = PrimaryModuleId
-GratorRelationship.primaryModuleLabel = PrimaryModuleLabel
-GratorRelationship.primaryModuleSubpanel = PrimaryModuleSubpanel
-GratorRelationship.relatedModuleId = RelatedModuleId
-GratorRelationship.relatedModuleLabel = RelatedModuleLabel
-GratorRelationship.relatedModuleSubpanel = RelatedModuleSubpanel
+gratorRelationship.id = Id
+gratorRelationship.name = Name
+gratorRelationship.relType = RelType
+gratorRelationship.primaryModuleId = PrimaryModuleId
+gratorRelationship.primaryModuleLabel = PrimaryModuleLabel
+gratorRelationship.primaryModuleSubpanel = PrimaryModuleSubpanel
+gratorRelationship.relatedModuleId = RelatedModuleId
+gratorRelationship.relatedModuleLabel = RelatedModuleLabel
+gratorRelationship.relatedModuleSubpanel = RelatedModuleSubpanel

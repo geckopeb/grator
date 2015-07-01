@@ -1,7 +1,7 @@
 package it.grator.module_source.relationships
 
 import it.grator.module_source.Module
-import utils._
+import it.grator.utils._
 
 trait Relationship{
 	def packageName = "models.DB"

@@ -23,3 +23,5 @@ libraryDependencies += "mysql" % "mysql-connector-java" % "5.1.35"
 libraryDependencies += "com.typesafe.play" %% "play-slick" % "1.0.0"
 
 libraryDependencies += "com.typesafe.play" %% "play-slick-evolutions" % "1.0.0"
+
+libraryDependencies += "commons-io" % "commons-io" % "2.4"

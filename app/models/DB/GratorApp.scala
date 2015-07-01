@@ -28,7 +28,7 @@ object GratorApp extends HasDatabaseConfig[JdbcProfile]{
   protected val dbConfig = DatabaseConfigProvider.get[JdbcProfile](Play.current)
 
   
-  class GratorAppT(tag: Tag) extends Table[GratorApp](tag, "_grator_app"){
+  class GratorAppT(tag: Tag) extends Table[GratorApp](tag, "grator_app"){
     
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
     def name = column[String]("name")
@@ -38,58 +38,58 @@ object GratorApp extends HasDatabaseConfig[JdbcProfile]{
     
   }
 
-  val GratorAppT = TableQuery[GratorAppT]
+  val gratorAppT = TableQuery[GratorAppT]
 
-  def save(GratorApp: GratorApp): Future[Long] = {
-    db.run(GratorAppT.returning(GratorAppT.map(_.id)) += GratorApp )
+  def save(gratorApp: GratorApp): Future[Long] = {
+    db.run(gratorAppT.returning(gratorAppT.map(_.id)) += gratorApp )
   }
 
-  def update(GratorApp: GratorApp): Future[Long] = {
+  def update(gratorApp: GratorApp): Future[Long] = {
       val q = for {
-        s <- GratorAppT
-        if s.id === GratorApp.id
+        s <- gratorAppT
+        if s.id === gratorApp.id
       } yield(s)
-      db.run(q.update(GratorApp)).map(_.toLong)
+      db.run(q.update(gratorApp)).map(_.toLong)
   }
 
-  def delete(GratorApp: GratorApp):Future[Int] = {
+  def delete(gratorApp: GratorApp):Future[Int] = {
        val q = for {
-        s <- GratorAppT
-        if s.id === GratorApp.id.get
+        s <- gratorAppT
+        if s.id === gratorApp.id.get
       } yield(s)
       db.run(q.delete)
   }
 
   def findAllWithRelateds: Future[List[models.DB.GratorApp]] = {
       val q = for {
-        GratorApp <- GratorAppT
+        gratorApp <- gratorAppT
         
-      } yield (GratorApp )
+      } yield (gratorApp )
       db.run(q.result).map(_.toList)
   }
 
   def findAll: Future[List[GratorApp]] = {
-    db.run(GratorAppT.result).map(_.toList)
+    db.run(gratorAppT.result).map(_.toList)
   }
 
   def findById(id: Long): Future[Option[GratorApp]] = {
       val q = for{
-        s <- GratorAppT if s.id === id
+        s <- gratorAppT if s.id === id
       } yield (s)
       db.run(q.result).map(_.headOption)
   }
 
   def findByIdWithRelateds(id: Long): Future[Option[models.DB.GratorApp]] = {
       val q = for {
-        GratorApp <- GratorAppT if GratorApp.id === id
+        gratorApp <- gratorAppT if gratorApp.id === id
         
-      } yield (GratorApp )
+      } yield (gratorApp )
       db.run(q.result).map(_.headOption)
   }
 
   def getOptions(): Future[Seq[(String,String)]] = {
     val q = for {
-      p <- GratorAppT
+      p <- gratorAppT
     } yield(p.id, p.name)
 
     db.run(q.result).map(rows => rows.map { case (id, name) => (id.toString, name) })
@@ -98,20 +98,20 @@ object GratorApp extends HasDatabaseConfig[JdbcProfile]{
   def findByQueryString(q: String): Future[List[GratorApp]] = {
       val qstring = "%"+q+"%"
       val p = for{
-        GratorApp <- GratorAppT if GratorApp.name like qstring
-      } yield (GratorApp)
+        gratorApp <- gratorAppT if gratorApp.name like qstring
+      } yield (gratorApp)
       db.run(p.result).map(_.toList)
   }
 
-  def toJsonRelatedCombo(GratorApp: List[GratorApp]) = {
-    implicit val GratorAppWrites = new Writes[GratorApp] {
-      def writes(GratorApp: GratorApp) = Json.obj(
-        "value" -> GratorApp.id.get,
-        "label" -> GratorApp.name,
-        "desc" -> GratorApp.toString //ESP pendiente generar una descripción!!!
+  def toJsonRelatedCombo(gratorApp: List[GratorApp]) = {
+    implicit val gratorAppWrites = new Writes[GratorApp] {
+      def writes(gratorApp: GratorApp) = Json.obj(
+        "value" -> gratorApp.id.get,
+        "label" -> gratorApp.name,
+        "desc" -> gratorApp.toString //ESP pendiente generar una descripción!!!
       )
     }
-    val jsonList = Json.toJson(GratorApp)
+    val jsonList = Json.toJson(gratorApp)
     Json.stringify(jsonList)
   }
 }

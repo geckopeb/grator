@@ -1,0 +1,71 @@
+
+@(rowForm: Form[models.DB.GratorRelationship], route: play.api.mvc.Call, gratorRelationshipTuple: Option[( models.DB.GratorRelationship, models.DB.GratorModule, models.DB.GratorModule )] = None)(implicit messages: Messages, req: RequestHeader)
+
+@import helper._
+
+@helper.form(action = route) {
+  <fieldset>
+    
+		@gratorRelationshipTuple match {
+    	case Some(gratorRelationshipTuple) => {
+    		<input type="hidden" name="id" value="@gratorRelationshipTuple._1.id.get">
+    	}
+    	case None => {}
+	  }
+	
+		<legend>
+				@Messages("gratorRelationship.item_name")
+		   </legend>
+		    @helper.inputText(rowForm("name"))
+	
+		<legend>
+				@Messages("gratorRelationship.relType")
+		   </legend>
+		    @helper.inputText(rowForm("relType"))
+	
+		
+      @gratorRelationshipTuple match{
+        case Some(( gratorRelationship, primaryModuleId, relatedModuleId )) => {
+          @views.html.gratorModule.widgets.related_dropdown("primaryModuleId", rowForm("primaryModuleId"), Some(primaryModuleId))
+        }
+        case None => {
+          @views.html.gratorModule.widgets.related_dropdown("primaryModuleId", rowForm("primaryModuleId"), None)
+        }
+      }
+    
+	
+		<legend>
+				@Messages("gratorRelationship.primaryModuleLabel")
+		   </legend>
+		    @helper.inputText(rowForm("primaryModuleLabel"))
+	
+		<legend>
+				@Messages("gratorRelationship.primaryModuleSubpanel")
+		   </legend>
+		    @helper.inputText(rowForm("primaryModuleSubpanel"))
+	
+		
+      @gratorRelationshipTuple match{
+        case Some(( gratorRelationship, primaryModuleId, relatedModuleId )) => {
+          @views.html.gratorModule.widgets.related_dropdown("relatedModuleId", rowForm("relatedModuleId"), Some(relatedModuleId))
+        }
+        case None => {
+          @views.html.gratorModule.widgets.related_dropdown("relatedModuleId", rowForm("relatedModuleId"), None)
+        }
+      }
+    
+	
+		<legend>
+				@Messages("gratorRelationship.relatedModuleLabel")
+		   </legend>
+		    @helper.inputText(rowForm("relatedModuleLabel"))
+	
+		<legend>
+				@Messages("gratorRelationship.relatedModuleSubpanel")
+		   </legend>
+		    @helper.inputText(rowForm("relatedModuleSubpanel"))
+	
+  </fieldset>
+  <p><input type="submit" class="btn primary"
+  value='@Messages("gratorRelationship.save")'></p>
+}

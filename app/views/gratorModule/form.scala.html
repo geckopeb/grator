@@ -1,0 +1,35 @@
+
+@(rowForm: Form[models.DB.GratorModule], route: play.api.mvc.Call, gratorModuleTuple: Option[( models.DB.GratorModule, models.DB.GratorApp )] = None)(implicit messages: Messages, req: RequestHeader)
+
+@import helper._
+
+@helper.form(action = route) {
+  <fieldset>
+    
+		@gratorModuleTuple match {
+    	case Some(gratorModuleTuple) => {
+    		<input type="hidden" name="id" value="@gratorModuleTuple._1.id.get">
+    	}
+    	case None => {}
+	  }
+	
+		<legend>
+				@Messages("gratorModule.item_name")
+		   </legend>
+		    @helper.inputText(rowForm("name"))
+	
+		
+      @gratorModuleTuple match{
+        case Some(( gratorModule, applicationId )) => {
+          @views.html.gratorApp.widgets.related_dropdown("applicationId", rowForm("applicationId"), Some(applicationId))
+        }
+        case None => {
+          @views.html.gratorApp.widgets.related_dropdown("applicationId", rowForm("applicationId"), None)
+        }
+      }
+    
+	
+  </fieldset>
+  <p><input type="submit" class="btn primary"
+  value='@Messages("gratorModule.save")'></p>
+}

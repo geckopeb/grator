@@ -2,7 +2,7 @@ package it.grator.module_source
 
 import it.grator.module_source.fields._
 import it.grator.module_source.relationships._
-import utils.FileUtils
+import it.grator.utils.FileUtils
 
 import play.api.Logger
 

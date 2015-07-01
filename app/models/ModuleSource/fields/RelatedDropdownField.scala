@@ -11,13 +11,19 @@ case class RelatedDropdownField(
 	relatedModule: Module
 ) extends RelatedField{
 	override def htmlForm(app: App): String = {
-		s"""<legend>
-				@Messages("$moduleName.$name")
-		   </legend>
-		   @select(
-		   		rowForm("$name"),
-		   		models.DB.$relatedClassName.getOptions,
-		   		'default -> "-- select --"
-		   )"""
+		val varOrTuple = this.module.varOrTuple(app)
+    val relatedModuleName = this.relatedModule.name
+    val tuple = module.tupleExtractor(app)
+
+    s"""
+      @$varOrTuple match{
+        case Some($tuple) => {
+          @views.html.$relatedModuleName.widgets.related_dropdown("$name", rowForm("$name"), Some($name))
+        }
+        case None => {
+          @views.html.$relatedModuleName.widgets.related_dropdown("$name", rowForm("$name"), None)
+        }
+      }
+    """
 	}
 }

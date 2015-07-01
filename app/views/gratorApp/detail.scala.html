@@ -1,0 +1,25 @@
+
+@(gratorApp: models.DB.GratorApp )(implicit messages: Messages, req: RequestHeader)
+
+@main(Messages("gratorApp.name")){
+	<div class="page-header">
+		
+    	<h1>@Messages("gratorApp.item_detail",gratorApp.name)</h1>
+    	
+  </div>
+
+  @views.html.gratorApp.list(List(gratorApp))
+
+ 	<p>
+		<a href="@controllers.routes.GratorAppController.index()"
+		class="btn">
+		<i class="icon-plus"></i> @Messages("gratorApp.index")</a>
+
+		
+		@views.html.gratorApp.delete(route = routes.GratorAppController.delete(gratorApp.id.get), gratorApp = Some(gratorApp))
+		
+	</p>
+
+	
+	
+}

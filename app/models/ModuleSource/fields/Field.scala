@@ -2,7 +2,7 @@ package it.grator.module_source.fields
 
 import it.grator.module_source._
 
-import utils._
+import it.grator.utils._
 
 trait Field{
 	def name: String

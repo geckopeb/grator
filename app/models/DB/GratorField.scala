@@ -13,8 +13,8 @@ import slick.driver.JdbcProfile
 
 import it.grator.grator_base.Row
 
-import models.DB.GratorModule.GratorModuleT
-import models.DB.GratorModule.GratorModuleT
+import models.DB.GratorModule.gratorModuleT
+import models.DB.GratorModule.gratorModuleT
 
 case class GratorField(
   
@@ -33,7 +33,7 @@ object GratorField extends HasDatabaseConfig[JdbcProfile]{
   protected val dbConfig = DatabaseConfigProvider.get[JdbcProfile](Play.current)
 
   
-  class GratorFieldT(tag: Tag) extends Table[GratorField](tag, "_grator_field"){
+  class GratorFieldT(tag: Tag) extends Table[GratorField](tag, "grator_field"){
     
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
     def name = column[String]("name")
@@ -43,67 +43,67 @@ object GratorField extends HasDatabaseConfig[JdbcProfile]{
     def relatedModuleId = column[Long]("related_module_id")
 
     def * = ( id.?, name, moduleId, fieldType, required, relatedModuleId.? ) <> ((GratorField.apply _).tupled, GratorField.unapply _)
-    def moduleIdKey = foreignKey("_grator_field__grator_module_module_id", moduleId, models.DB.GratorModule.GratorModuleT)(_.id)
-	def relatedModuleIdKey = foreignKey("_grator_field__grator_module_related_module_id", relatedModuleId, models.DB.GratorModule.GratorModuleT)(_.id)
+    def moduleIdKey = foreignKey("grator_field_grator_module_module_id", moduleId, models.DB.GratorModule.gratorModuleT)(_.id)
+	def relatedModuleIdKey = foreignKey("grator_field_grator_module_related_module_id", relatedModuleId, models.DB.GratorModule.gratorModuleT)(_.id)
 	
   }
 
-  val GratorFieldT = TableQuery[GratorFieldT]
+  val gratorFieldT = TableQuery[GratorFieldT]
 
-  def save(GratorField: GratorField): Future[Long] = {
-    db.run(GratorFieldT.returning(GratorFieldT.map(_.id)) += GratorField )
+  def save(gratorField: GratorField): Future[Long] = {
+    db.run(gratorFieldT.returning(gratorFieldT.map(_.id)) += gratorField )
   }
 
-  def update(GratorField: GratorField): Future[Long] = {
+  def update(gratorField: GratorField): Future[Long] = {
       val q = for {
-        s <- GratorFieldT
-        if s.id === GratorField.id
+        s <- gratorFieldT
+        if s.id === gratorField.id
       } yield(s)
-      db.run(q.update(GratorField)).map(_.toLong)
+      db.run(q.update(gratorField)).map(_.toLong)
   }
 
-  def delete(GratorField: GratorField):Future[Int] = {
+  def delete(gratorField: GratorField):Future[Int] = {
        val q = for {
-        s <- GratorFieldT
-        if s.id === GratorField.id.get
+        s <- gratorFieldT
+        if s.id === gratorField.id.get
       } yield(s)
       db.run(q.delete)
   }
 
   def findAllWithRelateds: Future[List[( models.DB.GratorField, models.DB.GratorModule, models.DB.GratorModule )]] = {
       val q = for {
-        GratorField <- GratorFieldT
-        moduleId <- GratorModuleT if GratorField.moduleId === moduleId.id
-relatedModuleId <- GratorModuleT if GratorField.relatedModuleId === relatedModuleId.id
+        gratorField <- gratorFieldT
+        moduleId <- gratorModuleT if gratorField.moduleId === moduleId.id
+relatedModuleId <- gratorModuleT if gratorField.relatedModuleId === relatedModuleId.id
 
-      } yield (GratorField , moduleId, relatedModuleId)
+      } yield (gratorField , moduleId, relatedModuleId)
       db.run(q.result).map(_.toList)
   }
 
   def findAll: Future[List[GratorField]] = {
-    db.run(GratorFieldT.result).map(_.toList)
+    db.run(gratorFieldT.result).map(_.toList)
   }
 
   def findById(id: Long): Future[Option[GratorField]] = {
       val q = for{
-        s <- GratorFieldT if s.id === id
+        s <- gratorFieldT if s.id === id
       } yield (s)
       db.run(q.result).map(_.headOption)
   }
 
   def findByIdWithRelateds(id: Long): Future[Option[( models.DB.GratorField, models.DB.GratorModule, models.DB.GratorModule )]] = {
       val q = for {
-        GratorField <- GratorFieldT if GratorField.id === id
-        moduleId <- GratorModuleT if GratorField.moduleId === moduleId.id
-relatedModuleId <- GratorModuleT if GratorField.relatedModuleId === relatedModuleId.id
+        gratorField <- gratorFieldT if gratorField.id === id
+        moduleId <- gratorModuleT if gratorField.moduleId === moduleId.id
+relatedModuleId <- gratorModuleT if gratorField.relatedModuleId === relatedModuleId.id
 
-      } yield (GratorField , moduleId, relatedModuleId)
+      } yield (gratorField , moduleId, relatedModuleId)
       db.run(q.result).map(_.headOption)
   }
 
   def getOptions(): Future[Seq[(String,String)]] = {
     val q = for {
-      p <- GratorFieldT
+      p <- gratorFieldT
     } yield(p.id, p.name)
 
     db.run(q.result).map(rows => rows.map { case (id, name) => (id.toString, name) })
@@ -112,20 +112,20 @@ relatedModuleId <- GratorModuleT if GratorField.relatedModuleId === relatedModul
   def findByQueryString(q: String): Future[List[GratorField]] = {
       val qstring = "%"+q+"%"
       val p = for{
-        GratorField <- GratorFieldT if GratorField.name like qstring
-      } yield (GratorField)
+        gratorField <- gratorFieldT if gratorField.name like qstring
+      } yield (gratorField)
       db.run(p.result).map(_.toList)
   }
 
-  def toJsonRelatedCombo(GratorField: List[GratorField]) = {
-    implicit val GratorFieldWrites = new Writes[GratorField] {
-      def writes(GratorField: GratorField) = Json.obj(
-        "value" -> GratorField.id.get,
-        "label" -> GratorField.name,
-        "desc" -> GratorField.toString //ESP pendiente generar una descripción!!!
+  def toJsonRelatedCombo(gratorField: List[GratorField]) = {
+    implicit val gratorFieldWrites = new Writes[GratorField] {
+      def writes(gratorField: GratorField) = Json.obj(
+        "value" -> gratorField.id.get,
+        "label" -> gratorField.name,
+        "desc" -> gratorField.toString //ESP pendiente generar una descripción!!!
       )
     }
-    val jsonList = Json.toJson(GratorField)
+    val jsonList = Json.toJson(gratorField)
     Json.stringify(jsonList)
   }
 }

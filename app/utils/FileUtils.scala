@@ -1,4 +1,4 @@
-package utils
+package it.grator.utils
 
 import java.io.{File,FileInputStream,FileOutputStream}
 import org.apache.commons.io.{FileUtils => FU}
@@ -11,7 +11,7 @@ object FileUtils{
         carpeta.getParentFile().mkdirs();
       }
     } catch {
-      case e: Exception => println("The following exception was raised: " + e);  
+      case e: Exception => println("The following exception was raised: " + e);
     }
   }
 
