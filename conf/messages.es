@@ -22,6 +22,7 @@ gratorApp.clear = Vaciar
 gratorApp.id = Id
 gratorApp.name = Name
 gratorApp.path = Path
+gratorApp.wait = Aguarde
 
 #gratorModule
 gratorModule.module_name = GratorModule

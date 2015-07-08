@@ -18,6 +18,7 @@ POST  /gratorApp/:id/delete     				controllers.GratorAppController.delete(id: L
 POST  /gratorApp/:id/update     				controllers.GratorAppController.update(id: Long)
 
 GET  /gratorApp/relatedCombo/:q        controllers.GratorAppController.relatedCombo(q: String)
+GET  /gratorApp/relatedDropdown        controllers.GratorAppController.relatedDropdown
 
 
 #gratorModule:

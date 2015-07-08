@@ -2,53 +2,26 @@
 @(fieldName: String, field: Field, gratorApp: Option[models.DB.GratorApp])(implicit messages: Messages, req: RequestHeader)
   @import helper._
 
-  <script src="@routes.Assets.at("javascripts/jquery-2.1.4.min.js")"></script>
-  <link rel="stylesheet" href="@routes.Assets.at("javascripts/jquery-ui-1.11.4.custom/jquery-ui.min.css")">
-  <link rel="stylesheet" href="@routes.Assets.at("javascripts/jquery-ui-1.11.4.custom/jquery-ui.theme.min.css")">
-
-  <script src="@routes.Assets.at("javascripts/jquery-ui-1.11.4.custom/jquery-ui.min.js")"></script>
-
-<script>
+  <script>
   $(function() {
-    $("#@{fieldName}_clear").click(function(){
-      $("#@{fieldName}").val("");
-      $("#@{fieldName}").trigger("change"); //ESP Siempre propagar el evento del cambio de valor.
-      $("#@{fieldName}_input_search").val("");
-    });
-    $( "#@{fieldName}_input_search" ).autocomplete({
-      minLength: 0,
-      source: function( request, response ) {
-                if(request.term != ""){
-                  var genUrl = jsRoutes.controllers.GratorAppController.relatedCombo(request.term).url
-                } else {
-                  var genUrl = jsRoutes.controllers.GratorAppController.relatedCombo("NULL").url
-                }
+    var genUrl = jsRoutes.controllers.GratorAppController.relatedDropdown().url;
+    $.get(
+      genUrl,
+      {},
+      function(data){
+        var options = "";
+        var selected = $("#@{fieldName}").val();
 
-                $.ajax({
-                  url: genUrl,
-                  dataType: "json",
-                  success: function( data ) {
-                    response( data );
-                  }
-                });
-              },
-      focus: function( event, ui ) {
-        $( "#@{fieldName}_input_search" ).val( ui.item.label );
-        return false;
+        $.each(data, function(key, value){
+          var opt = '<option value="'+value.value+'">'+value.label+'</option>';
+          options += opt;
+        });
+        $("#@{fieldName}").empty();
+        $("#@{fieldName}").html(options);
+        $("#@{fieldName}").val(selected);
       },
-      select: function( event, ui ) {
-        $( "#@{fieldName}_input_search" ).val( ui.item.label );
-        $( "#@{fieldName}" ).val( ui.item.value );
-        $( "#@{fieldName}" ).trigger("change"); //ESP Siempre propagar el evento del cambio de valor.
-
-        return false;
-      }
-    })
-    .autocomplete( "instance" )._renderItem = function( ul, item ) {
-      return $( "<li>" )
-        .append( "<a>" + item.label + "<br>" + item.desc + "</a>" )
-        .appendTo( ul );
-    };
+      "json"
+    );
   });
   </script>
 
@@ -61,14 +34,15 @@
     <dd>
         @gratorApp match{
           case Some(row) => {
-            <input id="@{fieldName}_input_search" value="@row.name">
+            <select id="@{fieldName}" name="@{fieldName}">
+              <option value="@{row.id.get}" selected="selected">@{row.name}</option>
+            </select>
           }
           case None => {
-            <input id="@{fieldName}_input_search" value="">
+            <select id="@{fieldName}" name="@{fieldName}">
+              <option value="">@Messages("gratorApp.wait")</option>
+            </select>
           }
         }
-        <input type="button" class="btn" id="@{fieldName}_clear" name="@{fieldName}_clear" value="@Messages("gratorApp.clear")" />
-        @helper.inputText(field, 'type -> "hidden")
-        <p id="@{fieldName}_description"></p>
   </dd>
 </dl>
