@@ -29,6 +29,9 @@ object FileUtils{
     val src = new File(source)
     val dest = new File(destination)
 
-    FU.copyDirectory(src, dest)
+    //Skip the same source/dest directories.
+    if(!src.getCanonicalPath().equals(dest.getCanonicalPath())){
+      FU.copyDirectory(src, dest)
+    }
   }
 }
