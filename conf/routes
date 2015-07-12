@@ -16,7 +16,7 @@ GET   /gratorApp/:id/edit       				controllers.GratorAppController.edit(id: Lon
 POST  /gratorApp/save           				controllers.GratorAppController.save
 POST  /gratorApp/:id/delete     				controllers.GratorAppController.delete(id: Long)
 POST  /gratorApp/:id/update     				controllers.GratorAppController.update(id: Long)
-
+GET   /gratorApp/:id/generateall  controllers.GratorAppController.generateAll(id: Long)
 GET  /gratorApp/relatedCombo/:q        controllers.GratorAppController.relatedCombo(q: String)
 GET  /gratorApp/relatedDropdown        controllers.GratorAppController.relatedDropdown
 

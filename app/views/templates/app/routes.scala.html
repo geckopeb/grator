@@ -21,6 +21,7 @@ GET	  /@{module.name}/:id/@{rel.relatedModule.varName}_insert   controllers.@{mo
 POST  /@{module.name}/:id/@{rel.relatedModule.varName}_save     controllers.@{module.controllerName}.@{rel.relatedModule.varName}Save(id: Long)
 }
 GET  /@{module.name}/@{module.relatedComboJsonMethod}/:q        controllers.@{module.controllerName}.@{module.relatedComboJsonMethod}(q: String)
+GET  /@{module.name}/@{module.relatedDropdownJsonMethod}        controllers.@{module.controllerName}.@{module.relatedDropdownJsonMethod}
 }
 
 # Map static resources from the /public folder to the /assets URL path

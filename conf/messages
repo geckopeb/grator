@@ -24,6 +24,11 @@ gratorApp.name = Name
 gratorApp.path = Path
 gratorApp.wait = Please Wait
 
+gratorApp.generate_all = Generate All
+gratorApp.detail = Detail
+gratorApp.module_list = Module List
+gratorApp.backup = Backup
+
 #gratorModule
 gratorModule.module_name = GratorModule
 

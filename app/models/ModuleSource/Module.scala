@@ -26,6 +26,7 @@ case class Module(
 
 	def writesMethod = Module.writesMethod(this.name) //toJson
 	def relatedComboJsonMethod = Module.relatedComboJsonMethod(this.name)
+	def relatedDropdownJsonMethod = Module.relatedDropdownJsonMethod(this.name)
 	def jsRoutes = Module.jsRoutes(this.name)
 
 	def varNameId = Module.varNameId(this.name)
@@ -194,24 +195,7 @@ case class Module(
 	def generateRelatedComboView(app: App): Unit = {
 		val path = this.generatePath(app, "app/views/"+this.name+"/widgets/", "related_combo", ".scala.html")
 
-		/*
-		ESP: no es posible interpolar la palabra case en un template,
-		La única forma es generandolo como string, lo cual no se puede realizar dentro del mismo,
-		Y en este punto no tenemos disponible el campo, este template es el que manejaría a todos
-		Los campos del tipo relatedCombo que apuntan al mismo módulo.
-		val varName = this.varName
-		*/
-
-		val matchExpression = s"""@$varName match{
-          case Some(row) => {
-            <input id="@{fieldName}_input_search" value="@row.name">
-          }
-          case None => {
-            <input id="@{fieldName}_input_search" value="">
-          }
-        }"""
-
-		val combo = views.html.templates.module.module_views.widgets.related_combo(app, this, matchExpression).toString
+		val combo = views.html.templates.module.module_views.widgets.related_combo(app, this).toString
 
 		FileUtils.writeToFile(path, combo)
 	}
@@ -219,24 +203,7 @@ case class Module(
 	def generateRelatedDropdownView(app: App): Unit = {
 		val path = this.generatePath(app, "app/views/"+this.name+"/widgets/", "related_dropdown", ".scala.html")
 
-		/*
-		ESP: no es posible interpolar la palabra case en un template,
-		La única forma es generandolo como string, lo cual no se puede realizar dentro del mismo,
-		Y en este punto no tenemos disponible el campo, este template es el que manejaría a todos
-		Los campos del tipo relatedCombo que apuntan al mismo módulo.
-		val varName = this.varName
-		*/
-
-		val matchExpression = s"""@$varName match{
-          case Some(row) => {
-            <input id="@{fieldName}_input_search" value="@row.name">
-          }
-          case None => {
-            <input id="@{fieldName}_input_search" value="">
-          }
-        }"""
-
-		val dropdown = views.html.templates.module.module_views.widgets.related_dropdown(app, this, matchExpression).toString
+		val dropdown = views.html.templates.module.module_views.widgets.related_dropdown(app, this).toString
 
 		FileUtils.writeToFile(path, dropdown)
 	}
@@ -320,6 +287,7 @@ object Module {
 	def findByMethodWithRelateds(name: String) = Module.findByMethod(name)+"WithRelateds"
 	def writesMethod(name: String) = Module.varName(name)+"Writes" //toJson
 	def relatedComboJsonMethod(name: String) = "relatedCombo"
+	def relatedDropdownJsonMethod(name: String) = "relatedDropdown"
 	def jsRoutes(name: String) = "jsRoutes"+Module.className(name)
 
 	def varNameId(name: String) = name+"Id"

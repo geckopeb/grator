@@ -91,7 +91,6 @@ class @{module.controllerName} @@Inject() (val messagesApi: MessagesApi) extends
       @{"case None"} => NotFound
     }.recover { case ex: Exception => Ok("Fallo") }
   }
-
   @views.html.templates.module.controller_template_aux.relationship_actions(module, primaryRelationships)
 
   def @{module.relatedComboJsonMethod}(q: String) = Action.async { implicit request =>
@@ -105,4 +104,17 @@ class @{module.controllerName} @@Inject() (val messagesApi: MessagesApi) extends
     }.recover { case ex: Exception => Ok("Fallo") }
   }
 
+  def @{module.relatedDropdownJsonMethod} = Action.async { implicit request =>
+    val futureOptions = @{module.className}.findAll
+
+    futureOptions.map{
+      @{"case"} options => {
+        val @{module.varName} = @{module.className}.toJsonRelatedCombo(options)
+        Ok(@{module.varName}).as("application/json")
+      }
+    }.recover { case ex: Exception => Ok("Fallo") }
+  }
+
+  /* CUSTOM CODE */
+  /* END CUSTOM CODE */
 }

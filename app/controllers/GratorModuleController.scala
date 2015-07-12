@@ -40,7 +40,7 @@ class GratorModuleController @Inject() (val messagesApi: MessagesApi) extends Co
   def detail(id: Long) = Action.async { implicit request =>
     val futureData = for {
       gratorModule <- GratorModule.findByIdWithRelateds(id)
-      
+
     } yield ( (gratorModule) )
     futureData.map{
       case ((Some(gratorModule))) => Ok(views.html.gratorModule.detail((gratorModule)))
@@ -93,10 +93,6 @@ class GratorModuleController @Inject() (val messagesApi: MessagesApi) extends Co
       case None => NotFound
     }.recover { case ex: Exception => Ok("Fallo") }
   }
-
-  
-
-
 
   def relatedCombo(q: String) = Action.async { implicit request =>
     val futureOptions = GratorModule.findByQueryString(q)

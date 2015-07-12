@@ -1,4 +1,4 @@
-@(app: it.grator.module_source.App, relatedModule: it.grator.module_source.Module, matchExpression: String)
+@(app: it.grator.module_source.App, relatedModule: it.grator.module_source.Module)
 @@(fieldName: String, field: Field, @{relatedModule.varName}: Option[@{relatedModule.fullClassName}])(implicit messages: Messages, req: RequestHeader)
   @@import helper._
 
@@ -59,7 +59,14 @@
       </label>
     </dt>
     <dd>
-        @{Html(matchExpression)}
+          @{relatedModule.varName} match{
+            @{"case Some"}(row) => {
+              <input id="@@{fieldName}_input_search" value="@@row.name">
+            }
+            @{"case None"} => {
+              <input id="@@{fieldName}_input_search" value="">
+            }
+          }
         <input type="button" class="btn" id="@@{fieldName}_clear" name="@@{fieldName}_clear" value="@@Messages("@{relatedModule.name}.clear")" />
         @@helper.inputText(field, 'type -> "hidden")
         <p id="@@{fieldName}_description"></p>
