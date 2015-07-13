@@ -112,4 +112,17 @@ class GratorFieldController @Inject() (val messagesApi: MessagesApi) extends Con
     }.recover { case ex: Exception => Ok("Fallo") }
   }
 
+  def relatedDropdown = Action.async { implicit request =>
+    val futureOptions = GratorField.findAll
+
+    futureOptions.map{
+      case options => {
+        val gratorField = GratorField.toJsonRelatedCombo(options)
+        Ok(gratorField).as("application/json")
+      }
+    }.recover { case ex: Exception => Ok("Fallo") }
+  }
+
+  /* CUSTOM CODE */
+  /* END CUSTOM CODE */
 }

@@ -115,4 +115,17 @@ class GratorRelationshipController @Inject() (val messagesApi: MessagesApi) exte
     }.recover { case ex: Exception => Ok("Fallo") }
   }
 
+  def relatedDropdown = Action.async { implicit request =>
+    val futureOptions = GratorRelationship.findAll
+
+    futureOptions.map{
+      case options => {
+        val gratorRelationship = GratorRelationship.toJsonRelatedCombo(options)
+        Ok(gratorRelationship).as("application/json")
+      }
+    }.recover { case ex: Exception => Ok("Fallo") }
+  }
+
+  /* CUSTOM CODE */
+  /* END CUSTOM CODE */
 }

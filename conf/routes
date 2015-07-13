@@ -31,6 +31,7 @@ POST  /gratorModule/:id/delete     				controllers.GratorModuleController.delete
 POST  /gratorModule/:id/update     				controllers.GratorModuleController.update(id: Long)
 
 GET  /gratorModule/relatedCombo/:q        controllers.GratorModuleController.relatedCombo(q: String)
+GET  /gratorModule/relatedDropdown        controllers.GratorModuleController.relatedDropdown
 
 
 #gratorField:
@@ -43,6 +44,7 @@ POST  /gratorField/:id/delete     				controllers.GratorFieldController.delete(i
 POST  /gratorField/:id/update     				controllers.GratorFieldController.update(id: Long)
 
 GET  /gratorField/relatedCombo/:q        controllers.GratorFieldController.relatedCombo(q: String)
+GET  /gratorField/relatedDropdown        controllers.GratorFieldController.relatedDropdown
 
 
 #gratorRelationship:
@@ -55,6 +57,7 @@ POST  /gratorRelationship/:id/delete     				controllers.GratorRelationshipContr
 POST  /gratorRelationship/:id/update     				controllers.GratorRelationshipController.update(id: Long)
 
 GET  /gratorRelationship/relatedCombo/:q        controllers.GratorRelationshipController.relatedCombo(q: String)
+GET  /gratorRelationship/relatedDropdown        controllers.GratorRelationshipController.relatedDropdown
 
 
 # Map static resources from the /public folder to the /assets URL path
