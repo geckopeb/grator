@@ -1,5 +1,5 @@
 
-@(rows: List[( models.DB.GratorField, models.DB.GratorModule, models.DB.GratorModule )])(implicit messages: Messages, req: RequestHeader)
+@(rows: List[( models.DB.GratorField, models.DB.GratorModule, models.DB.GratorFieldType, models.DB.GratorModule )])(implicit messages: Messages, req: RequestHeader)
 
 <table class="table table-bordered table-striped table-hover">
     <thead>
@@ -13,7 +13,7 @@
       </tr>
     </thead>
     <tbody>
-    @for( ( gratorField, moduleId, relatedModuleId ) <- rows){
+    @for( ( gratorField, moduleId, fieldType, relatedModuleId ) <- rows){
         <tr>
             <td>
               <a href="@controllers.routes.GratorFieldController.detail(gratorField.id.get)">@gratorField.id</a>
@@ -25,7 +25,7 @@
               @moduleId.name
             </td>
             <td>
-              @gratorField.fieldType
+              @fieldType.name
             </td>
             <td>
               @gratorField.required

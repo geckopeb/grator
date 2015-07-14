@@ -49,6 +49,7 @@ gratorModule.clear = Vaciar
 gratorModule.id = Id
 gratorModule.name = Name
 gratorModule.applicationId = ApplicationId
+gratorModule.hasTab = HasTab
 
 #gratorField
 gratorField.module_name = GratorField
@@ -100,3 +101,20 @@ gratorRelationship.primaryModuleSubpanel = PrimaryModuleSubpanel
 gratorRelationship.relatedModuleId = RelatedModuleId
 gratorRelationship.relatedModuleLabel = RelatedModuleLabel
 gratorRelationship.relatedModuleSubpanel = RelatedModuleSubpanel
+
+#gratorFieldType
+gratorFieldType.module_name = GratorFieldType
+
+gratorFieldType.number = #
+gratorFieldType.item_name = Nombre
+
+gratorFieldType.new = Nuevo GratorFieldType
+gratorFieldType.insert = Insertando un nuevo GratorFieldType
+gratorFieldType.return = Volver
+gratorFieldType.save = Guardar
+gratorFieldType.index = Listado de GratorFieldType
+gratorFieldType.item_detail = Detalles de {0} GratorFieldType
+gratorFieldType.delete = Borrar GratorFieldType {0}
+gratorFieldType.select = Seleccionar
+gratorFieldType.add_rel = Agregar Relacion
+gratorFieldType.clear = Vaciar

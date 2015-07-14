@@ -1,0 +1,12 @@
+
+@(rowForm: Form[models.DB.GratorFieldType], route: play.api.mvc.Call, gratorFieldType: Option[models.DB.GratorFieldType] = None)(implicit messages: Messages, req: RequestHeader)
+
+@import helper._
+
+@helper.form(action = route) {
+  <fieldset>
+    
+  </fieldset>
+  <p><input type="submit" class="btn primary"
+  value='@Messages("gratorFieldType.save")'></p>
+}

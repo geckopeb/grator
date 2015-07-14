@@ -29,7 +29,7 @@ class GratorFieldController @Inject() (val messagesApi: MessagesApi) extends Con
 					"id" -> optional(longNumber),
 					"name" -> nonEmptyText,
 					"moduleId" -> longNumber,
-					"fieldType" -> nonEmptyText,
+					"fieldType" -> longNumber,
 					"required" -> boolean,
 					"relatedModuleId" -> optional(longNumber)
 

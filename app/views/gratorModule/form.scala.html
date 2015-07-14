@@ -29,6 +29,13 @@
       }
     
 	
+		<legend>
+				@Messages("gratorModule.hasTab")
+		   </legend>
+		 @helper.checkbox(
+	      rowForm("hasTab")
+	    )
+	
   </fieldset>
   <p><input type="submit" class="btn primary"
   value='@Messages("gratorModule.save")'></p>

@@ -1,0 +1,16 @@
+
+@(gratorFieldTypeForm: Form[models.DB.GratorFieldType], gratorFieldType: models.DB.GratorFieldType)(implicit messages: Messages, req: RequestHeader)
+
+@main(Messages("gratorFieldType.insert")){
+  <div class="page-header">
+      <h1>@Messages("gratorFieldType.insert")</h1>
+  </div>
+
+  @views.html.gratorFieldType.form(gratorFieldTypeForm, route = routes.GratorFieldTypeController.update(gratorFieldType.id.get), gratorFieldType = Some(gratorFieldType))
+
+  <p>
+    <a href="@controllers.routes.GratorFieldTypeController.index()"
+    class="btn">
+    <i class="icon-plus"></i> @Messages("gratorFieldType.return")</a>
+  </p>
+}

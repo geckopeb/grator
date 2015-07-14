@@ -60,5 +60,18 @@ GET  /gratorRelationship/relatedCombo/:q        controllers.GratorRelationshipCo
 GET  /gratorRelationship/relatedDropdown        controllers.GratorRelationshipController.relatedDropdown
 
 
+#gratorFieldType:
+GET   /gratorFieldType                				controllers.GratorFieldTypeController.index
+GET   /gratorFieldType/:id/detail     				controllers.GratorFieldTypeController.detail(id: Long)
+GET   /gratorFieldType/insert         				controllers.GratorFieldTypeController.insert
+GET   /gratorFieldType/:id/edit       				controllers.GratorFieldTypeController.edit(id: Long)
+POST  /gratorFieldType/save           				controllers.GratorFieldTypeController.save
+POST  /gratorFieldType/:id/delete     				controllers.GratorFieldTypeController.delete(id: Long)
+POST  /gratorFieldType/:id/update     				controllers.GratorFieldTypeController.update(id: Long)
+
+GET  /gratorFieldType/relatedCombo/:q        controllers.GratorFieldTypeController.relatedCombo(q: String)
+GET  /gratorFieldType/relatedDropdown        controllers.GratorFieldTypeController.relatedDropdown
+
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

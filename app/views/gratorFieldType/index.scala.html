@@ -1,0 +1,16 @@
+
+@(rows: List[models.DB.GratorFieldType])(implicit messages: Messages, req: RequestHeader)
+
+@main(Messages("gratorFieldType.name")){
+	<div class="page-header">
+    	<h1>@Messages("gratorFieldType.module_name")</h1>
+  </div>
+
+  @views.html.gratorFieldType.list(rows)
+
+ 	<p>
+		<a href="@controllers.routes.GratorFieldTypeController.insert()"
+		class="btn">
+		<i class="icon-plus"></i> @Messages("gratorFieldType.new")</a>
+	</p>
+}

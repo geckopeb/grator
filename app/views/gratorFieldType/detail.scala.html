@@ -1,0 +1,25 @@
+
+@(gratorFieldType: models.DB.GratorFieldType )(implicit messages: Messages, req: RequestHeader)
+
+@main(Messages("gratorFieldType.name")){
+	<div class="page-header">
+		
+    	<h1>@Messages("gratorFieldType.item_detail",gratorFieldType.name)</h1>
+    	
+  </div>
+
+  @views.html.gratorFieldType.list(List(gratorFieldType))
+
+ 	<p>
+		<a href="@controllers.routes.GratorFieldTypeController.index()"
+		class="btn">
+		<i class="icon-plus"></i> @Messages("gratorFieldType.index")</a>
+
+		
+		@views.html.gratorFieldType.delete(route = routes.GratorFieldTypeController.delete(gratorFieldType.id.get), gratorFieldType = Some(gratorFieldType))
+		
+	</p>
+
+	
+	
+}

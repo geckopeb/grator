@@ -1,0 +1,10 @@
+
+@(route: play.api.mvc.Call, gratorFieldType: Option[models.DB.GratorFieldType] = None)(implicit messages: Messages, req: RequestHeader)
+
+@import helper._
+
+@helper.form(action = route) {
+  <input type="hidden" id="id" name="id" value="@{gratorFieldType.get.id.get}"></input>
+  <p><input type="submit" class="btn primary"
+  value='@Messages("gratorFieldType.delete", gratorFieldType.get.name)'></p>
+}

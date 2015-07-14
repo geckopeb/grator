@@ -19,7 +19,8 @@ case class GratorModule(
 
     id: Option[Long] = None,
     name: String,
-    applicationId: Long
+    applicationId: Long,
+    hasTab: Boolean
 ) extends Row{
   def description: String = this.id+"-"+this.name
 }
@@ -34,8 +35,9 @@ object GratorModule extends HasDatabaseConfig[JdbcProfile]{
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
     def name = column[String]("name")
     def applicationId = column[Long]("application_id")
+    def hasTab = column[Boolean]("has_tab")
 
-    def * = ( id.?, name, applicationId ) <> ((GratorModule.apply _).tupled, GratorModule.unapply _)
+    def * = ( id.?, name, applicationId, hasTab ) <> ((GratorModule.apply _).tupled, GratorModule.unapply _)
     def applicationIdKey = foreignKey("grator_module_grator_app_application_id", applicationId, models.DB.GratorApp.gratorAppT)(_.id)
 
   }

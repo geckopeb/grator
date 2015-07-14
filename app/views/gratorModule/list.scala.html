@@ -7,6 +7,7 @@
         <th>@Messages("gratorModule.id")</th>
         <th>@Messages("gratorModule.name")</th>
         <th>@Messages("gratorModule.applicationId")</th>
+        <th>@Messages("gratorModule.hasTab")</th>
       </tr>
     </thead>
     <tbody>
@@ -20,6 +21,9 @@
             </td>
             <td>
               @applicationId.name
+            </td>
+            <td>
+              @gratorModule.hasTab
             </td>
         </tr>
     }
