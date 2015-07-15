@@ -2,15 +2,24 @@
 @(gratorAppForm: Form[models.DB.GratorApp], gratorApp: models.DB.GratorApp)(implicit messages: Messages, req: RequestHeader)
 
 @main(Messages("gratorApp.insert")){
-  <div class="page-header">
-      <h1>@Messages("gratorApp.insert")</h1>
+  <div class="row">
+		<div class="col-xs-12">
+			<div class="box box-primary">
+				<div class="box-header with-border">
+          <h1 class="box-title">@Messages("gratorApp.insert")</h1>
+        </div>
+        @views.html.gratorApp.form(gratorAppForm, route = routes.GratorAppController.update(gratorApp.id.get), gratorApp = Some(gratorApp))
+      </div>
+    </div>
   </div>
-
-  @views.html.gratorApp.form(gratorAppForm, route = routes.GratorAppController.update(gratorApp.id.get), gratorApp = Some(gratorApp))
-
-  <p>
-    <a href="@controllers.routes.GratorAppController.index()"
-    class="btn">
-    <i class="icon-plus"></i> @Messages("gratorApp.return")</a>
-  </p>
+  <div class="row">
+		<div class="col-xs-12">
+			<div class="btn-group">
+				<a href="@controllers.routes.GratorAppController.index()"  class="btn btn-block btn-info">
+					<i class="fa fa-fw fa-arrow-left"></i>
+					@Messages("gratorApp.return")
+				</a>
+			</div>
+		</div>
+	</div>
 }
