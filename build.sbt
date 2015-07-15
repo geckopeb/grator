@@ -26,5 +26,3 @@ libraryDependencies += "com.typesafe.play" %% "play-slick" % "1.0.0"
 libraryDependencies += "com.typesafe.play" %% "play-slick-evolutions" % "1.0.0"
 
 libraryDependencies += "commons-io" % "commons-io" % "2.4"
-
-offline := true
