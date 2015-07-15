@@ -1,0 +1,16 @@
+
+@(form: Form[models.DB.GratorSubpanel])(implicit messages: Messages, req: RequestHeader)
+
+@main(Messages("gratorSubpanel.insert")){
+  <div class="page-header">
+      <h1>@Messages("gratorSubpanel.insert")</h1>
+  </div>
+
+  @views.html.gratorSubpanel.form(form, route = routes.GratorSubpanelController.save())
+
+  <p>
+    <a href="@controllers.routes.GratorSubpanelController.index()"
+    class="btn">
+    <i class="icon-plus"></i>@Messages("gratorSubpanel.return")</a>
+  </p>
+}

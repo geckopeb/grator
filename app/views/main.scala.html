@@ -24,7 +24,10 @@
           routes.javascript.GratorRelationshipController.relatedDropdown,
           
           routes.javascript.GratorFieldTypeController.relatedCombo,
-          routes.javascript.GratorFieldTypeController.relatedDropdown
+          routes.javascript.GratorFieldTypeController.relatedDropdown,
+          
+          routes.javascript.GratorSubpanelController.relatedCombo,
+          routes.javascript.GratorSubpanelController.relatedDropdown
           
         )
     </head>
@@ -49,7 +52,11 @@
           <a class="brand" href="@routes.GratorRelationshipController.index()">
             @Messages("gratorRelationship.module_name")
           </a>
-
+          
+          <a class="brand" href="@routes.GratorSubpanelController.index()">
+            @Messages("gratorSubpanel.module_name")
+          </a>
+          
 
         </div>
 			</div>

@@ -29,7 +29,8 @@ class GratorModuleController @Inject() (val messagesApi: MessagesApi) extends Co
 					"id" -> optional(longNumber),
 					"name" -> nonEmptyText,
 					"applicationId" -> longNumber,
-          "hasTab" -> boolean
+					"hasTab" -> boolean
+
       )(GratorModule.apply)(GratorModule.unapply)
   )
 

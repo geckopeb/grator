@@ -21,7 +21,7 @@ class GratorFieldController @Inject() (val messagesApi: MessagesApi) extends Con
     val futuregratorField = GratorField.findAllWithRelateds
     futuregratorField.map{
       gratorField => Ok(views.html.gratorField.index(gratorField))
-    }.recover {case ex: Exception => Ok("Que paucho")}
+    }.recover {case ex: Exception => Ok("Fallo")}
   }
 
   val gratorFieldForm = Form(

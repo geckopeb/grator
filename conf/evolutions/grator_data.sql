@@ -11,7 +11,8 @@ insert  into `grator_module`(`id`,`name`,`application_id`,`has_tab`)
   (2,'gratorModule',1,1),
   (3,'gratorField',1,1),
   (4,'gratorRelationship',1,1),
-  (5,'gratorFieldType',1,0);
+  (5,'gratorFieldType',1,0),
+  (6,'gratorSubpanel',1,1);
 
   /*Data for the table `grator_field` */
 
@@ -26,7 +27,7 @@ insert  into `grator_module`(`id`,`name`,`application_id`,`has_tab`)
     (7,'id',3,1,1,3),
     (8,'name',3,2,1,3),
     (9,'moduleId',3,6,1,2),
-    (10,'fieldType',3,3,1,1),
+    (10,'fieldType',3,6,1,1),
     (11,'required',3,5,0,1),
     (12,'relatedModuleId',3,6,0,2),
     (13,'id',4,1,1,4),
@@ -39,4 +40,9 @@ insert  into `grator_module`(`id`,`name`,`application_id`,`has_tab`)
     (20,'relatedModuleLabel',4,3,1,1),
     (21,'relatedModuleSubpanel',4,3,1,1),
     (22,'id',5,1,1,2),
-    (23,'name',5,2,1,2);
+    (23,'name',5,2,1,2),
+    (24, 'id',6,1,1,6),
+    (25, 'name',6,2,1,6),
+    (26, 'toModule',6,6,1,2),
+    (27, 'fromModule',6,6,1,2),
+    (28, 'fromField',6,6,1,3);

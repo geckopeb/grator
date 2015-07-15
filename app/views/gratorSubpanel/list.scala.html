@@ -1,0 +1,35 @@
+
+@(rows: List[( models.DB.GratorSubpanel, models.DB.GratorModule, models.DB.GratorModule, models.DB.GratorField )])(implicit messages: Messages, req: RequestHeader)
+
+<table class="table table-bordered table-striped table-hover">
+    <thead>
+      <tr>
+        <th>@Messages("gratorSubpanel.id")</th>
+        <th>@Messages("gratorSubpanel.name")</th>
+        <th>@Messages("gratorSubpanel.toModule")</th>
+        <th>@Messages("gratorSubpanel.fromModule")</th>
+        <th>@Messages("gratorSubpanel.fromField")</th>
+      </tr>
+    </thead>
+    <tbody>
+    @for( ( gratorSubpanel, toModule, fromModule, fromField ) <- rows){
+        <tr>
+            <td>
+              <a href="@controllers.routes.GratorSubpanelController.detail(gratorSubpanel.id.get)">@gratorSubpanel.id</a>
+            </td>
+            <td>
+              @gratorSubpanel.name
+            </td>
+            <td>
+              @toModule.name
+            </td>
+            <td>
+              @fromModule.name
+            </td>
+            <td>
+              @fromField.name
+            </td>
+        </tr>
+    }
+     </tbody>
+  </table>

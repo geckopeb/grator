@@ -1,0 +1,57 @@
+
+@(rowForm: Form[models.DB.GratorSubpanel], route: play.api.mvc.Call, gratorSubpanelTuple: Option[( models.DB.GratorSubpanel, models.DB.GratorModule, models.DB.GratorModule, models.DB.GratorField )] = None)(implicit messages: Messages, req: RequestHeader)
+
+@import helper._
+
+@helper.form(action = route) {
+  <fieldset>
+    
+		@gratorSubpanelTuple match {
+    	case Some(gratorSubpanelTuple) => {
+    		<input type="hidden" name="id" value="@gratorSubpanelTuple._1.id.get">
+    	}
+    	case None => {}
+	  }
+	
+		<legend>
+				@Messages("gratorSubpanel.item_name")
+		   </legend>
+		    @helper.inputText(rowForm("name"))
+	
+		
+      @gratorSubpanelTuple match{
+        case Some(( gratorSubpanel, toModule, fromModule, fromField )) => {
+          @views.html.gratorModule.widgets.related_dropdown("toModule", rowForm("toModule"), Some(toModule))
+        }
+        case None => {
+          @views.html.gratorModule.widgets.related_dropdown("toModule", rowForm("toModule"), None)
+        }
+      }
+    
+	
+		
+      @gratorSubpanelTuple match{
+        case Some(( gratorSubpanel, toModule, fromModule, fromField )) => {
+          @views.html.gratorModule.widgets.related_dropdown("fromModule", rowForm("fromModule"), Some(fromModule))
+        }
+        case None => {
+          @views.html.gratorModule.widgets.related_dropdown("fromModule", rowForm("fromModule"), None)
+        }
+      }
+    
+	
+		
+      @gratorSubpanelTuple match{
+        case Some(( gratorSubpanel, toModule, fromModule, fromField )) => {
+          @views.html.gratorField.widgets.related_dropdown("fromField", rowForm("fromField"), Some(fromField))
+        }
+        case None => {
+          @views.html.gratorField.widgets.related_dropdown("fromField", rowForm("fromField"), None)
+        }
+      }
+    
+	
+  </fieldset>
+  <p><input type="submit" class="btn primary"
+  value='@Messages("gratorSubpanel.save")'></p>
+}

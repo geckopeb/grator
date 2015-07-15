@@ -1,0 +1,48 @@
+
+@(fieldName: String, field: Field, gratorSubpanel: Option[models.DB.GratorSubpanel])(implicit messages: Messages, req: RequestHeader)
+  @import helper._
+
+  <script>
+  $(function() {
+    var genUrl = jsRoutes.controllers.GratorSubpanelController.relatedDropdown().url;
+    $.get(
+      genUrl,
+      {},
+      function(data){
+        var options = "";
+        var selected = $("#@{fieldName}").val();
+
+        $.each(data, function(key, value){
+          var opt = '<option value="'+value.value+'">'+value.label+'</option>';
+          options += opt;
+        });
+        $("#@{fieldName}").empty();
+        $("#@{fieldName}").html(options);
+        $("#@{fieldName}").val(selected);
+      },
+      "json"
+    );
+  });
+  </script>
+
+<dl id="@{fieldName}_field">
+    <dt>
+      <label for="@{fieldName}">
+          @Messages("gratorSubpanel.module_name")
+      </label>
+    </dt>
+    <dd>
+        @gratorSubpanel match{
+          case Some(row) => {
+            <select id="@{fieldName}" name="@{fieldName}">
+              <option value="@{row.id.get}" selected="selected">@{row.name}</option>
+            </select>
+          }
+          case None => {
+            <select id="@{fieldName}" name="@{fieldName}">
+              <option value="">@Messages("gratorApp.wait")</option>
+            </select>
+          }
+        }
+  </dd>
+</dl>

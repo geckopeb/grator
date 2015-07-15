@@ -1,0 +1,10 @@
+
+@(route: play.api.mvc.Call, gratorSubpanel: Option[models.DB.GratorSubpanel] = None)(implicit messages: Messages, req: RequestHeader)
+
+@import helper._
+
+@helper.form(action = route) {
+  <input type="hidden" id="id" name="id" value="@{gratorSubpanel.get.id.get}"></input>
+  <p><input type="submit" class="btn primary"
+  value='@Messages("gratorSubpanel.delete", gratorSubpanel.get.name)'></p>
+}

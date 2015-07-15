@@ -73,5 +73,18 @@ GET  /gratorFieldType/relatedCombo/:q        controllers.GratorFieldTypeControll
 GET  /gratorFieldType/relatedDropdown        controllers.GratorFieldTypeController.relatedDropdown
 
 
+#gratorSubpanel:
+GET   /gratorSubpanel                				controllers.GratorSubpanelController.index
+GET   /gratorSubpanel/:id/detail     				controllers.GratorSubpanelController.detail(id: Long)
+GET   /gratorSubpanel/insert         				controllers.GratorSubpanelController.insert
+GET   /gratorSubpanel/:id/edit       				controllers.GratorSubpanelController.edit(id: Long)
+POST  /gratorSubpanel/save           				controllers.GratorSubpanelController.save
+POST  /gratorSubpanel/:id/delete     				controllers.GratorSubpanelController.delete(id: Long)
+POST  /gratorSubpanel/:id/update     				controllers.GratorSubpanelController.update(id: Long)
+
+GET  /gratorSubpanel/relatedCombo/:q        controllers.GratorSubpanelController.relatedCombo(q: String)
+GET  /gratorSubpanel/relatedDropdown        controllers.GratorSubpanelController.relatedDropdown
+
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

@@ -118,3 +118,29 @@ gratorFieldType.delete = Delete GratorFieldType {0}
 gratorFieldType.select = Select
 gratorFieldType.add_rel = Add Relationship
 gratorFieldType.clear = Clear
+
+gratorFieldType.id = Id
+gratorFieldType.name = Name
+
+#gratorSubpanel
+gratorSubpanel.module_name = GratorSubpanel
+
+gratorSubpanel.number = #
+gratorSubpanel.item_name = Name
+
+gratorSubpanel.new = New GratorSubpanel
+gratorSubpanel.insert = A New GratorSubpanel
+gratorSubpanel.return = Return
+gratorSubpanel.save = Save
+gratorSubpanel.index = GratorSubpanel List
+gratorSubpanel.item_detail = {0} GratorSubpanel details
+gratorSubpanel.delete = Delete GratorSubpanel {0}
+gratorSubpanel.select = Select
+gratorSubpanel.add_rel = Add Relationship
+gratorSubpanel.clear = Clear
+
+gratorSubpanel.id = Id
+gratorSubpanel.name = Name
+gratorSubpanel.toModule = ToModule
+gratorSubpanel.fromModule = FromModule
+gratorSubpanel.fromField = FromField
