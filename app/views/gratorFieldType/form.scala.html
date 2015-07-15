@@ -6,6 +6,18 @@
 @helper.form(action = route) {
   <fieldset>
     
+		<legend>
+				@Messages("gratorFieldType.item_name")
+		   </legend>
+		    @helper.inputText(rowForm("name"))
+	
+		@gratorFieldType match {
+    	case Some(gratorFieldType) => {
+    		<input type="hidden" name="id" value="@gratorFieldType.id.get">
+    	}
+    	case None => {}
+	  }
+	
   </fieldset>
   <p><input type="submit" class="btn primary"
   value='@Messages("gratorFieldType.save")'></p>

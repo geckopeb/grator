@@ -125,11 +125,12 @@ class GratorAppController @Inject() (val messagesApi: MessagesApi) extends Contr
       gModules       <- GratorModule.findAllByApplicationId(id)
       gFields        <- GratorField.findAllByApplicationId(id)
       gRelationships <- GratorRelationship.findAllByApplicationId(id)
-    } yield (gApp, gModules, gFields, gRelationships)
+      gFieldTypes    <- GratorFieldType.findAll
+    } yield (gApp, gModules, gFields, gRelationships, gFieldTypes)
 
     futureData.map{
-      case ( Some(gApp: GratorApp), gModules: List[GratorModule], gFields: List[GratorField], gRelationships: List[GratorRelationship]) => {
-        val app = AppFactory.construct(gApp.name, gApp.path, gModules, gFields, gRelationships)
+      case ( Some(gApp: GratorApp), gModules: List[GratorModule], gFields: List[GratorField], gRelationships: List[GratorRelationship], gFieldTypes: List[GratorFieldType]) => {
+        val app = AppFactory.construct(gApp.name, gApp.path, gModules, gFields, gRelationships, gFieldTypes)
         app.generateAll()
 
         Redirect(routes.GratorAppController.detail(id))

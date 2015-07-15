@@ -21,7 +21,7 @@ class GratorFieldController @Inject() (val messagesApi: MessagesApi) extends Con
     val futuregratorField = GratorField.findAllWithRelateds
     futuregratorField.map{
       gratorField => Ok(views.html.gratorField.index(gratorField))
-    }.recover {case ex: Exception => Ok("Fallo")}
+    }.recover {case ex: Exception => Ok("Que paucho")}
   }
 
   val gratorFieldForm = Form(
@@ -43,7 +43,7 @@ class GratorFieldController @Inject() (val messagesApi: MessagesApi) extends Con
   def detail(id: Long) = Action.async { implicit request =>
     val futureData = for {
       gratorField <- GratorField.findByIdWithRelateds(id)
-      
+
     } yield ( (gratorField) )
     futureData.map{
       case ((Some(gratorField))) => Ok(views.html.gratorField.detail((gratorField)))
@@ -97,7 +97,7 @@ class GratorFieldController @Inject() (val messagesApi: MessagesApi) extends Con
     }.recover { case ex: Exception => Ok("Fallo") }
   }
 
-  
+
 
 
 

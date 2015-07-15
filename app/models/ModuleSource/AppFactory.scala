@@ -21,15 +21,16 @@ object AppFactory{
 		path: String,
 		gModules: List[GratorModule],
 		gFields: List[GratorField],
-		gRelationships: List[GratorRelationship]
+		gRelationships: List[GratorRelationship],
+    gFieldTypes: List[GratorFieldType]
 	): App = {
 
 		def generateFields(modules: List[Module]): List[F] = for {
 	      gModule <- gModules
 	      gField  <- gFields if(gField.moduleId == gModule.id.get)
-	    } yield(FF.construct(gField, gModule, gModules, modules))
+	    } yield(FF.construct(gField, gModule, gModules, modules, gFieldTypes))
 
-        val modules = gModules.map( gm => M(gm.name) )
+        val modules = gModules.map( gm => M(gm.name,gm.hasTab) )
 
         val fields = generateFields(modules)
 

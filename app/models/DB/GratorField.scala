@@ -17,6 +17,8 @@ import models.DB.GratorModule.gratorModuleT
 import models.DB.GratorFieldType.gratorFieldTypeT
 import models.DB.GratorModule.gratorModuleT
 
+//import play.api.Logger
+
 case class GratorField(
 
     id: Option[Long] = None,
@@ -80,6 +82,7 @@ fieldType <- gratorFieldTypeT if gratorField.fieldType === fieldType.id
 relatedModuleId <- gratorModuleT if gratorField.relatedModuleId === relatedModuleId.id
 
       } yield (gratorField , moduleId, fieldType, relatedModuleId)
+      //Logger.debug(q.result.statements.head)
       db.run(q.result).map(_.toList)
   }
 

@@ -26,6 +26,8 @@ class GratorFieldTypeController @Inject() (val messagesApi: MessagesApi) extends
 
   val gratorFieldTypeForm = Form(
       mapping(
+					"name" -> nonEmptyText,
+					"id" -> optional(longNumber)
 
       )(GratorFieldType.apply)(GratorFieldType.unapply)
   )

@@ -25,7 +25,7 @@
             @@Messages("application.name")
           </a>
           *@
-          @for(module <- app.modules){
+          @for(module <- app.modules.filter(_.hasTab)){
           <a class="brand" href="@@routes.@{module.controllerName}.index()">
             @@Messages("@{module.name}.module_name")
           </a>

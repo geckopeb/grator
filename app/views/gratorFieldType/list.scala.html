@@ -4,11 +4,19 @@
 <table class="table table-bordered table-striped table-hover">
     <thead>
       <tr>
+        <th>@Messages("gratorFieldType.name")</th>
+        <th>@Messages("gratorFieldType.id")</th>
       </tr>
     </thead>
     <tbody>
     @for( gratorFieldType <- rows){
         <tr>
+            <td>
+              @gratorFieldType.name
+            </td>
+            <td>
+              <a href="@controllers.routes.GratorFieldTypeController.detail(gratorFieldType.id.get)">@gratorFieldType.id</a>
+            </td>
         </tr>
     }
      </tbody>

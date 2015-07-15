@@ -16,6 +16,8 @@ import it.grator.grator_base.Row
 
 case class GratorFieldType(
   
+    name: String,
+    id: Option[Long] = None
 ) extends Row{
   def description: String = this.id+"-"+this.name
 }
@@ -27,8 +29,10 @@ object GratorFieldType extends HasDatabaseConfig[JdbcProfile]{
   
   class GratorFieldTypeT(tag: Tag) extends Table[GratorFieldType](tag, "grator_field_type"){
     
+    def name = column[String]("name")
+    def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
 
-    def * = (  ) <> ((GratorFieldType.apply _).tupled, GratorFieldType.unapply _)
+    def * = ( name, id.? ) <> ((GratorFieldType.apply _).tupled, GratorFieldType.unapply _)
     
   }
 

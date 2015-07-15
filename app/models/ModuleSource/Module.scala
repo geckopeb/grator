@@ -6,7 +6,8 @@ import it.grator.utils._
 import views.html._
 
 case class Module(
-	name: String //name must be in camelCase
+	name: String, //name must be in camelCase
+	hasTab: Boolean
 ){
 	def packageName = Module.packageName
 
