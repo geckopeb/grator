@@ -2,15 +2,34 @@
 @(rows: List[models.DB.GratorApp])(implicit messages: Messages, req: RequestHeader)
 
 @main(Messages("gratorApp.name")){
-	<div class="page-header">
-    	<h1>@Messages("gratorApp.module_name")</h1>
-  </div>
-
-  @views.html.gratorApp.list(rows)
-
- 	<p>
-		<a href="@controllers.routes.GratorAppController.insert()"
-		class="btn">
-		<i class="icon-plus"></i> @Messages("gratorApp.new")</a>
-	</p>
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="box box-primary">
+				<div class="box-header with-border">
+    			<h1 class="box-title">@Messages("gratorApp.module_name")</h1>
+					<div class="box-tools pull-right">
+						<button class="btn btn-box-tool" data-widget="collapse">
+							<i class="fa fa-minus"></i>
+						</button>
+						<button class="btn btn-box-tool" data-widget="remove">
+							<i class="fa fa-times"></i>
+						</button>
+					</div>
+  			</div>
+				<div class="box-body">
+  				@views.html.gratorApp.list(rows)
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="btn-group">
+				<a href="@controllers.routes.GratorAppController.insert()"  class="btn btn-block btn-info">
+					<i class="fa fa-fw fa-plus"></i>
+					@Messages("gratorApp.new")
+				</a>
+			</div>
+		</div>
+	</div>
 }
