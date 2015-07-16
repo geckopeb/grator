@@ -17,10 +17,8 @@ import models.DB.GratorModule.gratorModuleT
 import models.DB.GratorFieldType.gratorFieldTypeT
 import models.DB.GratorModule.gratorModuleT
 
-//import play.api.Logger
-
 case class GratorField(
-
+  
     id: Option[Long] = None,
     name: String,
     moduleId: Long,
@@ -35,9 +33,9 @@ object GratorField extends HasDatabaseConfig[JdbcProfile]{
   import driver.api._
   protected val dbConfig = DatabaseConfigProvider.get[JdbcProfile](Play.current)
 
-
+  
   class GratorFieldT(tag: Tag) extends Table[GratorField](tag, "grator_field"){
-
+    
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
     def name = column[String]("name")
     def moduleId = column[Long]("module_id")
@@ -49,7 +47,7 @@ object GratorField extends HasDatabaseConfig[JdbcProfile]{
     def moduleIdKey = foreignKey("grator_field_grator_module_module_id", moduleId, models.DB.GratorModule.gratorModuleT)(_.id)
 	def fieldTypeKey = foreignKey("grator_field_grator_field_type_field_type", fieldType, models.DB.GratorFieldType.gratorFieldTypeT)(_.id)
 	def relatedModuleIdKey = foreignKey("grator_field_grator_module_related_module_id", relatedModuleId, models.DB.GratorModule.gratorModuleT)(_.id)
-
+	
   }
 
   val gratorFieldT = TableQuery[GratorFieldT]
@@ -82,7 +80,6 @@ fieldType <- gratorFieldTypeT if gratorField.fieldType === fieldType.id
 relatedModuleId <- gratorModuleT if gratorField.relatedModuleId === relatedModuleId.id
 
       } yield (gratorField , moduleId, fieldType, relatedModuleId)
-      //Logger.debug(q.result.statements.head)
       db.run(q.result).map(_.toList)
   }
 
@@ -135,6 +132,43 @@ relatedModuleId <- gratorModuleT if gratorField.relatedModuleId === relatedModul
     val jsonList = Json.toJson(gratorField)
     Json.stringify(jsonList)
   }
+
+  
+
+  def findByModuleIdWithRelateds(id: Long): Future[List[( models.DB.GratorField, models.DB.GratorModule, models.DB.GratorFieldType, models.DB.GratorModule )]] = {
+      val q = for {
+        gratorField <- gratorFieldT if gratorField.moduleId === id
+        moduleId <- gratorModuleT if gratorField.moduleId === moduleId.id
+fieldType <- gratorFieldTypeT if gratorField.fieldType === fieldType.id
+relatedModuleId <- gratorModuleT if gratorField.relatedModuleId === relatedModuleId.id
+
+      } yield (gratorField , moduleId, fieldType, relatedModuleId)
+      db.run(q.result).map(_.toList)
+  }
+
+  def findByFieldTypeWithRelateds(id: Long): Future[List[( models.DB.GratorField, models.DB.GratorModule, models.DB.GratorFieldType, models.DB.GratorModule )]] = {
+      val q = for {
+        gratorField <- gratorFieldT if gratorField.fieldType === id
+        moduleId <- gratorModuleT if gratorField.moduleId === moduleId.id
+fieldType <- gratorFieldTypeT if gratorField.fieldType === fieldType.id
+relatedModuleId <- gratorModuleT if gratorField.relatedModuleId === relatedModuleId.id
+
+      } yield (gratorField , moduleId, fieldType, relatedModuleId)
+      db.run(q.result).map(_.toList)
+  }
+
+  def findByRelatedModuleIdWithRelateds(id: Long): Future[List[( models.DB.GratorField, models.DB.GratorModule, models.DB.GratorFieldType, models.DB.GratorModule )]] = {
+      val q = for {
+        gratorField <- gratorFieldT if gratorField.relatedModuleId === id
+        moduleId <- gratorModuleT if gratorField.moduleId === moduleId.id
+fieldType <- gratorFieldTypeT if gratorField.fieldType === fieldType.id
+relatedModuleId <- gratorModuleT if gratorField.relatedModuleId === relatedModuleId.id
+
+      } yield (gratorField , moduleId, fieldType, relatedModuleId)
+      db.run(q.result).map(_.toList)
+  }
+
+
 
   /* CUSTOM CODE */
   def findAllByApplicationId(applicationId: Long): Future[List[GratorField]] = {

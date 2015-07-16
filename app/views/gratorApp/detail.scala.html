@@ -1,5 +1,5 @@
 
-@(gratorApp: models.DB.GratorApp )(implicit messages: Messages, req: RequestHeader)
+@(gratorApp: models.DB.GratorApp, modules: List[(models.DB.GratorModule, models.DB.GratorApp)] )(implicit messages: Messages, req: RequestHeader)
 
 @main(Messages("gratorApp.name")){
 	<div class="page-header">
@@ -10,11 +10,18 @@
 
   @views.html.gratorApp.list(List(gratorApp))
 
+	<div id="subpanels">
+		<div id="subpanel_modules">
+			<h3>Modules</h3>
+			@views.html.gratorModule.list(modules)
+		</div>
+	</div>
+
  	<p>
 		<a href="@controllers.routes.GratorAppController.generateAll(gratorApp.id.get)"
     class="btn">
     <i class="icon-plus"></i> @Messages("gratorApp.generate_all")</a>
-		
+
 		<a href="@controllers.routes.GratorAppController.index()"
 		class="btn">
 		<i class="icon-plus"></i> @Messages("gratorApp.index")</a>

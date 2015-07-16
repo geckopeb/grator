@@ -1,0 +1,10 @@
+@(app: it.grator.module_source.App, module: it.grator.module_source.Module, relatedFields: List[it.grator.module_source.fields.RelatedField])
+@for(relatedField <- relatedFields){
+  def @{relatedField.findByMethod}(id: Long): Future[List[@{module.tupleType(app)}]] = {
+      val q = for {
+        @{module.varName} <- @{module.queryName} if @{module.varName}.@{relatedField.name} === id
+        @views.html.templates.module.class_template_aux.related_fields_joins(module,relatedFields)
+      } yield (@views.html.templates.module.class_template_aux.related_fields_yield(module,relatedFields))
+      db.run(q.result).map(_.toList)
+  }
+}

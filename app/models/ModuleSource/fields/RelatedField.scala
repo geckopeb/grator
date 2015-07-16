@@ -22,7 +22,6 @@ trait RelatedField extends Field{
 
   def tableIndex: String = {
     val sqlKeyName = TextUtils.camelToUnderscores(this.moduleName+"_"+this.relatedModuleName+"_"+this.name)
-    Logger.debug(sqlKeyName)
 
     val relatedTable = Module.externalTableRef(this.relatedModuleName)
 
@@ -35,4 +34,6 @@ trait RelatedField extends Field{
     //val varName = Module.varName(this.relatedModuleName)+this.name.capitalize
     s"@$varName.name"
   }
+
+  def findByMethod: String = "findBy"+this.name.capitalize+"WithRelateds"
 }

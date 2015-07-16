@@ -104,4 +104,9 @@ object @{module.className} extends HasDatabaseConfig[JdbcProfile]{
     val jsonList = Json.toJson(@{module.varName})
     Json.stringify(jsonList)
   }
+
+  @views.html.templates.module.class_template_aux.find_by_related_fields(app, module, relatedFields)
+
+  /* CUSTOM CODE */
+  /* END CUSTOM CODE */
 }

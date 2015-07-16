@@ -59,14 +59,14 @@
       </label>
     </dt>
     <dd>
-        @gratorRelationship match{
-          case Some(row) => {
-            <input id="@{fieldName}_input_search" value="@row.name">
+          @gratorRelationship match{
+            case Some(row) => {
+              <input id="@{fieldName}_input_search" value="@row.name">
+            }
+            case None => {
+              <input id="@{fieldName}_input_search" value="">
+            }
           }
-          case None => {
-            <input id="@{fieldName}_input_search" value="">
-          }
-        }
         <input type="button" class="btn" id="@{fieldName}_clear" name="@{fieldName}_clear" value="@Messages("gratorRelationship.clear")" />
         @helper.inputText(field, 'type -> "hidden")
         <p id="@{fieldName}_description"></p>

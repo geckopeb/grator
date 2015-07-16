@@ -43,7 +43,7 @@ class GratorFieldController @Inject() (val messagesApi: MessagesApi) extends Con
   def detail(id: Long) = Action.async { implicit request =>
     val futureData = for {
       gratorField <- GratorField.findByIdWithRelateds(id)
-
+      
     } yield ( (gratorField) )
     futureData.map{
       case ((Some(gratorField))) => Ok(views.html.gratorField.detail((gratorField)))
@@ -96,8 +96,7 @@ class GratorFieldController @Inject() (val messagesApi: MessagesApi) extends Con
       case None => NotFound
     }.recover { case ex: Exception => Ok("Fallo") }
   }
-
-
+  
 
 
 

@@ -46,3 +46,5 @@ insert  into `grator_module`(`id`,`name`,`application_id`,`has_tab`)
     (26, 'toModule',6,6,1,2),
     (27, 'fromModule',6,6,1,2),
     (28, 'fromField',6,6,1,3);
+
+insert  into `grator_subpanel`(`id`,`name`,`to_module`,`from_module`,`from_field`) values (1,'modules',1,2,6);

@@ -41,10 +41,10 @@ class GratorAppController @Inject() (val messagesApi: MessagesApi) extends Contr
   def detail(id: Long) = Action.async { implicit request =>
     val futureData = for {
       gratorApp <- GratorApp.findByIdWithRelateds(id)
-
-    } yield ( (gratorApp) )
+      modules <- GratorModule.findByApplicationIdWithRelateds(id)
+    } yield ( (gratorApp, modules) )
     futureData.map{
-      case ((Some(gratorApp))) => Ok(views.html.gratorApp.detail((gratorApp)))
+      case ((Some(gratorApp), modules: List[GratorModule])) => Ok(views.html.gratorApp.detail(gratorApp, modules))
       case _ => NotFound
     }.recover { case ex: Exception => Ok("Fallo") }
   }
@@ -94,6 +94,9 @@ class GratorAppController @Inject() (val messagesApi: MessagesApi) extends Contr
       case None => NotFound
     }.recover { case ex: Exception => Ok("Fallo") }
   }
+  
+
+
 
   def relatedCombo(q: String) = Action.async { implicit request =>
     val futureOptions = GratorApp.findByQueryString(q)
@@ -125,12 +128,13 @@ class GratorAppController @Inject() (val messagesApi: MessagesApi) extends Contr
       gModules       <- GratorModule.findAllByApplicationId(id)
       gFields        <- GratorField.findAllByApplicationId(id)
       gRelationships <- GratorRelationship.findAllByApplicationId(id)
+      gSubpanels     <- GratorSubpanel.findAllByApplicationId(id)
       gFieldTypes    <- GratorFieldType.findAll
-    } yield (gApp, gModules, gFields, gRelationships, gFieldTypes)
+    } yield (gApp, gModules, gFields, gRelationships, gSubpanels, gFieldTypes)
 
     futureData.map{
-      case ( Some(gApp: GratorApp), gModules: List[GratorModule], gFields: List[GratorField], gRelationships: List[GratorRelationship], gFieldTypes: List[GratorFieldType]) => {
-        val app = AppFactory.construct(gApp.name, gApp.path, gModules, gFields, gRelationships, gFieldTypes)
+      case ( Some(gApp: GratorApp), gModules: List[GratorModule], gFields: List[GratorField], gRelationships: List[GratorRelationship], gSubpanels: List[GratorSubpanel], gFieldTypes: List[GratorFieldType]) => {
+        val app = AppFactory.construct(gApp.name, gApp.path, gModules, gFields, gRelationships, gSubpanels, gFieldTypes)
         app.generateAll()
 
         Redirect(routes.GratorAppController.detail(id))

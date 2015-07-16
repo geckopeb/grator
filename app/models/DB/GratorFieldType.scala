@@ -112,4 +112,11 @@ object GratorFieldType extends HasDatabaseConfig[JdbcProfile]{
     val jsonList = Json.toJson(gratorFieldType)
     Json.stringify(jsonList)
   }
+
+  
+
+
+
+  /* CUSTOM CODE */
+  /* END CUSTOM CODE */
 }

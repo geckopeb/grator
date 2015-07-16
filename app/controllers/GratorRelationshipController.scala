@@ -99,7 +99,6 @@ class GratorRelationshipController @Inject() (val messagesApi: MessagesApi) exte
       case None => NotFound
     }.recover { case ex: Exception => Ok("Fallo") }
   }
-
   
 
 

@@ -2,6 +2,7 @@ package it.grator.module_source
 
 import it.grator.module_source.fields._
 import it.grator.module_source.relationships._
+import it.grator.module_source.subpanels.Subpanel
 import it.grator.utils.FileUtils
 
 import play.api.Logger
@@ -11,7 +12,8 @@ case class App(
 	path: String,
 	modules: List[Module],
 	fields: List[Field],
-	relationships: List[Relationship]
+	relationships: List[Relationship],
+	subpanels: List[Subpanel]
 ){
 	def getPrimaryRelationships(module: Module): List[Relationship] = {
 		relationships.filter(_.primaryModule == module)

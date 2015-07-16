@@ -130,4 +130,51 @@ fromField <- gratorFieldT if gratorSubpanel.fromField === fromField.id
     val jsonList = Json.toJson(gratorSubpanel)
     Json.stringify(jsonList)
   }
+
+  
+
+  def findByToModuleWithRelateds(id: Long): Future[List[( models.DB.GratorSubpanel, models.DB.GratorModule, models.DB.GratorModule, models.DB.GratorField )]] = {
+      val q = for {
+        gratorSubpanel <- gratorSubpanelT if gratorSubpanel.toModule === id
+        toModule <- gratorModuleT if gratorSubpanel.toModule === toModule.id
+fromModule <- gratorModuleT if gratorSubpanel.fromModule === fromModule.id
+fromField <- gratorFieldT if gratorSubpanel.fromField === fromField.id
+
+      } yield (gratorSubpanel , toModule, fromModule, fromField)
+      db.run(q.result).map(_.toList)
+  }
+
+  def findByFromModuleWithRelateds(id: Long): Future[List[( models.DB.GratorSubpanel, models.DB.GratorModule, models.DB.GratorModule, models.DB.GratorField )]] = {
+      val q = for {
+        gratorSubpanel <- gratorSubpanelT if gratorSubpanel.fromModule === id
+        toModule <- gratorModuleT if gratorSubpanel.toModule === toModule.id
+fromModule <- gratorModuleT if gratorSubpanel.fromModule === fromModule.id
+fromField <- gratorFieldT if gratorSubpanel.fromField === fromField.id
+
+      } yield (gratorSubpanel , toModule, fromModule, fromField)
+      db.run(q.result).map(_.toList)
+  }
+
+  def findByFromFieldWithRelateds(id: Long): Future[List[( models.DB.GratorSubpanel, models.DB.GratorModule, models.DB.GratorModule, models.DB.GratorField )]] = {
+      val q = for {
+        gratorSubpanel <- gratorSubpanelT if gratorSubpanel.fromField === id
+        toModule <- gratorModuleT if gratorSubpanel.toModule === toModule.id
+fromModule <- gratorModuleT if gratorSubpanel.fromModule === fromModule.id
+fromField <- gratorFieldT if gratorSubpanel.fromField === fromField.id
+
+      } yield (gratorSubpanel , toModule, fromModule, fromField)
+      db.run(q.result).map(_.toList)
+  }
+
+
+
+  /* CUSTOM CODE */
+  def findAllByApplicationId(applicationId: Long): Future[List[GratorSubpanel]] = {
+    val q = for{
+      mod <- GratorModule.gratorModuleT if mod.applicationId === applicationId
+      sub <- GratorSubpanel.gratorSubpanelT if mod.id === sub.fromModule
+    } yield (sub)
+    db.run(q.result).map(_.toList)
+  }
+  /* END CUSTOM CODE */
 }
