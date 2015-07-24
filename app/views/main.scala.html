@@ -10,53 +10,53 @@
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
         <script src="@routes.Assets.at("javascripts/jquery-2.1.4.min.js")" type="text/javascript"></script>
         @helper.javascriptRouter("jsRoutes")(
-          
+
           routes.javascript.GratorAppController.relatedCombo,
           routes.javascript.GratorAppController.relatedDropdown,
-          
+
           routes.javascript.GratorModuleController.relatedCombo,
           routes.javascript.GratorModuleController.relatedDropdown,
-          
+
           routes.javascript.GratorFieldController.relatedCombo,
           routes.javascript.GratorFieldController.relatedDropdown,
-          
+
           routes.javascript.GratorRelationshipController.relatedCombo,
           routes.javascript.GratorRelationshipController.relatedDropdown,
-          
+
           routes.javascript.GratorFieldTypeController.relatedCombo,
           routes.javascript.GratorFieldTypeController.relatedDropdown,
-          
+
           routes.javascript.GratorSubpanelController.relatedCombo,
           routes.javascript.GratorSubpanelController.relatedDropdown
-          
+
         )
     </head>
     <body>
 	     <div class="navbar navbar-fixed-top">
 			<div class="navbar-inner">
 				<div class="container">
-          
-          
+
+
           <a class="brand" href="@routes.GratorAppController.index()">
             @Messages("gratorApp.module_name")
           </a>
-          
+
           <a class="brand" href="@routes.GratorModuleController.index()">
             @Messages("gratorModule.module_name")
           </a>
-          
+
           <a class="brand" href="@routes.GratorFieldController.index()">
             @Messages("gratorField.module_name")
           </a>
-          
+
           <a class="brand" href="@routes.GratorRelationshipController.index()">
             @Messages("gratorRelationship.module_name")
           </a>
-          
+
           <a class="brand" href="@routes.GratorSubpanelController.index()">
             @Messages("gratorSubpanel.module_name")
           </a>
-          
+
 
         </div>
 			</div>

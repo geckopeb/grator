@@ -115,6 +115,8 @@ class @{module.controllerName} @@Inject() (val messagesApi: MessagesApi) extends
     }.recover { case ex: Exception => Ok("Fallo") }
   }
 
+  @views.html.templates.module.controller_template_aux.subpanels(app, module)
+
   /* CUSTOM CODE */
   /* END CUSTOM CODE */
 }

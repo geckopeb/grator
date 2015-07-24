@@ -15,7 +15,7 @@ import it.grator.grator_base.Row
 
 
 case class GratorApp(
-  
+
     id: Option[Long] = None,
     name: String,
     path: String
@@ -27,15 +27,16 @@ object GratorApp extends HasDatabaseConfig[JdbcProfile]{
   import driver.api._
   protected val dbConfig = DatabaseConfigProvider.get[JdbcProfile](Play.current)
 
-  
+  def getSchema: String = gratorAppT.schema.create.statements.toString
+
   class GratorAppT(tag: Tag) extends Table[GratorApp](tag, "grator_app"){
-    
+
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
     def name = column[String]("name")
     def path = column[String]("path")
 
     def * = ( id.?, name, path ) <> ((GratorApp.apply _).tupled, GratorApp.unapply _)
-    
+
   }
 
   val gratorAppT = TableQuery[GratorAppT]
@@ -63,7 +64,7 @@ object GratorApp extends HasDatabaseConfig[JdbcProfile]{
   def findAllWithRelateds: Future[List[models.DB.GratorApp]] = {
       val q = for {
         gratorApp <- gratorAppT
-        
+
       } yield (gratorApp )
       db.run(q.result).map(_.toList)
   }
@@ -82,7 +83,7 @@ object GratorApp extends HasDatabaseConfig[JdbcProfile]{
   def findByIdWithRelateds(id: Long): Future[Option[models.DB.GratorApp]] = {
       val q = for {
         gratorApp <- gratorAppT if gratorApp.id === id
-        
+
       } yield (gratorApp )
       db.run(q.result).map(_.headOption)
   }
@@ -115,7 +116,7 @@ object GratorApp extends HasDatabaseConfig[JdbcProfile]{
     Json.stringify(jsonList)
   }
 
-  
+
 
 
 

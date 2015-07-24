@@ -9,5 +9,8 @@ case class Subpanel(
   fromModule: Module,
   fromField: RelatedField
 ){
-
+  def controllerName: String = {
+    val tName = name.capitalize
+    s"""subpanel$tName"""
+  }
 }

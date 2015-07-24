@@ -2,6 +2,7 @@ package it.grator.module_source
 
 import it.grator.module_source.fields._
 import it.grator.module_source.relationships._
+import it.grator.module_source.subpanels.Subpanel
 import it.grator.utils._
 import views.html._
 
@@ -121,6 +122,12 @@ case class Module(
 	def primaryRelationships(app: App): List[Relationship] = {
 		app.relationships.filter(_.primaryModule == this)
 	}
+
+	def subpanels(app: App): List[Subpanel] = {
+		app.subpanels.filter(_.toModule == this)
+	}
+
+	/* END HELPERS */
 
 	def generatePath(app: App, folder: String, fileName: String, fileTermination: String): String = {
 	    app.path+folder+fileName+fileTermination

@@ -1,0 +1,13 @@
+@(app: it.grator.module_source.App, module: it.grator.module_source.Module)
+@for(subpanel <- module.subpanels(app)){
+def @{subpanel.controllerName}(id: Long) = Action.async {
+  val fSubpanelData = @{subpanel.fromModule.className}.@{subpanel.fromField.findByMethod}(id)
+
+  fSubpanelData.map{
+    @{"case"} @{subpanel.fromModule.tupleExtractor(app)} => {
+      
+    }
+  }.recover { case ex: Exception => Ok("Fallo")}
+
+}
+}
