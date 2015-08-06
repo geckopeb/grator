@@ -1,5 +1,6 @@
 @(app: it.grator.module_source.App, modules: List[it.grator.module_source.Module])
 application.name = @app.name
+application.generate_evolutions = Generate Evolutions
 @for(module <- modules){
 
 #@{module.name}

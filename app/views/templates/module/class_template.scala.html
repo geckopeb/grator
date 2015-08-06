@@ -30,6 +30,10 @@ object @{module.className} extends HasDatabaseConfig[JdbcProfile]{
 
   val @{module.queryName} = TableQuery[@module.tableClassName]
 
+  def createSchema: String = @{module.queryName}.schema.create.statements.toString
+
+  def dropSchema: String = @{module.queryName}.schema.drop.statements.toString
+
   def save(@{module.varName}: @{module.className}): Future[Long] = {
     db.run(@{module.queryName}.returning(@{module.queryName}.map(_.id)) += @{module.varName} )
   }

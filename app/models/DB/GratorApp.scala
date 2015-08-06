@@ -25,7 +25,6 @@ object GratorApp extends HasDatabaseConfig[JdbcProfile]{
   import driver.api._
   protected val dbConfig = DatabaseConfigProvider.get[JdbcProfile](Play.current)
 
-
   class GratorAppT(tag: Tag) extends Table[GratorApp](tag, "grator_app"){
 
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
