@@ -10,6 +10,8 @@ import javax.inject.Inject
 
 import play.api.i18n.{MessagesApi, I18nSupport}
 
+import models.DB._
+
 class GratorAppController @@Inject() (val messagesApi: MessagesApi) extends Controller with I18nSupport {
   def createPath(path: String){
     val carpeta = new java.io.File(path)
@@ -36,5 +38,40 @@ class GratorAppController @@Inject() (val messagesApi: MessagesApi) extends Cont
     Ok(views.html.home.index())
   }
 
-  def evolutions = TODO
+  def split(s: String): (String, Option[String]) = {
+    val a = s.split(";")
+    if(a.length > 1){
+      (a(0), Some(a(1)))
+    } else {
+      (a(0), None)
+    }
+  }
+
+  def split_downs(s: String): (String, Option[String]) = {
+    val a = s.split(";")
+    if(a.length > 1){
+      (a(1), Some(a(0)))
+    } else {
+      (a(0), None)
+    }
+  }
+
+  def evolutions = Action { implicit request =>
+      val ups = List(@app.modulesWithMethod("createSchema"))
+      val ups_sp = ups.map(this.split(_))
+
+      val ups_tables = ups_sp.map(_._1)
+      val ups_const = ups_sp.flatMap(_._2)
+
+      val downs = List(@app.modulesWithMethod("dropSchema"))
+
+      val downs_sp = downs.map(this.split_downs(_))
+
+      val downs_tables = downs_sp.map(_._1)
+      val downs_const = downs_sp.flatMap(_._2)
+
+
+      this.writeToFile("conf/evolutions/default/1.sql",views.html.gratorApp.evolutions(ups_tables, ups_const, downs_tables, downs_const).toString)
+      Redirect(routes.GratorAppController.index())
+    }
 }

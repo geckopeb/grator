@@ -1,0 +1,11 @@
+@@(ups_tables: List[String], ups_const: List[String], down_tables: List[String], down_const: List[String])
+# --- !Ups
+@@for(ut <- ups_tables){@@{ut};
+}
+@@for(uc <- ups_const){@@{uc};
+}
+# --- !Downs
+@@for(dc <- down_const){@@{dc};
+}
+@@for(dt <- down_tables){@@{dt};
+}

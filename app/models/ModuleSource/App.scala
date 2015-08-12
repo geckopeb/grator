@@ -75,6 +75,12 @@ case class App(
 		FileUtils.copy("app/gratorBase", destBasePath)
 	}
 
+	def copyEvolutions(): Unit = {
+		val destPath = this.path+"views/gratorApp/evolutions.scala.html"
+
+		FileUtils.writeToFile(destPath, views.html.templates.app.grator_app_evolutions().toString)
+	}
+
 	def generateAll(): Unit = {
 		this.generateRoutes()
 		this.generateAppController()
@@ -86,8 +92,16 @@ case class App(
 	    this.generateHome()
 			this.copyBase()
 
+			this.copyEvolutions()
+
 	    for(module <- this.modules){
 	    	module.generateAll(this)
 	    }
+	}
+
+	def modulesWithMethod(method: String): String = {
+		val mlist = this.modules.map(_.className+"."+method)
+
+		mlist.mkString(", ")
 	}
 }

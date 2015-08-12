@@ -15,6 +15,8 @@ import it.grator.grator_base.Row
 
 import models.DB.GratorApp.gratorAppT
 
+import models.DB.GratorField.gratorFieldT
+
 case class GratorModule(
 
     id: Option[Long] = None,
@@ -45,7 +47,16 @@ object GratorModule extends HasDatabaseConfig[JdbcProfile]{
   val gratorModuleT = TableQuery[GratorModuleT]
 
   def save(gratorModule: GratorModule): Future[Long] = {
-    db.run(gratorModuleT.returning(gratorModuleT.map(_.id)) += gratorModule )
+    db.run(
+      (
+        for {
+          gmid <- gratorModuleT.returning(gratorModuleT.map(_.id)) += gratorModule
+          _ <- gratorFieldT ++= Seq(
+                                  GratorField(None, "id", gmid, 1, true, Some(gmid)),
+                                  GratorField(None, "name", gmid, 2, true, Some(gmid))
+                                )
+        } yield gmid).transactionally
+    )
   }
 
   def update(gratorModule: GratorModule): Future[Long] = {
