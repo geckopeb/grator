@@ -25,4 +25,6 @@ libraryDependencies += "com.typesafe.play" %% "play-slick" % "2.0.0"
 
 libraryDependencies += "com.typesafe.play" %% "play-slick-evolutions" % "2.0.0"
 
+libraryDependencies += "com.typesafe.slick" %% "slick" % "3.1.1"
+
 libraryDependencies += "commons-io" % "commons-io" % "2.4"
