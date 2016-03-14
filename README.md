@@ -1,7 +1,7 @@
 Grator
 ======
 
-CRUD Generator for PlayFramework2.4.x-Slick3.0.x-Scala
+CRUD Generator for PlayFramework2.5.x-Slick3.1.x-Scala
 
 
 https://github.com/geckopeb/grator/wiki
