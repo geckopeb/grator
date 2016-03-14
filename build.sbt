@@ -1,11 +1,11 @@
 name := """grator"""
-//Reboot Numero 2.
+//Reboot Numero 3.
 //..
-version := "0.1.1"
+version := "0.2.0"
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala)
 
-scalaVersion := "2.11.6"
+scalaVersion := "2.11.7"
 
 libraryDependencies ++= Seq(
   cache,
@@ -19,10 +19,10 @@ resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
 // other, legacy style, accesses its actions statically.
 routesGenerator := InjectedRoutesGenerator
 
-libraryDependencies += "mysql" % "mysql-connector-java" % "5.1.36"
+libraryDependencies += "mysql" % "mysql-connector-java" % "5.1.38"
 
-libraryDependencies += "com.typesafe.play" %% "play-slick" % "1.0.1"
+libraryDependencies += "com.typesafe.play" %% "play-slick" % "2.0.0"
 
-libraryDependencies += "com.typesafe.play" %% "play-slick-evolutions" % "1.0.1"
+libraryDependencies += "com.typesafe.play" %% "play-slick-evolutions" % "2.0.0"
 
 libraryDependencies += "commons-io" % "commons-io" % "2.4"
