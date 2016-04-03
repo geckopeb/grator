@@ -76,7 +76,7 @@ case class App(
 	}
 
 	def copyEvolutions(): Unit = {
-		val destPath = this.path+"views/gratorApp/evolutions.scala.html"
+		val destPath = this.path+"app/views/gratorApp/evolutions.scala.html"
 
 		FileUtils.writeToFile(destPath, views.html.templates.app.grator_app_evolutions().toString)
 	}
